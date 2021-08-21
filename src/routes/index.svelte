@@ -1,13 +1,22 @@
 <script lang="ts">
   import io from 'socket.io-client'
+  import { tick } from 'svelte'
 
   const socket = io(':3001')
 
   let messages: string[] = []
   let value = ''
+  let container: HTMLElement
 
-  socket.on('chat message', function (msg) {
+  socket.on('chat message', async function (msg) {
     messages = [...messages, msg]
+    if (
+      container.scrollTop >
+      container.scrollHeight - container.clientHeight - 10
+    ) {
+      await tick()
+      container.scrollTo({ top: container.scrollHeight })
+    }
   })
 
   const send = () => {
@@ -17,7 +26,7 @@
 </script>
 
 <main>
-  <div class="messages">
+  <div class="messages" bind:this={container}>
     {#each messages as message}
       <p>{message}</p>
     {/each}
