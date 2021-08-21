@@ -2,17 +2,26 @@ import { createServer } from 'http';
 import polka from 'polka';
 import { Server } from 'socket.io';
 import sirv from 'sirv';
+import { statSync } from 'fs';
 
 const { PORT = 3001 } = process.env;
 
-const files = sirv('build');
 const server = createServer();
 
-polka({ server })
-	.use(files)
-	.listen(PORT, () => {
-		console.log(`> Running on localhost:${PORT}`);
-	});
+const polkaServer = polka({ server });
+
+try {
+	if (statSync('build').isDirectory()) {
+		polkaServer.use(sirv('build'));
+		console.log('Starting in production mode');
+	}
+} catch (err) {
+	console.log('Starting in development mode');
+}
+
+polkaServer.listen(PORT, () => {
+	console.log(`> Running on localhost:${PORT}`);
+});
 
 const io = new Server(server);
 
