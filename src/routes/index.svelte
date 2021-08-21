@@ -1,22 +1,39 @@
 <script lang="ts">
+  import type { Socket } from 'socket.io'
   import io from 'socket.io-client'
-  import { tick } from 'svelte'
+  import { onMount, tick } from 'svelte'
 
-  const socket = io(':3001')
-
-  let messages: string[] = []
+  let messages: Array<{ login: string; msg: string }> = []
   let value = ''
   let container: HTMLElement
 
-  socket.on('chat message', async function (msg) {
-    messages = [...messages, msg]
-    if (
-      container.scrollTop >
-      container.scrollHeight - container.clientHeight - 10
-    ) {
-      await tick()
-      container.scrollTo({ top: container.scrollHeight })
+  let socket: Socket | undefined
+
+  onMount(() => {
+    const token = sessionStorage.getItem('token')
+    if (token === null) {
+      location.href = 'login'
+      return
     }
+
+    socket = io(':3001', {
+      auth: { token },
+    })
+
+    socket.on('chat message', async function (msg) {
+      messages = [...messages, msg]
+      if (
+        container.scrollTop >
+        container.scrollHeight - container.clientHeight - 10
+      ) {
+        await tick()
+        container.scrollTo({ top: container.scrollHeight })
+      }
+    })
+
+    socket.on('disconnect', () => {
+      location.href = 'login'
+    })
   })
 
   const send = () => {
@@ -27,8 +44,8 @@
 
 <main>
   <div class="messages" bind:this={container}>
-    {#each messages as message}
-      <p>{message}</p>
+    {#each messages as { login, msg }}
+      <p><strong>{login}:</strong> {msg}</p>
     {/each}
   </div>
 
@@ -58,9 +75,14 @@
     flex: 1;
     overflow: auto;
     padding: 0 1em;
+    gap: 0.5rem;
 
     > :first-child {
       margin-top: auto;
+    }
+
+    > p {
+      margin: 0;
     }
   }
 
