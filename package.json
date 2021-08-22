@@ -65,7 +65,7 @@
     "build": "svelte-kit build",
     "check": "tsc --noEmit & eslint --fix 'src/**/*.{ts,js,svelte}' & stylelint --fix 'src/**/*' & svelte-check --tsconfig ./tsconfig.json &",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
-    "dev": "nodemon & svelte-kit dev &",
+    "dev": "nodemon -e ts & svelte-kit dev &",
     "format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
     "lint": "prettier --ignore-path .gitignore  --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
     "postinstall": "husky install",
