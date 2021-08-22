@@ -24,7 +24,7 @@
     })
 
     socket.on('chat message', async (msg) => {
-      messages = [...messages, msg]
+      messages = [...messages.slice(-999), msg]
       if (
         container.scrollTop >
         container.scrollHeight - container.clientHeight - 10
@@ -63,12 +63,13 @@
   </p>
 
   <div class="messages" bind:this={container}>
-    {#each messages as message (message.id)}
+    {#each messages as { id, login, msg } (id)}
       <Message
-        {...message}
+        {login}
+        {msg}
         {mod}
         on:delete={() => {
-          del(message.id)
+          del(id)
         }}
       />
     {/each}
