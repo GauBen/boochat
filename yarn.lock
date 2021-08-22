@@ -5,13 +5,6 @@ __metadata:
   version: 4
   cacheKey: 8
 
-"@arr/every@npm:^1.0.0":
-  version: 1.0.1
-  resolution: "@arr/every@npm:1.0.1"
-  checksum: fc33cd8f3244db7053b89898fc0d1753dd17f40328a443d8640dc15578ed74c59d8e12fe8de87ddb20a2cee578dc0dd9fbb94eb77ef209158fb615bb904b684f
-  languageName: node
-  linkType: hard
-
 "@babel/code-frame@npm:7.12.11":
   version: 7.12.11
   resolution: "@babel/code-frame@npm:7.12.11"
@@ -108,13 +101,6 @@ __metadata:
     mkdirp: ^1.0.4
     rimraf: ^3.0.2
   checksum: c96381d4a37448ea280951e46233f7e541058cf57a57d4094dd4bdcaae43fa5872b5f2eb6bfb004591a68e29c5877abe3cdc210cb3588cbf20ab2877f31a7de7
-  languageName: node
-  linkType: hard
-
-"@polka/url@npm:^0.5.0":
-  version: 0.5.0
-  resolution: "@polka/url@npm:0.5.0"
-  checksum: 3f007adf9c271b28992ebff1df6424e75e7d579493c66969356a9b5dada18480583744dbc28a7467371fa10eb794a5e1dc1f3fcd359c0b5685f4f9c6592cd312
   languageName: node
   linkType: hard
 
@@ -691,7 +677,7 @@ __metadata:
     eslint-config-prettier: ^8.1.0
     eslint-plugin-svelte3: ^3.2.0
     hat: ^0.0.3
-    polka: ^0.5.2
+    polka: next
     prettier: ~2.2.1
     prettier-plugin-svelte: ^2.2.0
     sass: ^1.38.0
@@ -1880,15 +1866,6 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"matchit@npm:^1.0.0":
-  version: 1.1.0
-  resolution: "matchit@npm:1.1.0"
-  dependencies:
-    "@arr/every": ^1.0.0
-  checksum: 14617343d9f77a5f2a2e9e5213b1d6c1c7b3efda10758d1502e632edf63bf77f260e3f1aa2afdc97dd7e259fae7845a1b07719cd4680d2f1d23b2aa45a393934
-  languageName: node
-  linkType: hard
-
 "media-typer@npm:0.3.0":
   version: 0.3.0
   resolution: "media-typer@npm:0.3.0"
@@ -2254,13 +2231,13 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"polka@npm:^0.5.2":
-  version: 0.5.2
-  resolution: "polka@npm:0.5.2"
+"polka@npm:next":
+  version: 1.0.0-next.17
+  resolution: "polka@npm:1.0.0-next.17"
   dependencies:
-    "@polka/url": ^0.5.0
-    trouter: ^2.0.1
-  checksum: 5f4994e78985e10f77fcccced4d3781ba3f896059f66be6099ee189007b73a9bd4d136f73e4156f731bfe3ead66b1d44448b9be6e57e88fa28b53a6096bd3f11
+    "@polka/url": ^1.0.0-next.17
+    trouter: ^3.1.0
+  checksum: 8fca05b6e5078e6a9efd83b670eaf3aeb24c3970d44e796c1caae1738f8d0a29f17029dfaa67432c88b8b875d900db964fa16d1794ed1ae65a83aa09f2a9fd10
   languageName: node
   linkType: hard
 
@@ -2386,6 +2363,13 @@ fsevents@~2.3.2:
   dependencies:
     picomatch: ^2.2.1
   checksum: 1ced032e6e45670b6d7352d71d21ce7edf7b9b928494dcaba6f11fba63180d9da6cd7061ebc34175ffda6ff529f481818c962952004d273178acd70f7059b320
+  languageName: node
+  linkType: hard
+
+"regexparam@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "regexparam@npm:1.3.0"
+  checksum: ea6449d9984392cdf401d3d9b722a56357224fba7e9fdf2887f1901e0d3a838052d3b92b30f2276047bf5d5b6a1a90b7dff6aa1c89599b246a86285e7e3e3fd4
   languageName: node
   linkType: hard
 
@@ -2962,12 +2946,12 @@ resolve@^1.20.0:
   languageName: node
   linkType: hard
 
-"trouter@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "trouter@npm:2.0.1"
+"trouter@npm:^3.1.0":
+  version: 3.2.0
+  resolution: "trouter@npm:3.2.0"
   dependencies:
-    matchit: ^1.0.0
-  checksum: 4a25e81a132d75e8659a29c4b1f6a91eff06601a78a9d1fc189d525ad0298881ed7db7a82045a3b7d1fcc52cb283d2ca7b79eb908de02088798de36659d5205c
+    regexparam: ^1.3.0
+  checksum: 50beb18d4cf0239fe5ee81368d59f08b25298869d169d39c35b1c1d142e922025e14a648989382da70d4064d2ac7900b4348401caa0a235c3cccabaaa85351ef
   languageName: node
   linkType: hard
 

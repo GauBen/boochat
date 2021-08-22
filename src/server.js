@@ -26,8 +26,9 @@ try {
   console.log('Starting in development mode')
 }
 
-polkaServer.use(json(), cors())
-polkaServer.post('/api/login', (req, res) => {
+const api = polka()
+api.use(json(), cors())
+api.post('/login', (req, res) => {
   if (!('login' in req.body)) {
     res.writeHead(400, { 'Content-Type': 'application/json' })
     res.end('{}')
@@ -38,6 +39,7 @@ polkaServer.post('/api/login', (req, res) => {
   res.writeHead(200, { 'Content-Type': 'application/json' })
   res.end(JSON.stringify({ token }))
 })
+polkaServer.use('/api', api)
 
 polkaServer.listen(PORT, () => {
   console.log(`> Running on localhost:${PORT}`)
