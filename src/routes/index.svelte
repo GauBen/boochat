@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { goto } from '$app/navigation'
+
   import type { Socket } from 'socket.io'
   import io from 'socket.io-client'
   import { onMount, tick } from 'svelte'
@@ -12,7 +14,7 @@
   onMount(() => {
     const token = sessionStorage.getItem('token')
     if (token === null) {
-      location.href = 'login'
+      goto('login')
       return
     }
 

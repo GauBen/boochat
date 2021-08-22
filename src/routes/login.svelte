@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { goto } from '$app/navigation'
+
   let login = ''
   const submit = async () => {
     const response = await fetch(`//localhost:3001/api/login`, {
@@ -9,7 +11,7 @@
     }).then((r) => r.json())
     if ('token' in response) {
       sessionStorage.setItem('token', response.token)
-      location.href = '.'
+      goto('.')
     }
   }
 </script>
