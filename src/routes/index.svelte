@@ -63,17 +63,12 @@
 </main>
 
 <style lang="scss">
-  :global(body) {
-    // TODO: use sanitize.css
-    margin: 0;
-    color: #fff;
-    background-color: rgb(41, 37, 65);
-  }
-
   main {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    color: #fff;
+    background-color: rgb(41, 37, 65);
   }
 
   .messages {
@@ -101,6 +96,7 @@
     input,
     button {
       padding: 0.5em;
+      color: #000;
       background: #fff;
       border: 1px solid rgb(24, 24, 27);
       border-radius: 0.5em;
