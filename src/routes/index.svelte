@@ -3,6 +3,7 @@
 
   import type { Socket } from 'socket.io'
   import io from 'socket.io-client'
+  import Message from '../components/Message.svelte'
   import { onMount, tick } from 'svelte'
 
   let messages: Array<{ login: string; msg: string }> = []
@@ -46,8 +47,8 @@
 
 <main>
   <div class="messages" bind:this={container}>
-    {#each messages as { login, msg }}
-      <p><strong>{login}:</strong> {msg}</p>
+    {#each messages as message}
+      <Message {...message} />
     {/each}
   </div>
 
@@ -79,12 +80,8 @@
     padding: 0 1em;
     gap: 0.5rem;
 
-    > :first-child {
+    > :global(:first-child) {
       margin-top: auto;
-    }
-
-    > p {
-      margin: 0;
     }
   }
 
