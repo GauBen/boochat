@@ -1,10 +1,9 @@
 <script lang="ts">
-  import { goto } from '$app/navigation'
-
-  import type { Socket } from 'socket.io'
-  import io from 'socket.io-client'
-  import Message from '../components/Message.svelte'
+  import type { Socket } from 'socket.io-client'
+  import { io } from 'socket.io-client'
   import { onMount, tick } from 'svelte'
+  import { goto } from '$app/navigation'
+  import Message from '../components/Message.svelte'
 
   let messages: Array<{ login: string; msg: string }> = []
   let value = ''
@@ -12,10 +11,10 @@
 
   let socket: Socket | undefined
 
-  onMount(() => {
+  onMount(async () => {
     const token = sessionStorage.getItem('token')
     if (token === null) {
-      goto('login')
+      await goto('login')
       return
     }
 
@@ -23,7 +22,7 @@
       auth: { token },
     })
 
-    socket.on('chat message', async function (msg) {
+    socket.on('chat message', async (msg) => {
       messages = [...messages, msg]
       if (
         container.scrollTop >
@@ -40,6 +39,7 @@
   })
 
   const send = () => {
+    if (!socket) return
     socket.emit('chat message', value)
     value = ''
   }
@@ -52,7 +52,11 @@
     {/each}
   </div>
 
-  <form on:submit|preventDefault={() => send()}>
+  <form
+    on:submit|preventDefault={() => {
+      send()
+    }}
+  >
     <input type="text" bind:value />
     <button>Envoyer</button>
   </form>
@@ -74,11 +78,11 @@
 
   .messages {
     display: flex;
-    flex-direction: column;
     flex: 1;
-    overflow: auto;
-    padding: 0 1em;
+    flex-direction: column;
     gap: 0.5rem;
+    padding: 0 1em;
+    overflow: auto;
 
     > :global(:first-child) {
       margin-top: auto;
@@ -97,13 +101,13 @@
     input,
     button {
       padding: 0.5em;
-      border-radius: 0.5em;
-      border: 1px solid rgb(24, 24, 27);
       background: #fff;
+      border: 1px solid rgb(24, 24, 27);
+      border-radius: 0.5em;
 
       &:focus {
-        box-shadow: 0 0 3px #fff;
         outline: 0;
+        box-shadow: 0 0 3px #fff;
       }
     }
   }

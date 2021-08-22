@@ -7,16 +7,16 @@
       method: 'POST',
       body: JSON.stringify({ login }),
       headers: { 'Content-Type': 'application/json' },
-      // mode: 'no-cors',
-    }).then((r) => r.json())
+      // Mode: 'no-cors',
+    }).then(async (r) => r.json())
     if ('token' in response) {
       sessionStorage.setItem('token', response.token)
-      goto('.')
+      await goto('.')
     }
   }
 </script>
 
-<form on:submit|preventDefault={() => submit()}>
+<form on:submit|preventDefault={async () => submit()}>
   <label for="login">Nom d'utilisateur :</label>
   <input type="text" id="login" bind:value={login} />
   <button>Se connecter</button>
