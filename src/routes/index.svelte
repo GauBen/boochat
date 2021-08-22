@@ -8,6 +8,7 @@
   let messages: Array<{ login: string; msg: string; id: string }> = []
   let value = ''
   let container: HTMLElement
+  let mod = false
 
   let socket: Socket | undefined
 
@@ -55,10 +56,17 @@
 </script>
 
 <main>
+  <p class="mod-toggle">
+    <label for="mod">
+      <input type="checkbox" id="mod" bind:checked={mod} /> Mod view
+    </label>
+  </p>
+
   <div class="messages" bind:this={container}>
     {#each messages as message (message.id)}
       <Message
         {...message}
+        {mod}
         on:delete={() => {
           del(message.id)
         }}
@@ -85,19 +93,6 @@
     background-color: rgb(41, 37, 65);
   }
 
-  .messages {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 0 1em;
-    overflow: auto;
-
-    > :global(:first-child) {
-      margin-top: auto;
-    }
-  }
-
   form {
     display: flex;
     gap: 0.5em;
@@ -119,6 +114,23 @@
         outline: 0;
         box-shadow: 0 0 3px #fff;
       }
+    }
+  }
+
+  .mod-toggle {
+    text-align: center;
+  }
+
+  .messages {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0 1em;
+    overflow: auto;
+
+    > :global(:first-child) {
+      margin-top: auto;
     }
   }
 </style>

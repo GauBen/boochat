@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte'
   import twemoji from 'twemoji'
 
+  export let mod = false
   export let login: string
   export let msg: string
 
@@ -16,12 +17,14 @@
 <p>
   <strong>{login}:</strong>
   <span use:emoji>{msg}</span>
-  <button
-    on:click={() => {
-      dispatch('delete')
-    }}
-    type="button">X</button
-  >
+  {#if mod}
+    <button
+      on:click={() => {
+        dispatch('delete')
+      }}
+      type="button">X</button
+    >
+  {/if}
 </p>
 
 <style lang="scss">
