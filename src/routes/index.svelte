@@ -5,7 +5,7 @@
   import { goto } from '$app/navigation'
   import Message from '../components/Message.svelte'
 
-  let messages: Array<{ login: string; msg: string }> = []
+  let messages: Array<{ login: string; msg: string; id: string }> = []
   let value = ''
   let container: HTMLElement
 
@@ -33,6 +33,10 @@
       }
     })
 
+    socket.on('del message', async (id: string) => {
+      messages = messages.filter((msg) => msg.id !== id)
+    })
+
     socket.on('disconnect', () => {
       location.href = 'login'
     })
@@ -43,12 +47,22 @@
     socket.emit('chat message', value)
     value = ''
   }
+
+  const del = (id: string) => {
+    if (!socket) return
+    socket.emit('del message', id)
+  }
 </script>
 
 <main>
   <div class="messages" bind:this={container}>
-    {#each messages as message}
-      <Message {...message} />
+    {#each messages as message (message.id)}
+      <Message
+        {...message}
+        on:delete={() => {
+          del(message.id)
+        }}
+      />
     {/each}
   </div>
 

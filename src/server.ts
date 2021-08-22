@@ -49,11 +49,16 @@ polkaServer.listen(PORT, () => {
 
 const io = new Server(server, { cors: { origin: '*' } })
 
+let id = 1
+
 io.on('connection', (socket) => {
   const { token } = socket.handshake.auth
   const login = tokens.get(token)
   if (!login) socket.disconnect(true)
   socket.on('chat message', (msg: string) => {
-    io.emit('chat message', { login, msg })
+    io.emit('chat message', { login, msg, id: `${id++}` })
+  })
+  socket.on('del message', (id: string) => {
+    io.emit('del message', id)
   })
 })

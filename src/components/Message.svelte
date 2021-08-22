@@ -1,8 +1,11 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte'
   import twemoji from 'twemoji'
 
   export let login: string
   export let msg: string
+
+  const dispatch = createEventDispatcher<{ delete: void }>()
 
   const emoji = (node: HTMLElement) => {
     // eslint-disable-next-line import/no-named-as-default-member
@@ -13,6 +16,12 @@
 <p>
   <strong>{login}:</strong>
   <span use:emoji>{msg}</span>
+  <button
+    on:click={() => {
+      dispatch('delete')
+    }}
+    type="button">X</button
+  >
 </p>
 
 <style lang="scss">
