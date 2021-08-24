@@ -3,11 +3,11 @@
   import type { Socket } from 'socket.io-client'
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
-  import Messages from '../components/Messages.svelte'
+  import { writable } from 'svelte/store'
+  import Admin from '../components/Admin.svelte'
+  import Messenger from '../components/Messenger.svelte'
 
   let messages: Array<{ login: User; msg: string; id: string }> = []
-  let value = ''
-  let mod = false
 
   let socket: Socket | undefined
 
@@ -45,10 +45,9 @@
     })
   })
 
-  const send = () => {
+  const send = ({ detail: value }: { detail: string }) => {
     if (!socket) return
     socket.emit('chat message', value)
-    value = ''
   }
 
   const del = ({ detail: id }: { detail: string }) => {
@@ -60,34 +59,47 @@
     sessionStorage.removeItem('token')
     loggedIn = false
   }
+
+  let app: HTMLElement
+  const nav = writable('0')
+
+  nav.subscribe((value) => {
+    if (!app) return
+    app.scrollTo({
+      left: Number(value) * app.clientWidth,
+      behavior: 'smooth',
+    })
+  })
 </script>
 
+<svelte:window
+  on:resize={() => {
+    if (!app) return
+    app.scrollTo({ left: Number($nav) * app.clientWidth })
+  }}
+/>
+
 <main>
-  {#if loggedIn === true}
-    <p class="center">
-      <label for="mod">
-        <input type="checkbox" id="mod" bind:checked={mod} /> Mod view
-      </label>
-      <button type="button" on:click={logout}>Se déconnecter</button>
-    </p>
-  {/if}
-
-  <Messages {messages} on:delete={del} {mod} />
-
-  {#if loggedIn === undefined}
-    <p class="center">Chargement...</p>
-  {:else if loggedIn === true}
-    <form
-      on:submit|preventDefault={() => {
-        send()
-      }}
-    >
-      <input type="text" bind:value />
-      <button>Envoyer</button>
-    </form>
-  {:else}
-    <p class="center"><a href="/login">Se connecter</a></p>
-  {/if}
+  <nav>
+    <input type="radio" bind:group={$nav} value="0" id="chat" />
+    <label for="chat">Chat</label>
+    <input type="radio" bind:group={$nav} value="1" id="admin" />
+    <label for="admin">Admin</label>
+  </nav>
+  <div bind:this={app} class="app">
+    <section>
+      <Messenger
+        {messages}
+        {loggedIn}
+        on:logout={logout}
+        on:send={send}
+        on:delete={del}
+      />
+    </section>
+    <section>
+      <Admin />
+    </section>
+  </div>
 </main>
 
 <style lang="scss">
@@ -95,39 +107,54 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
-    color: #fff;
-    background-color: rgb(41, 37, 65);
   }
 
-  form {
-    display: flex;
-    gap: 0.5em;
+  nav {
     padding: 1em;
+    text-align: center;
 
-    input {
-      flex: 1;
+    > label {
+      padding: 0.5em 1em;
+      border: 1px solid black;
     }
 
-    input,
-    button {
-      padding: 0.5em;
-      color: #000;
-      background: #fff;
-      border: 1px solid rgb(24, 24, 27);
-      border-radius: 0.5em;
+    > input {
+      display: none;
 
-      &:focus {
-        outline: 0;
-        box-shadow: 0 0 3px #fff;
+      &:checked + label {
+        background-color: #ccf;
+        outline: 1px solid black;
       }
     }
   }
 
-  a {
-    color: inherit;
+  .app {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    scroll-snap-type: y mandatory;
+
+    > section {
+      display: flex;
+      flex-shrink: 0;
+      width: 100vw;
+      height: 100%;
+      scroll-snap-align: start;
+    }
   }
 
-  .center {
-    text-align: center;
+  @media (min-width: 800px) {
+    nav {
+      display: none;
+    }
+
+    main {
+      flex-direction: row;
+    }
+
+    .app > section {
+      flex: 1;
+      width: auto;
+    }
   }
 </style>
