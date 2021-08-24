@@ -1,9 +1,10 @@
 <script lang="ts">
+  import type { User } from '../user'
   import { createEventDispatcher } from 'svelte'
   import twemoji from 'twemoji'
 
   export let mod = false
-  export let login: string
+  export let login: User
   export let msg: string
 
   const dispatch = createEventDispatcher<{ delete: void }>()
@@ -15,7 +16,7 @@
 </script>
 
 <p>
-  <strong>{login}:</strong>
+  <strong style="color:{login.color}">{login.name}:</strong>
   <span use:emoji>{msg}</span>
   {#if mod}
     <button

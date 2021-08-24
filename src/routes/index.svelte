@@ -1,11 +1,12 @@
 <script lang="ts">
+  import type { User } from '../user'
   import type { Socket } from 'socket.io-client'
   import { io } from 'socket.io-client'
   import { onMount, tick } from 'svelte'
   import { goto } from '$app/navigation'
   import Message from '../components/Message.svelte'
 
-  let messages: Array<{ login: string; msg: string; id: string }> = []
+  let messages: Array<{ login: User; msg: string; id: string }> = []
   let value = ''
   let container: HTMLElement
   let mod = false
@@ -53,6 +54,11 @@
     if (!socket) return
     socket.emit('del message', id)
   }
+
+  const logout = () => {
+    sessionStorage.removeItem('token')
+    void goto('login')
+  }
 </script>
 
 <main>
@@ -60,6 +66,7 @@
     <label for="mod">
       <input type="checkbox" id="mod" bind:checked={mod} /> Mod view
     </label>
+    <button type="button" on:click={logout}>Se déconnecter</button>
   </p>
 
   <div class="messages" bind:this={container}>
@@ -80,7 +87,7 @@
       send()
     }}
   >
-    <input type="text" bind:value />
+    <input type="text" bind:value autofocus />
     <button>Envoyer</button>
   </form>
 </main>
