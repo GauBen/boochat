@@ -35,17 +35,20 @@ api.post('/login', (req, res) => {
   }
 
   // TODO: check that login and color exists, and typed correctly
-  const body = req.body as { login: string; color?: string }
-
-  let { login, color } = body
+  let { login, color } = req.body as { login: string; color?: string }
 
   color = color?.match('#[a-fA-F0-9]{6}') ? color : undefined
 
   const token = rack()
   tokens.set(token, new User({ name: login, color }))
-  res.writeHead(200, { 'Content-Type': 'application/json' })
-  res.end(JSON.stringify({ token }))
+  res.json({ token })
 })
+
+api.post('/is-logged-in', (req, res) => {
+  const { token } = req.body as { token: string }
+  res.json(tokens.has(token))
+})
+
 app.use('/api', api)
 
 const io = new Server(server, { cors: { origin: '*' } })
@@ -56,17 +59,15 @@ io.on('connection', (socket) => {
   const { token } = socket.handshake.auth
   const login = tokens.get(token)
 
-  if (!login) {
-    socket.disconnect(true)
-    return
-  }
+  if (login) {
+    socket.on('chat message', (msg: string) => {
+      io.emit('chat message', { login, msg, id: `${id++}` })
+    })
 
-  socket.on('chat message', (msg: string) => {
-    io.emit('chat message', { login, msg, id: `${id++}` })
-  })
-  socket.on('del message', (id: string) => {
-    io.emit('del message', id)
-  })
+    socket.on('del message', (id: string) => {
+      io.emit('del message', id)
+    })
+  }
 })
 
 server.listen(PORT, () => {

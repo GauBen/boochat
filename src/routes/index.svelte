@@ -2,22 +2,34 @@
   import type { User } from '../user'
   import type { Socket } from 'socket.io-client'
   import { io } from 'socket.io-client'
-  import { onMount, tick } from 'svelte'
-  import { goto } from '$app/navigation'
-  import Message from '../components/Message.svelte'
+  import { onMount } from 'svelte'
+  import Messages from '../components/Messages.svelte'
 
   let messages: Array<{ login: User; msg: string; id: string }> = []
   let value = ''
-  let container: HTMLElement
   let mod = false
 
   let socket: Socket | undefined
 
+  let loggedIn: boolean | undefined
+
   onMount(async () => {
     const token = sessionStorage.getItem('token')
     if (token === null) {
-      await goto('login')
-      return
+      loggedIn = false
+    } else {
+      fetch('//localhost:3001/api/is-logged-in', {
+        method: 'POST',
+        body: JSON.stringify({ token }),
+        headers: { 'Content-Type': 'application/json' },
+      })
+        .then(async (r) => r.json())
+        .then((response) => {
+          loggedIn = response
+        })
+        .catch((error) => {
+          console.error(error)
+        })
     }
 
     socket = io(':3001', {
@@ -26,21 +38,10 @@
 
     socket.on('chat message', async (msg) => {
       messages = [...messages.slice(-999), msg]
-      if (
-        container.scrollTop >
-        container.scrollHeight - container.clientHeight - 10
-      ) {
-        await tick()
-        container.scrollTo({ top: container.scrollHeight })
-      }
     })
 
     socket.on('del message', async (id: string) => {
       messages = messages.filter((msg) => msg.id !== id)
-    })
-
-    socket.on('disconnect', () => {
-      location.href = 'login'
     })
   })
 
@@ -50,46 +51,43 @@
     value = ''
   }
 
-  const del = (id: string) => {
+  const del = ({ detail: id }: { detail: string }) => {
     if (!socket) return
     socket.emit('del message', id)
   }
 
   const logout = () => {
     sessionStorage.removeItem('token')
-    void goto('login')
+    loggedIn = false
   }
 </script>
 
 <main>
-  <p class="mod-toggle">
-    <label for="mod">
-      <input type="checkbox" id="mod" bind:checked={mod} /> Mod view
-    </label>
-    <button type="button" on:click={logout}>Se déconnecter</button>
-  </p>
+  {#if loggedIn === true}
+    <p class="center">
+      <label for="mod">
+        <input type="checkbox" id="mod" bind:checked={mod} /> Mod view
+      </label>
+      <button type="button" on:click={logout}>Se déconnecter</button>
+    </p>
+  {/if}
 
-  <div class="messages" bind:this={container}>
-    {#each messages as { id, login, msg } (id)}
-      <Message
-        {login}
-        {msg}
-        {mod}
-        on:delete={() => {
-          del(id)
-        }}
-      />
-    {/each}
-  </div>
+  <Messages {messages} on:delete={del} {mod} />
 
-  <form
-    on:submit|preventDefault={() => {
-      send()
-    }}
-  >
-    <input type="text" bind:value autofocus />
-    <button>Envoyer</button>
-  </form>
+  {#if loggedIn === undefined}
+    <p class="center">Chargement...</p>
+  {:else if loggedIn === true}
+    <form
+      on:submit|preventDefault={() => {
+        send()
+      }}
+    >
+      <input type="text" bind:value />
+      <button>Envoyer</button>
+    </form>
+  {:else}
+    <p class="center"><a href="/login">Se connecter</a></p>
+  {/if}
 </main>
 
 <style lang="scss">
@@ -125,20 +123,11 @@
     }
   }
 
-  .mod-toggle {
-    text-align: center;
+  a {
+    color: inherit;
   }
 
-  .messages {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 0 1em;
-    overflow: auto;
-
-    > :global(:first-child) {
-      margin-top: auto;
-    }
+  .center {
+    text-align: center;
   }
 </style>

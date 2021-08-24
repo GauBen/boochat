@@ -9,7 +9,6 @@
       method: 'POST',
       body: JSON.stringify({ login, color }),
       headers: { 'Content-Type': 'application/json' },
-      // Mode: 'no-cors',
     }).then(async (r) => r.json())
     if ('token' in response) {
       sessionStorage.setItem('token', response.token)
