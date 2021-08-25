@@ -1166,7 +1166,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv@npm:^8.0.1":
+"ajv@npm:^8.0.1, ajv@npm:^8.6.2":
   version: 8.6.2
   resolution: "ajv@npm:8.6.2"
   dependencies:
@@ -1547,6 +1547,7 @@ __metadata:
     "@types/twemoji": ^12.1.2
     "@typescript-eslint/eslint-plugin": ^4.19.0
     "@typescript-eslint/parser": ^4.19.0
+    ajv: ^8.6.2
     cors: ^2.8.5
     eslint: ^7.32.0
     eslint-config-prettier: ^8.3.0
