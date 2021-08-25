@@ -6,7 +6,7 @@
 
   export let loggedIn: boolean | undefined = undefined
   export let mod = false
-  export let socket: Socket | undefined
+  export let socket: Socket | undefined = undefined
 
   let messages: Array<{ id: string; login: User; msg: string }> = []
   let value = ''

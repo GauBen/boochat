@@ -1,13 +1,24 @@
 <script lang="ts">
   import type { User } from 'src/user'
-  import { io } from 'socket.io-client'
+  import { io, Socket } from 'socket.io-client'
   import { onMount } from 'svelte'
+  import GameScreen from '../components/GameScreen.svelte'
   import Messages from '../components/Messages.svelte'
 
   let messages: Array<{ login: User; msg: string; id: string }> = []
+  let socket: Socket | undefined
 
   onMount(() => {
-    const socket = io(':3001')
+    fetch('//localhost:3001/api/messages')
+      .then(async (r) => r.json())
+      .then((m) => {
+        messages = m
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+
+    socket = io(':3001')
 
     socket.on('chat message', async (msg) => {
       messages = [...messages.slice(-999), msg]
@@ -21,6 +32,7 @@
 
 <main>
   <Messages {messages} />
+  <GameScreen {socket} />
 </main>
 
 <style lang="scss">

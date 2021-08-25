@@ -73,7 +73,7 @@
       <Messenger {socket} {loggedIn} on:logout={logout} />
     </section>
     <section>
-      <Game />
+      <Game {socket} {loggedIn} />
     </section>
     <section>
       <Admin />

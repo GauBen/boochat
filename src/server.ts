@@ -74,6 +74,10 @@ io.on('connection', (socket) => {
     socket.on('del message', (id: string) => {
       io.emit('del message', id)
     })
+
+    socket.on('game', (evt: string) => {
+      io.emit('game', evt)
+    })
   }
 })
 
