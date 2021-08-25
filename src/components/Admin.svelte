@@ -1,1 +1,5 @@
-<h1>You're an admin, Harry.</h1>
+<script lang="ts">
+  import Admin from '../games/quizz/Admin.svelte'
+</script>
+
+<svelte:component this={Admin} />

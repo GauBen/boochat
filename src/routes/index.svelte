@@ -4,7 +4,7 @@
   import { onMount } from 'svelte'
   import { writable } from 'svelte/store'
   import Admin from '../components/Admin.svelte'
-  import Game from '../components/Game.svelte'
+  import GameController from '../components/GameController.svelte'
   import Messenger from '../components/Messenger.svelte'
 
   let socket: Socket | undefined
@@ -73,7 +73,7 @@
       <Messenger {socket} {loggedIn} on:logout={logout} />
     </section>
     <section>
-      <Game {socket} {loggedIn} />
+      <GameController {socket} {loggedIn} />
     </section>
     <section>
       <Admin />

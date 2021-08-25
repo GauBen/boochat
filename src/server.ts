@@ -28,6 +28,8 @@ try {
 }
 
 const api = express()
+const io = new Server(server, { cors: { origin: '*' } })
+
 // eslint-disable-next-line import/no-named-as-default-member
 api.use(express.json(), cors())
 api.post('/login', (req, res) => {
@@ -56,9 +58,15 @@ api.get('/messages', (req, res) => {
   res.json(messages)
 })
 
-app.use('/api', api)
-
-const io = new Server(server, { cors: { origin: '*' } })
+let gameSettings: { value: string; n: number } = { value: 'Ca va ?', n: 4 }
+api.get('/game-settings', (req, res) => {
+  res.json(gameSettings)
+})
+api.post('/setup-game', (req, res) => {
+  gameSettings = req.body as typeof gameSettings
+  io.emit('game-settings', gameSettings)
+  res.end()
+})
 
 io.on('connection', (socket) => {
   const { token } = socket.handshake.auth
@@ -81,6 +89,7 @@ io.on('connection', (socket) => {
   }
 })
 
+app.use('/api', api)
 server.listen(PORT, () => {
   console.log(`> Running on localhost:${PORT}`)
 })
