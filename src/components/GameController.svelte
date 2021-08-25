@@ -8,4 +8,14 @@
 
 {#if loggedIn}
   <svelte:component this={Controller} {socket} />
+{:else}
+  <a href="/login">Se connecter</a>
 {/if}
+
+<style>
+  a {
+    flex: 1;
+    align-self: center;
+    text-align: center;
+  }
+</style>
