@@ -17,7 +17,10 @@ const tokens = new Map<string, User>()
 const app = express()
 const server = createServer(app)
 
-const io = new Server(server, { cors: { origin: '*' } })
+const io = new Server(server, {
+  cors: { origin: '*' },
+  serveClient: false,
+})
 const messenger = createMessenger(io)
 const quizz = createQuizz(io)
 
