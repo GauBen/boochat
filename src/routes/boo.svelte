@@ -3,7 +3,7 @@
   import { io, Socket } from 'socket.io-client'
   import { onMount } from 'svelte'
   import GameScreen from '../components/GameScreen.svelte'
-  import Messages from '../components/Messages.svelte'
+  import Messages from '../messenger/Messages.svelte'
 
   let messages: Array<{ login: User; msg: string; id: string }> = []
   let socket: Socket | undefined
