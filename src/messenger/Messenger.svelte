@@ -2,7 +2,7 @@
   import type { Socket } from 'socket.io-client'
   import type { User } from 'src/user'
   import { createEventDispatcher, onMount } from 'svelte'
-  import Messages from './Messages.svelte'
+  import Messages from '../components/Messages.svelte'
 
   export let loggedIn: boolean | undefined = undefined
   export let mod = false

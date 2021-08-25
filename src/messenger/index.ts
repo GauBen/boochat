@@ -10,14 +10,11 @@ export default (
 } => {
   const app = express()
 
-  let gameSettings: { value: string; n: number } = { value: 'Ca va ?', n: 4 }
-  app.get('/game-settings', (_req, res) => {
-    res.json(gameSettings)
-  })
-  app.post('/setup-game', (req, res) => {
-    gameSettings = req.body as typeof gameSettings
-    io.emit('game-settings', gameSettings)
-    res.end()
+  let id = 1
+  let messages: Array<{ id: string; login: User; msg: string }> = []
+
+  app.get('/messages', (_req, res) => {
+    res.json(messages)
   })
 
   const listen = (
@@ -25,8 +22,15 @@ export default (
     { login }: { login: User | undefined }
   ): void => {
     if (!login) return
-    socket.on('game', (evt: string) => {
-      io.emit('game', evt)
+
+    socket.on('chat message', (msg: string) => {
+      const message = { login, msg, id: `${id++}` }
+      io.emit('chat message', message)
+      messages = [...messages.slice(-999), message]
+    })
+
+    socket.on('del message', (id: string) => {
+      io.emit('del message', id)
     })
   }
 

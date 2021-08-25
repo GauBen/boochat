@@ -5,7 +5,7 @@
   import { writable } from 'svelte/store'
   import Admin from '../components/Admin.svelte'
   import GameController from '../components/GameController.svelte'
-  import Messenger from '../components/Messenger.svelte'
+  import Messenger from '../messenger/Messenger.svelte'
 
   let socket: Socket | undefined
 

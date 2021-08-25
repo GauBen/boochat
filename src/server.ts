@@ -1,13 +1,15 @@
 import { statSync } from 'fs'
 import { createServer } from 'http'
 import cors from 'cors'
-import express from 'express'
+import express, { json } from 'express'
 import hat from 'hat'
 import sirv from 'sirv'
 import { Server } from 'socket.io'
+import createQuizz from './games/quizz/index.js'
+import createMessenger from './messenger/index.js'
 import { User } from './user.js'
 
-const { PORT = 3001 } = process.env
+const PORT = 3001
 
 const rack = hat.rack()
 const tokens = new Map<string, User>()
@@ -15,23 +17,14 @@ const tokens = new Map<string, User>()
 const app = express()
 const server = createServer(app)
 
-let id = 1
-let messages: Array<{ id: string; login: User; msg: string }> = []
-
-try {
-  if (statSync('build').isDirectory()) {
-    app.use(sirv('build'))
-    console.log('Starting in production mode')
-  }
-} catch {
-  console.log('Starting in development mode')
-}
+const io = new Server(server, { cors: { origin: '*' } })
+const messenger = createMessenger(io)
+const quizz = createQuizz(io)
 
 const api = express()
-const io = new Server(server, { cors: { origin: '*' } })
-
-// eslint-disable-next-line import/no-named-as-default-member
-api.use(express.json(), cors())
+api.use(json(), cors())
+api.use(messenger.app)
+api.use(quizz.app)
 api.post('/login', (req, res) => {
   if (!req.body || typeof req.body !== 'object' || !('login' in req.body)) {
     res.writeHead(400, { 'Content-Type': 'application/json' })
@@ -54,42 +47,25 @@ api.post('/is-logged-in', (req, res) => {
   res.json(tokens.has(token))
 })
 
-api.get('/messages', (_req, res) => {
-  res.json(messages)
-})
-
-let gameSettings: { value: string; n: number } = { value: 'Ca va ?', n: 4 }
-api.get('/game-settings', (_req, res) => {
-  res.json(gameSettings)
-})
-api.post('/setup-game', (req, res) => {
-  gameSettings = req.body as typeof gameSettings
-  io.emit('game-settings', gameSettings)
-  res.end()
-})
-
 io.on('connection', (socket) => {
   const { token } = socket.handshake.auth
   const login = tokens.get(token)
 
-  if (login) {
-    socket.on('chat message', (msg: string) => {
-      const message = { login, msg, id: `${id++}` }
-      io.emit('chat message', message)
-      messages = [...messages.slice(-999), message]
-    })
-
-    socket.on('del message', (id: string) => {
-      io.emit('del message', id)
-    })
-
-    socket.on('game', (evt: string) => {
-      io.emit('game', evt)
-    })
-  }
+  messenger.listen(socket, { login })
+  quizz.listen(socket, { login })
 })
 
 app.use('/api', api)
+
+try {
+  if (statSync('build').isDirectory()) {
+    app.use(sirv('build'))
+    console.log('Starting in production mode')
+  }
+} catch {
+  console.log('Starting in development mode')
+}
+
 server.listen(PORT, () => {
   console.log(`> Running on localhost:${PORT}`)
 })
