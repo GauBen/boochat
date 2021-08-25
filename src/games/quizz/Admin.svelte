@@ -1,8 +1,22 @@
 <script lang="ts">
+  import { onMount } from 'svelte'
+
   let value = ''
   let n = 4
 
   let request: Promise<unknown> | undefined
+
+  onMount(() => {
+    fetch('//localhost:3001/api/game-settings')
+      .then(async (r) => r.json())
+      .then((x) => {
+        value = x.value
+        n = x.n
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  })
 
   const send = () => {
     request = fetch('//localhost:3001/api/setup-game', {
