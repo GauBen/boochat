@@ -32,6 +32,15 @@
         })
     }
 
+    fetch('//localhost:3001/api/messages')
+      .then(async (r) => r.json())
+      .then((m) => {
+        messages = m
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+
     socket = io(':3001', {
       auth: { token },
     })

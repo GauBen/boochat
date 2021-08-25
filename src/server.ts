@@ -15,6 +15,9 @@ const tokens = new Map<string, User>()
 const app = express()
 const server = createServer(app)
 
+let id = 1
+let messages: Array<{ id: string; login: User; msg: string }> = []
+
 try {
   if (statSync('build').isDirectory()) {
     app.use(sirv('build'))
@@ -49,11 +52,13 @@ api.post('/is-logged-in', (req, res) => {
   res.json(tokens.has(token))
 })
 
+api.get('/messages', (req, res) => {
+  res.json(messages)
+})
+
 app.use('/api', api)
 
 const io = new Server(server, { cors: { origin: '*' } })
-
-let id = 1
 
 io.on('connection', (socket) => {
   const { token } = socket.handshake.auth
@@ -61,7 +66,9 @@ io.on('connection', (socket) => {
 
   if (login) {
     socket.on('chat message', (msg: string) => {
-      io.emit('chat message', { login, msg, id: `${id++}` })
+      const message = { login, msg, id: `${id++}` }
+      io.emit('chat message', message)
+      messages = [...messages.slice(-999), message]
     })
 
     socket.on('del message', (id: string) => {
