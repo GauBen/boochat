@@ -1,14 +1,55 @@
 <script lang="ts">
+  import type { Socket } from 'socket.io-client'
   import type { User } from 'src/user'
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher, onMount } from 'svelte'
   import Messages from './Messages.svelte'
 
   export let loggedIn: boolean | undefined = undefined
   export let mod = false
-  export let messages: Array<{ id: string; login: User; msg: string }> = []
+  export let socket: Socket | undefined
+
+  let messages: Array<{ id: string; login: User; msg: string }> = []
   let value = ''
 
   const dispatch = createEventDispatcher<{ logout: void; send: string }>()
+
+  onMount(() => {
+    fetch('//localhost:3001/api/messages')
+      .then(async (r) => r.json())
+      .then((m) => {
+        messages = m
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  })
+
+  const listen = (socket: Socket | undefined) => {
+    if (!socket) return
+    socket.on(
+      'chat message',
+      async (msg: { id: string; login: User; msg: string }) => {
+        messages = [...messages.slice(-999), msg]
+      }
+    )
+
+    socket.on('del message', async (id: string) => {
+      messages = messages.filter((msg) => msg.id !== id)
+    })
+  }
+
+  $: listen(socket)
+
+  const send = () => {
+    if (!socket) return
+    socket.emit('chat message', value)
+    value = ''
+  }
+
+  const del = ({ detail: id }: { detail: string }) => {
+    if (!socket) return
+    socket.emit('del message', id)
+  }
 </script>
 
 <div class="messenger">
@@ -26,17 +67,12 @@
     </p>
   {/if}
 
-  <Messages {messages} on:delete {mod} />
+  <Messages {messages} on:delete={del} {mod} />
 
   {#if loggedIn === undefined}
     <p class="center">Chargement...</p>
   {:else if loggedIn === true}
-    <form
-      on:submit|preventDefault={() => {
-        dispatch('send', value)
-        value = ''
-      }}
-    >
+    <form on:submit|preventDefault={send}>
       <input type="text" bind:value />
       <button>Envoyer</button>
     </form>

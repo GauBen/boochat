@@ -1,13 +1,11 @@
 <script lang="ts">
-  import type { User } from '../user'
   import type { Socket } from 'socket.io-client'
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
   import { writable } from 'svelte/store'
   import Admin from '../components/Admin.svelte'
+  import Game from '../components/Game.svelte'
   import Messenger from '../components/Messenger.svelte'
-
-  let messages: Array<{ login: User; msg: string; id: string }> = []
 
   let socket: Socket | undefined
 
@@ -32,37 +30,10 @@
         })
     }
 
-    fetch('//localhost:3001/api/messages')
-      .then(async (r) => r.json())
-      .then((m) => {
-        messages = m
-      })
-      .catch((error) => {
-        console.error(error)
-      })
-
     socket = io(':3001', {
       auth: { token },
     })
-
-    socket.on('chat message', async (msg) => {
-      messages = [...messages.slice(-999), msg]
-    })
-
-    socket.on('del message', async (id: string) => {
-      messages = messages.filter((msg) => msg.id !== id)
-    })
   })
-
-  const send = ({ detail: value }: { detail: string }) => {
-    if (!socket) return
-    socket.emit('chat message', value)
-  }
-
-  const del = ({ detail: id }: { detail: string }) => {
-    if (!socket) return
-    socket.emit('del message', id)
-  }
 
   const logout = () => {
     sessionStorage.removeItem('token')
@@ -92,18 +63,17 @@
   <nav>
     <input type="radio" bind:group={$nav} value="0" id="chat" />
     <label for="chat">Chat</label>
-    <input type="radio" bind:group={$nav} value="1" id="admin" />
+    <input type="radio" bind:group={$nav} value="1" id="game" />
+    <label for="game">Jeu</label>
+    <input type="radio" bind:group={$nav} value="2" id="admin" />
     <label for="admin">Admin</label>
   </nav>
   <div bind:this={app} class="app">
     <section>
-      <Messenger
-        {messages}
-        {loggedIn}
-        on:logout={logout}
-        on:send={send}
-        on:delete={del}
-      />
+      <Messenger {socket} {loggedIn} on:logout={logout} />
+    </section>
+    <section>
+      <Game />
     </section>
     <section>
       <Admin />
