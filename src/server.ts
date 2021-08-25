@@ -54,12 +54,12 @@ api.post('/is-logged-in', (req, res) => {
   res.json(tokens.has(token))
 })
 
-api.get('/messages', (req, res) => {
+api.get('/messages', (_req, res) => {
   res.json(messages)
 })
 
 let gameSettings: { value: string; n: number } = { value: 'Ca va ?', n: 4 }
-api.get('/game-settings', (req, res) => {
+api.get('/game-settings', (_req, res) => {
   res.json(gameSettings)
 })
 api.post('/setup-game', (req, res) => {
