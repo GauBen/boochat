@@ -16,7 +16,7 @@
 </script>
 
 <p>
-  <strong style="color:{login.color}">{login.name}:</strong>
+  <strong style="color:{login.team.color}">{login.name}:</strong>
   <span use:emoji>{msg}</span>
   {#if mod}
     <button

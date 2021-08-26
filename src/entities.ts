@@ -1,16 +1,31 @@
-import hat from 'hat'
-
-export interface User {
+export interface Team {
+  id: string
   name: string
   color: string
 }
 
-export class UserEntity implements User {
+export class TeamEntity {
+  id: string
   name: string
   color: string
-  constructor({ name, color }: { name: string; color?: string }) {
+  constructor({ id, name, color }: Team) {
+    this.id = id
     this.name = name
-    this.color = color ?? '#' + hat(24)
+    this.color = color
+  }
+}
+
+export interface User {
+  name: string
+  team: Team
+}
+
+export class UserEntity implements User {
+  name: string
+  team: Team
+  constructor({ name, team }: User) {
+    this.name = name
+    this.team = team
   }
 }
 
