@@ -14,7 +14,6 @@
       .then((x) => {
         ready = true
         question = x.value
-        n = x.n
       })
       .catch((error) => {
         console.error(error)
@@ -35,14 +34,12 @@
 <div>
   {#if ready}
     <h1>{question}</h1>
-    {#each [...Array.from({ length: n }).keys()] as i}
-      <button
-        on:click={() => {
-          socket?.emit('game', i)
-        }}
-      >
-        {i}
-      </button>
-    {/each}
+    <button
+      on:click={() => {
+        socket?.emit('game', 'yo')
+      }}
+    >
+      CLICK
+    </button>
   {/if}
 </div>

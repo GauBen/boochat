@@ -21,19 +21,18 @@ const io = new Server(server, {
   cors: { origin: '*' },
   serveClient: false,
 })
-const messenger = createMessenger(io)
-const quizz = createQuizz(io)
-
-const api = express()
-api.use(json(), cors())
-api.use(messenger.app)
-api.use(quizz.app)
-
 const teams = [
   new TeamEntity({ id: '1', name: 'SN', color: '#ff0000' }),
   new TeamEntity({ id: '2', name: 'EEEA', color: '#ffff00' }),
   new TeamEntity({ id: '3', name: 'Hydro', color: '#8080ff' }),
 ]
+const messenger = createMessenger(io)
+const quizz = createQuizz(io, teams)
+
+const api = express()
+api.use(json(), cors())
+api.use(messenger.app)
+api.use(quizz.app)
 api.get('/teams', (_req, res) => {
   res.json(teams)
 })
