@@ -11,6 +11,19 @@
   let messages: Message[] = []
   let value = ''
 
+  const users = new Map<string, User>()
+  $: for (const message of messages) {
+    const { login } = message
+    if (!users.has(login.id)) users.set(login.id, login)
+
+    const l = users.get(login.id)
+    if (l) {
+      message.login = l
+      l.name = login.name
+      l.team = login.team
+    }
+  }
+
   const dispatch = createEventDispatcher<{ logout: void; send: string }>()
 
   onMount(() => {
@@ -26,6 +39,7 @@
 
   const listen = (socket: Socket | undefined) => {
     if (!socket) return
+
     socket.on(
       'chat message',
       async (msg: { id: string; login: User; msg: string }) => {
@@ -67,7 +81,7 @@
     </p>
   {/if}
 
-  <Messages {messages} on:delete={del} {mod} />
+  <Messages {messages} {mod} on:delete={del} />
 
   {#if loggedIn === undefined}
     <p class="center">Chargement...</p>

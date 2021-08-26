@@ -16,16 +16,19 @@ export class TeamEntity {
 }
 
 export interface User {
+  id: string
   name: string
   team: Team
 }
 
 export class UserEntity implements User {
+  id: string
   name: string
   team: Team
-  constructor({ name, team }: User) {
+  constructor({ id, name, team }: User) {
+    this.id = id
     this.name = name
-    this.team = team
+    this.team = new TeamEntity(team)
   }
 }
 

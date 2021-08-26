@@ -37,6 +37,8 @@ const teams = [
 api.get('/teams', (_req, res) => {
   res.json(teams)
 })
+
+let userId = 1
 api.post('/login', (req, res) => {
   if (!req.body || typeof req.body !== 'object' || !('login' in req.body)) {
     res.writeHead(400, { 'Content-Type': 'application/json' })
@@ -54,7 +56,7 @@ api.post('/login', (req, res) => {
   }
 
   const token = rack()
-  tokens.set(token, new UserEntity({ name: login, team }))
+  tokens.set(token, new UserEntity({ id: `${userId++}`, name: login, team }))
   res.json({ token })
 })
 

@@ -24,7 +24,11 @@ export default (
     if (!login) return
 
     socket.on('chat message', (msg: string) => {
-      const message = { login, msg, id: `${id++}` }
+      const message = {
+        login,
+        msg,
+        id: `${id++}`,
+      }
       io.emit('chat message', message)
       messages = [...messages.slice(-999), message]
     })
