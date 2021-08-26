@@ -33,6 +33,10 @@
     socket = io(':3001', {
       auth: { token },
     })
+
+    socket.on('logged out', () => {
+      loggedIn = false
+    })
   })
 
   const logout = () => {

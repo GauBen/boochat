@@ -69,6 +69,8 @@ io.on('connection', (socket) => {
   const { token } = socket.handshake.auth
   const login = tokens.get(token)
 
+  if (token && !login) socket.emit('logged out')
+
   messenger.listen(socket, { login })
   quizz.listen(socket, { login })
 })
