@@ -561,10 +561,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polka/url@npm:^1.0.0-next.17":
-  version: 1.0.0-next.17
-  resolution: "@polka/url@npm:1.0.0-next.17"
-  checksum: 6a24aa7a04b3b50fa42e9c7c2f3ca46a762773850b663c4e5ed67939ff94c66d5361d1a1866cc82a0c171c3dd043b62b30881a04f51fc77dc9efc3716b77d563
+"@polka/url@npm:^1.0.0-next.19":
+  version: 1.0.0-next.19
+  resolution: "@polka/url@npm:1.0.0-next.19"
+  checksum: cef724f1ce403e3009729e0d2f3441a90f0ba6373ad9a2e67a6818278535a70587c1a0c24fb3fcc9ba7d55b72ed4cc3ef94f106e9ad345149158b1a9c11f4c32
   languageName: node
   linkType: hard
 
@@ -808,6 +808,13 @@ __metadata:
   version: 7.0.9
   resolution: "@types/json-schema@npm:7.0.9"
   checksum: 259d0e25f11a21ba5c708f7ea47196bd396e379fddb79c76f9f4f62c945879dc21657904914313ec2754e443c5018ea8372362f323f30e0792897fdb2098a705
+  languageName: node
+  linkType: hard
+
+"@types/json5@npm:^0.0.29":
+  version: 0.0.29
+  resolution: "@types/json5@npm:0.0.29"
+  checksum: e60b153664572116dfea673c5bda7778dbff150498f44f998e34b5886d8afc47f16799280e4b6e241c0472aef1bc36add771c569c68fc5125fc2ae519a3eb9ac
   languageName: node
   linkType: hard
 
@@ -1555,7 +1562,7 @@ __metadata:
     eslint-config-xo-typescript: ^0.44.0
     eslint-import-resolver-typescript: ^2.4.0
     eslint-plugin-html: ^6.1.2
-    eslint-plugin-import: ^2.24.1
+    eslint-plugin-import: ^2.24.2
     eslint-plugin-no-unsanitized: ^3.1.5
     eslint-plugin-prettier: ^3.4.1
     eslint-plugin-sonarjs: ^0.10.0
@@ -1563,24 +1570,24 @@ __metadata:
     eslint-plugin-unicorn: ^35.0.0
     express: ^4.17.1
     hat: ^0.0.3
-    husky: ^7.0.1
+    husky: ^7.0.2
     lint-staged: ^11.1.2
     nodemon: ^2.0.12
     prettier: ^2.3.2
     prettier-plugin-jsdoc: ^0.3.23
     prettier-plugin-svelte: ^2.3.1
     sanitize.css: ^12.0.1
-    sass: ^1.38.0
-    sirv: ^1.0.14
+    sass: ^1.38.1
+    sirv: ^1.0.16
     socket.io: ^4.1.3
     socket.io-client: ^4.1.3
     standard-version: ^9.3.1
     stylelint: ^13.13.1
     stylelint-config-rational-order: ^0.1.2
     stylelint-config-standard: ^22.0.0
-    svelte: ^3.42.2
-    svelte-check: ^2.2.4
-    svelte-preprocess: ^4.7.4
+    svelte: ^3.42.3
+    svelte-check: ^2.2.5
+    svelte-preprocess: ^4.8.0
     ts-node: ^10.2.1
     tslib: ^2.3.1
     twemoji: ^13.1.0
@@ -1820,9 +1827,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.30001109, caniuse-lite@npm:^1.0.30001251":
-  version: 1.0.30001251
-  resolution: "caniuse-lite@npm:1.0.30001251"
-  checksum: 918e1b1662c26c11291206146bc305d7fd1ca351aa9231c2e21cb1526d87b444830e2d8dc54416ebb8ecf7e0addea12d66a1c41493476229987e5e6922f0c14b
+  version: 1.0.30001252
+  resolution: "caniuse-lite@npm:1.0.30001252"
+  checksum: 0d25a2795ca224c1a689b08fe37a5dc6c4c79d80720f927bf7df70ed30c1b1b62c3cc51429eac01902d3fc298d9531b85efec331c2a051e42615c76fa348f118
   languageName: node
   linkType: hard
 
@@ -2103,9 +2110,9 @@ __metadata:
   linkType: hard
 
 "comment-parser@npm:^1.1.4":
-  version: 1.2.3
-  resolution: "comment-parser@npm:1.2.3"
-  checksum: a9f25823ef2c1e9494bcb881d8650046490e92d4fe96db8ff1da60a7684e8737783675b78c723b7c99368ab0cc1e9df5f70ab830124fcf37632b1fa12f4ed575
+  version: 1.2.4
+  resolution: "comment-parser@npm:1.2.4"
+  checksum: 36ac280bce4c472fac22b3ec4d8aebb4d3d7c22c6808c70174f4deabee3b82144db66f8bd61eca9c514a6d0f12f6087ddab99e7d531e660d0da793b4730fd445
   languageName: node
   linkType: hard
 
@@ -2847,9 +2854,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.3.811":
-  version: 1.3.814
-  resolution: "electron-to-chromium@npm:1.3.814"
-  checksum: 5d74e2fdb46a2edff9d3940a7419aaa950ec07ef0bb89e843a4320222fe14b811b34079ffeac2f04cd21c468c71c10f6921b7e13648b6309f98f5cd42030726d
+  version: 1.3.818
+  resolution: "electron-to-chromium@npm:1.3.818"
+  checksum: 772ef834d4cb3f2ce802bec9feb36b5816e3a7801d86223c48303b57fe281b4aa599e5d7e17c79d6f758935870038c62708bab11ad7f3958613b8589310687b6
   languageName: node
   linkType: hard
 
@@ -3016,11 +3023,11 @@ __metadata:
   linkType: hard
 
 "esbuild@npm:^0.12.17":
-  version: 0.12.22
-  resolution: "esbuild@npm:0.12.22"
+  version: 0.12.23
+  resolution: "esbuild@npm:0.12.23"
   bin:
     esbuild: bin/esbuild
-  checksum: db14cc10914d40a875da1b102cee7479ebe1b085cdc2deaa8e275468ada9bf3c6b793bd6004a031a9f2e34865fe629dc59030c5fe4820978f1cf071966aa2c5d
+  checksum: 9ae58a151d62888d9ded07bda113a7e343331aaf0ba651827883d0f270e94846cac3ac8cb28c055dfceb6c45fb648a20db70e65aa8afb03b8b87fb08fdfb4f90
   languageName: node
   linkType: hard
 
@@ -3139,9 +3146,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-import@npm:^2.24.1":
-  version: 2.24.1
-  resolution: "eslint-plugin-import@npm:2.24.1"
+"eslint-plugin-import@npm:^2.24.2":
+  version: 2.24.2
+  resolution: "eslint-plugin-import@npm:2.24.2"
   dependencies:
     array-includes: ^3.1.3
     array.prototype.flat: ^1.2.4
@@ -3157,10 +3164,10 @@ __metadata:
     pkg-up: ^2.0.0
     read-pkg-up: ^3.0.0
     resolve: ^1.20.0
-    tsconfig-paths: ^3.10.1
+    tsconfig-paths: ^3.11.0
   peerDependencies:
     eslint: ^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0
-  checksum: 6a43dc2c045d8f70a370fead2ed342a4b009685bb75818c0e4dab8bb118b853a77d532c63684f5c0b808239809a5a7289c968e45b5cc56960963be5b8cf1ee54
+  checksum: df570aec83ffa126fd80596d9fb1b6799d3cde025ceeb159eb28383541ebbb855468c9a2dbc670ab9e91dd0a8f8a82e52fd909a7c61e9ffa585bcce84ae1aec4
   languageName: node
   linkType: hard
 
@@ -4444,12 +4451,12 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"husky@npm:^7.0.1":
-  version: 7.0.1
-  resolution: "husky@npm:7.0.1"
+"husky@npm:^7.0.2":
+  version: 7.0.2
+  resolution: "husky@npm:7.0.2"
   bin:
     husky: lib/bin.js
-  checksum: b2ea1460f1126ed7161779b1b89f7ec8ae66fb6723e0e9fd47c522f454f4a2ea7e31a21d6ce2eb5d32e9837d232fb0245783425c109df0adab53668f8c8d8fc8
+  checksum: 2ccfe6ddc51dc05ae8ea1e2fbb893344e93a813e00c595d6b5f5e704b7b998d6b0e2adda7c57f99b5e46a60dc07c7d860269a2ea91661c6bacef0eca8e0b8e96
   languageName: node
   linkType: hard
 
@@ -5206,7 +5213,18 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"json5@npm:^2.1.2, json5@npm:^2.2.0":
+"json5@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "json5@npm:1.0.1"
+  dependencies:
+    minimist: ^1.2.0
+  bin:
+    json5: lib/cli.js
+  checksum: e76ea23dbb8fc1348c143da628134a98adf4c5a4e8ea2adaa74a80c455fc2cdf0e2e13e6398ef819bfe92306b610ebb2002668ed9fc1af386d593691ef346fc3
+  languageName: node
+  linkType: hard
+
+"json5@npm:^2.1.2":
   version: 2.2.0
   resolution: "json5@npm:2.2.0"
   dependencies:
@@ -6152,8 +6170,8 @@ fsevents@~2.3.2:
   linkType: hard
 
 "node-gyp@npm:latest":
-  version: 8.1.0
-  resolution: "node-gyp@npm:8.1.0"
+  version: 8.2.0
+  resolution: "node-gyp@npm:8.2.0"
   dependencies:
     env-paths: ^2.2.0
     glob: ^7.1.4
@@ -6163,11 +6181,11 @@ fsevents@~2.3.2:
     npmlog: ^4.1.2
     rimraf: ^3.0.2
     semver: ^7.3.5
-    tar: ^6.1.0
+    tar: ^6.1.2
     which: ^2.0.2
   bin:
     node-gyp: bin/node-gyp.js
-  checksum: d9f11a9ab20d2ec900cd910ecd77bc3909d4b5cd9eaf9854b00be4ba930227c5ce2ee0681216c326739dd445b1787aa933ac8d6a16ce222455d85092bb047901
+  checksum: 5e0e755eab8ca88647d20fc8aba4095560c3dd549686e86761b57b8489d93a1af68b0dccf881e5314bfce4d7ca290f8248e192915ccd3e18bf46571d72da6a9d
   languageName: node
   linkType: hard
 
@@ -7528,8 +7546,8 @@ fsevents@~2.3.2:
   linkType: hard
 
 "rollup@npm:^2.38.5":
-  version: 2.56.2
-  resolution: "rollup@npm:2.56.2"
+  version: 2.56.3
+  resolution: "rollup@npm:2.56.3"
   dependencies:
     fsevents: ~2.3.2
   dependenciesMeta:
@@ -7537,7 +7555,7 @@ fsevents@~2.3.2:
       optional: true
   bin:
     rollup: dist/bin/rollup
-  checksum: 4e8e13c5c43147de142ae2f294f775b1cc567d2f5c196b28a37482d886fb0cabef769c18e427ab0180f5929b8422b27a7664a5e4586be38651871c62e333b8ee
+  checksum: e4c5a6e871f0340f18fc795cbb6b76bfbc5827580c443a7c4f5d9f9b1fec8c3d1553dae5e45bd7fc9dea4de56e01c244b1583f8f08f401d2ba81f5eb3ff83101
   languageName: node
   linkType: hard
 
@@ -7614,14 +7632,14 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.38.0":
-  version: 1.38.0
-  resolution: "sass@npm:1.38.0"
+"sass@npm:^1.38.1":
+  version: 1.38.1
+  resolution: "sass@npm:1.38.1"
   dependencies:
     chokidar: ">=3.0.0 <4.0.0"
   bin:
     sass: sass.js
-  checksum: 2a7140084785ab86a7577b8b1568a2fe9091716e02eacb071e37b32d3b5947d4b433ffc0361494ddeefcd0d8b2d44a87ee43b23630995250a7160261b1307e43
+  checksum: e260889fd9163f68b3916fa69f2b7c99d2980e54e8938ac3a74f6d5a4fe4d0c15450871273286f5abdaecd6e218ff70b70e8f32188203ac6a9f08582fd721b3a
   languageName: node
   linkType: hard
 
@@ -7763,14 +7781,14 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"sirv@npm:^1.0.14":
-  version: 1.0.14
-  resolution: "sirv@npm:1.0.14"
+"sirv@npm:^1.0.16":
+  version: 1.0.16
+  resolution: "sirv@npm:1.0.16"
   dependencies:
-    "@polka/url": ^1.0.0-next.17
+    "@polka/url": ^1.0.0-next.19
     mime: ^2.3.1
     totalist: ^1.0.0
-  checksum: 3d6fbc8d3ca93050abcbaa58c32dd91dc704a0215a7504eecd5fe33c1a158c20b6137d7b5390634e246899546f490a7ca0ac3fb5a9046cff1780b732d1fd2c00
+  checksum: f96cbc04ba09f8634699d2b491ab2765776d4e87e840090549a1be2d66597396782b6416d3bc42e1e8fb966cbddd9d0610977a22ba7e1f83aceeeebd95eb952c
   languageName: node
   linkType: hard
 
@@ -8524,9 +8542,9 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"svelte-check@npm:^2.2.4":
-  version: 2.2.4
-  resolution: "svelte-check@npm:2.2.4"
+"svelte-check@npm:^2.2.5":
+  version: 2.2.5
+  resolution: "svelte-check@npm:2.2.5"
   dependencies:
     chalk: ^4.0.0
     chokidar: ^3.4.1
@@ -8541,7 +8559,7 @@ fsevents@~2.3.2:
     svelte: ^3.24.0
   bin:
     svelte-check: bin/svelte-check
-  checksum: 1ccb71023eb1bd625025191a278243fb29dfdb1fe33387550488c31c642d70de9288075b9632378bc4591016f9ab513252fbdf396c77a6cb78be1aa8e54793eb
+  checksum: 5466f73942fd4049631708f8ca65faa0e49069bfe8a5305862e351e643d2cd0115a344a4eb3717e0212592103faf3c5ce83834da87ff148b81c9295f18f7a453
   languageName: node
   linkType: hard
 
@@ -8554,9 +8572,9 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"svelte-preprocess@npm:^4.0.0, svelte-preprocess@npm:^4.7.4":
-  version: 4.7.4
-  resolution: "svelte-preprocess@npm:4.7.4"
+"svelte-preprocess@npm:^4.0.0, svelte-preprocess@npm:^4.8.0":
+  version: 4.8.0
+  resolution: "svelte-preprocess@npm:4.8.0"
   dependencies:
     "@types/pug": ^2.0.4
     "@types/sass": ^1.16.0
@@ -8597,14 +8615,14 @@ fsevents@~2.3.2:
       optional: true
     typescript:
       optional: true
-  checksum: 566fd75e501673a956ddcd26347fbb8ede032b90c124d73b51be5bebeb056239788fceece70ed0a32e400a474e4498f0529844ea0e3ed0dab16831b0b719f258
+  checksum: 9b16eb67ae47f9316a6f9192842260e2ef1cdd7805eed2371f23eece41e84f1215d586a19be085b7124f02805dc07915169a378d21c745651476d8dc3712d54e
   languageName: node
   linkType: hard
 
-"svelte@npm:^3.42.2":
-  version: 3.42.2
-  resolution: "svelte@npm:3.42.2"
-  checksum: c4f362509581c80723931758df9d4574deb6f5e0eb49e4d65b68a95172c34cb75b33d22e6f763f577bce96a48ac857ea2b62775c803d4ded9972fec3575bb70e
+"svelte@npm:^3.42.3":
+  version: 3.42.3
+  resolution: "svelte@npm:3.42.3"
+  checksum: eef4e500710e125caa3c11e464a3d00740a79e2abfc4f8085d22279b58675566177645932873c277534da47230ef5e715db0b16b486dfebd269f34c2accd3606
   languageName: node
   linkType: hard
 
@@ -8641,9 +8659,9 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"tar@npm:^6.0.2, tar@npm:^6.1.0":
-  version: 6.1.10
-  resolution: "tar@npm:6.1.10"
+"tar@npm:^6.0.2, tar@npm:^6.1.2":
+  version: 6.1.11
+  resolution: "tar@npm:6.1.11"
   dependencies:
     chownr: ^2.0.0
     fs-minipass: ^2.0.0
@@ -8651,7 +8669,7 @@ fsevents@~2.3.2:
     minizlib: ^2.1.1
     mkdirp: ^1.0.3
     yallist: ^4.0.0
-  checksum: 9e7ba4abc81a3095a5fc7a3e97a9f753103f5ce884c52431613f281954ec83d690e58f1ccad3cdd9eacdea901431f96f5f879dddc421f6b231994f6e7de07e1f
+  checksum: a04c07bb9e2d8f46776517d4618f2406fb977a74d914ad98b264fc3db0fe8224da5bec11e5f8902c5b9bcb8ace22d95fbe3c7b36b8593b7dfc8391a25898f32f
   languageName: node
   linkType: hard
 
@@ -8859,14 +8877,15 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"tsconfig-paths@npm:^3.10.1, tsconfig-paths@npm:^3.9.0":
-  version: 3.10.1
-  resolution: "tsconfig-paths@npm:3.10.1"
+"tsconfig-paths@npm:^3.11.0, tsconfig-paths@npm:^3.9.0":
+  version: 3.11.0
+  resolution: "tsconfig-paths@npm:3.11.0"
   dependencies:
-    json5: ^2.2.0
+    "@types/json5": ^0.0.29
+    json5: ^1.0.1
     minimist: ^1.2.0
     strip-bom: ^3.0.0
-  checksum: 014ec869276114031d3bd6d2d9ce07c32c96ca6912f32285f46eeb4ca5270bd4c5e4de1353b838c66282157f089dedc8c3377c4e72e2f3d910e706c7b9ac5e6d
+  checksum: e14aaa6883f316d611db41cbb0fc8779b59c66b31d1e045565ad4540c77ccd3d2bb66f7c261b74ff535d3cc6b4a1ce21dc84774bf2a2a603ed6b0fb96f7e0cc7
   languageName: node
   linkType: hard
 
@@ -9375,8 +9394,8 @@ fsevents@~2.3.2:
   linkType: hard
 
 "vite@npm:^2.5.0":
-  version: 2.5.0
-  resolution: "vite@npm:2.5.0"
+  version: 2.5.1
+  resolution: "vite@npm:2.5.1"
   dependencies:
     esbuild: ^0.12.17
     fsevents: ~2.3.2
@@ -9388,7 +9407,7 @@ fsevents@~2.3.2:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 9465f56c7b3bf9014cb028fbf533590c9f150bd5d37eac81e1f3abb3a05a8a20ad431204b622a7d39d18fd245b175dbf00b5b800138544371d436c214cfbb09f
+  checksum: 31dfd00615143f79b30a95bd709951646448ddc552a1de3da0c3151f93e1de5ded9ddc97704d75518bf06f111e51cb37c547c4c84b598be45bc566d1e41cb599
   languageName: node
   linkType: hard
 

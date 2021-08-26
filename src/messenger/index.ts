@@ -31,6 +31,7 @@ export default (
 
     socket.on('del message', (id: string) => {
       io.emit('del message', id)
+      messages = messages.filter((msg) => msg.id !== id)
     })
   }
 
