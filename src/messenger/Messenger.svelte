@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Socket } from 'socket.io-client'
-  import type { User } from 'src/user'
+  import type { Message, User } from 'src/entities'
   import { createEventDispatcher, onMount } from 'svelte'
   import Messages from './Messages.svelte'
 
@@ -8,7 +8,7 @@
   export let mod = false
   export let socket: Socket | undefined = undefined
 
-  let messages: Array<{ id: string; login: User; msg: string }> = []
+  let messages: Message[] = []
   let value = ''
 
   const dispatch = createEventDispatcher<{ logout: void; send: string }>()

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { User } from 'src/user'
+  import type { User } from 'src/entities'
   import { io, Socket } from 'socket.io-client'
   import { onMount } from 'svelte'
   import GameScreen from '../components/GameScreen.svelte'

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { User } from '../user'
+  import type { User } from '../entities'
   import { createEventDispatcher } from 'svelte'
   import twemoji from 'twemoji'
 

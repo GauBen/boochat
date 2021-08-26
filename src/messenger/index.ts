@@ -1,17 +1,17 @@
 import type { Server, Socket } from 'socket.io'
-import type { User } from 'src/user'
+import type { Message, UserEntity } from 'src/entities'
 import express, { Express } from 'express'
 
 export default (
   io: Server
 ): {
   app: Express
-  listen: (socket: Socket, { login }: { login: User | undefined }) => void
+  listen: (socket: Socket, { login }: { login: UserEntity | undefined }) => void
 } => {
   const app = express()
 
   let id = 1
-  let messages: Array<{ id: string; login: User; msg: string }> = []
+  let messages: Message[] = []
 
   app.get('/messages', (_req, res) => {
     res.json(messages)
@@ -19,7 +19,7 @@ export default (
 
   const listen = (
     socket: Socket,
-    { login }: { login: User | undefined }
+    { login }: { login: UserEntity | undefined }
   ): void => {
     if (!login) return
 

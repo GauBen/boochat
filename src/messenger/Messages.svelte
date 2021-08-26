@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { User } from 'src/user'
+  import type { Message } from 'src/entities'
   import { afterUpdate, beforeUpdate, createEventDispatcher } from 'svelte'
-  import Message from './Message.svelte'
+  import MessageComponent from './Message.svelte'
 
-  export let messages: Array<{ id: string; login: User; msg: string }> = []
+  export let messages: Message[] = []
 
   export let mod = false
 
@@ -26,7 +26,7 @@
 
 <div class="messages" bind:this={div}>
   {#each messages as { id, login, msg } (id)}
-    <Message
+    <MessageComponent
       {login}
       {msg}
       {mod}

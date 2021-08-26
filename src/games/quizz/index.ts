@@ -1,12 +1,12 @@
 import type { Server, Socket } from 'socket.io'
-import type { User } from 'src/user'
+import type { UserEntity } from 'src/entities'
 import express, { Express } from 'express'
 
 export default (
   io: Server
 ): {
   app: Express
-  listen: (socket: Socket, { login }: { login: User | undefined }) => void
+  listen: (socket: Socket, { login }: { login: UserEntity | undefined }) => void
 } => {
   const app = express()
 
@@ -22,7 +22,7 @@ export default (
 
   const listen = (
     socket: Socket,
-    { login }: { login: User | undefined }
+    { login }: { login: UserEntity | undefined }
   ): void => {
     if (!login) return
     socket.on('game', (evt: string) => {

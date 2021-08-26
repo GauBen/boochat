@@ -5,14 +5,14 @@ import express, { json } from 'express'
 import hat from 'hat'
 import sirv from 'sirv'
 import { Server } from 'socket.io'
+import { UserEntity } from './entities.js'
 import createQuizz from './games/quizz/index.js'
 import createMessenger from './messenger/index.js'
-import { User } from './user.js'
 
 const PORT = 3001
 
 const rack = hat.rack()
-const tokens = new Map<string, User>()
+const tokens = new Map<string, UserEntity>()
 
 const app = express()
 const server = createServer(app)
@@ -41,7 +41,7 @@ api.post('/login', (req, res) => {
   color = color?.match('#[a-fA-F0-9]{6}') ? color : undefined
 
   const token = rack()
-  tokens.set(token, new User({ name: login, color }))
+  tokens.set(token, new UserEntity({ name: login, color }))
   res.json({ token })
 })
 

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "strict": true,
     "target": "ES2015",
-    "module": "ES2015",
+    "module": "ESNext",
     "moduleResolution": "node",
     "importsNotUsedAsValues": "error",
     "isolatedModules": true,
