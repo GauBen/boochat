@@ -6,6 +6,7 @@
   let login = ''
   let team = ''
   let teams: Team[] | undefined
+  let error: string | undefined
 
   const submit = async () => {
     const response = await fetch(`//localhost:3001/api/login`, {
@@ -16,6 +17,8 @@
     if ('token' in response) {
       sessionStorage.setItem('token', response.token)
       await goto('.')
+    } else if ('error' in response) {
+      error = response.error
     }
   }
 
@@ -31,6 +34,7 @@
   <h1>Se connecter</h1>
   <label for="login">Nom d'utilisateur :</label>
   <input type="text" id="login" bind:value={login} />
+  {#if error !== undefined}<p>❌ {error}</p>{/if}
   <h2>Equipe</h2>
   {#if teams}
     {#each teams as { id, name, color } (id)}
