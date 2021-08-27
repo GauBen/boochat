@@ -3,7 +3,7 @@ import { statSync } from 'fs'
 import { createServer } from 'http'
 import cors from 'cors'
 import express, { json } from 'express'
-import hat from 'hat'
+import { nanoid } from 'nanoid'
 import sirv from 'sirv'
 import { Server } from 'socket.io'
 import createQuizz from './games/quizz/index.js'
@@ -15,7 +15,6 @@ const { PrismaClient } = pkg
 
 const PORT = 3001
 
-const rack = hat.rack()
 const tokens = new Map<string, User>()
 
 const app = express()
@@ -57,7 +56,7 @@ api.post('/login', async (req, res) => {
     return
   }
 
-  const token = rack()
+  const token = nanoid()
   try {
     tokens.set(
       token,
