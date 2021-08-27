@@ -11,7 +11,7 @@ export default (
 } => {
   const app = express()
 
-  const results = new Map<string, number>(teams.map(({ id }) => [id, 0]))
+  const results = new Map<number, number>(teams.map(({ id }) => [id, 0]))
   let gameSettings: { value: string } = { value: 'Ca va ?' }
 
   app.get('/game-settings', (_req, res) => {

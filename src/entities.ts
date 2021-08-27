@@ -1,11 +1,11 @@
 export interface Team {
-  id: string
+  id: number
   name: string
   color: string
 }
 
 export class TeamEntity {
-  id: string
+  id: number
   name: string
   color: string
   constructor({ id, name, color }: Team) {
@@ -16,13 +16,13 @@ export class TeamEntity {
 }
 
 export interface User {
-  id: string
+  id: number
   name: string
   team: Team
 }
 
 export class UserEntity implements User {
-  id: string
+  id: number
   name: string
   team: Team
   constructor({ id, name, team }: User) {
@@ -33,18 +33,18 @@ export class UserEntity implements User {
 }
 
 export interface Message {
-  id: string
-  login: User
-  msg: string
+  id: number
+  author: User
+  body: string
 }
 
 export class MessageEntity implements Message {
-  id: string
-  login: UserEntity
-  msg: string
-  constructor({ id, login, msg }: Message) {
+  id: number
+  author: UserEntity
+  body: string
+  constructor({ id, author: login, body: msg }: Message) {
     this.id = id
-    this.login = new UserEntity(login)
-    this.msg = msg
+    this.author = new UserEntity(login)
+    this.body = msg
   }
 }

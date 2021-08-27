@@ -6,7 +6,6 @@
 
   let ready = true
   let question = 'zerteyrtu'
-  let n = 5
 
   onMount(() => {
     fetch('//localhost:3001/api/game-settings')
@@ -24,7 +23,6 @@
     if (!socket) return
     socket.on('game-settings', (x) => {
       question = x.value
-      n = x.n
     })
   }
 

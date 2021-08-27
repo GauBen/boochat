@@ -1,4 +1,3 @@
-.DS_Store
 node_modules
 /build
 /.svelte-kit
@@ -11,3 +10,5 @@ node_modules
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+.env

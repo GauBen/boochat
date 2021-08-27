@@ -1,6 +1,9 @@
 import type { Server, Socket } from 'socket.io'
-import type { Message, UserEntity } from 'src/entities'
+import type { Message, User, UserEntity } from 'src/entities'
 import express, { Express } from 'express'
+// eslint-disable-next-line import/order,import/default
+import pkg from '@prisma/client'
+const { PrismaClient } = pkg
 
 export default (
   io: Server
@@ -10,8 +13,14 @@ export default (
 } => {
   const app = express()
 
-  let id = 1
   let messages: Message[] = []
+
+  const prisma = new PrismaClient()
+  void prisma.message
+    .findMany({ include: { author: { include: { team: true } } } })
+    .then((res) => {
+      messages = res
+    })
 
   app.get('/messages', (_req, res) => {
     res.json(messages)
@@ -19,21 +28,23 @@ export default (
 
   const listen = (
     socket: Socket,
-    { login }: { login: UserEntity | undefined }
+    { login }: { login: User | undefined }
   ): void => {
     if (!login) return
 
-    socket.on('chat message', (msg: string) => {
-      const message = {
-        login,
-        msg,
-        id: `${id++}`,
-      }
+    socket.on('chat message', async (msg: string) => {
+      const message = await prisma.message.create({
+        data: {
+          body: msg,
+          authorId: login.id,
+        },
+        include: { author: { include: { team: true } } },
+      })
       io.emit('chat message', message)
       messages = [...messages.slice(-999), message]
     })
 
-    socket.on('del message', (id: string) => {
+    socket.on('del message', (id: number) => {
       io.emit('del message', id)
       messages = messages.filter((msg) => msg.id !== id)
     })

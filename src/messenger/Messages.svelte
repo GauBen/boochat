@@ -7,7 +7,7 @@
 
   export let mod = false
 
-  const dispatch = createEventDispatcher<{ delete: string }>()
+  const dispatch = createEventDispatcher<{ delete: number }>()
 
   /** Main div. */
   let div: HTMLElement | undefined
@@ -25,10 +25,10 @@
 </script>
 
 <div class="messages" bind:this={div}>
-  {#each messages as { id, login, msg } (id)}
+  {#each messages as { id, author, body } (id)}
     <MessageComponent
-      {login}
-      {msg}
+      {author}
+      {body}
       {mod}
       on:delete={() => {
         dispatch('delete', id)

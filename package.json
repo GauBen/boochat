@@ -2,6 +2,7 @@
   "name": "boochat",
   "version": "0.0.1",
   "dependencies": {
+    "@prisma/client": "2.30.0",
     "ajv": "^8.6.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
@@ -49,6 +50,7 @@
     "prettier": "^2.3.2",
     "prettier-plugin-jsdoc": "^0.3.23",
     "prettier-plugin-svelte": "^2.3.1",
+    "prisma": "2.30.0",
     "standard-version": "^9.3.1",
     "stylelint": "^13.13.1",
     "stylelint-config-rational-order": "^0.1.2",

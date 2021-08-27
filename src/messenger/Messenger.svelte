@@ -11,16 +11,16 @@
   let messages: Message[] = []
   let value = ''
 
-  const users = new Map<string, User>()
+  const users = new Map<number, User>()
   $: for (const message of messages) {
-    const { login } = message
-    if (!users.has(login.id)) users.set(login.id, login)
+    const { author } = message
+    if (!users.has(author.id)) users.set(author.id, author)
 
-    const l = users.get(login.id)
-    if (l) {
-      message.login = l
-      l.name = login.name
-      l.team = login.team
+    const u = users.get(author.id)
+    if (u) {
+      message.author = u
+      u.name = author.name
+      u.team = author.team
     }
   }
 
@@ -40,14 +40,11 @@
   const listen = (socket: Socket | undefined) => {
     if (!socket) return
 
-    socket.on(
-      'chat message',
-      async (msg: { id: string; login: User; msg: string }) => {
-        messages = [...messages.slice(-999), msg]
-      }
-    )
+    socket.on('chat message', async (msg: Message) => {
+      messages = [...messages.slice(-999), msg]
+    })
 
-    socket.on('del message', async (id: string) => {
+    socket.on('del message', async (id: number) => {
       messages = messages.filter((msg) => msg.id !== id)
     })
   }
@@ -60,7 +57,7 @@
     value = ''
   }
 
-  const del = ({ detail: id }: { detail: string }) => {
+  const del = ({ detail: id }: { detail: number }) => {
     if (!socket) return
     socket.emit('del message', id)
   }

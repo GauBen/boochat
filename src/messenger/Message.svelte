@@ -4,8 +4,8 @@
   import twemoji from 'twemoji'
 
   export let mod = false
-  export let login: User
-  export let msg: string
+  export let author: User
+  export let body: string
 
   const dispatch = createEventDispatcher<{ delete: void }>()
 
@@ -16,8 +16,8 @@
 </script>
 
 <p>
-  <strong style="color:{login.team.color}">{login.name}:</strong>
-  <span use:emoji>{msg}</span>
+  <strong style="color:{author.team.color}">{author.name}:</strong>
+  <span use:emoji>{body}</span>
   {#if mod}
     <button
       on:click={() => {
