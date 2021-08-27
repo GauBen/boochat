@@ -1,5 +1,5 @@
 import type { Server, Socket } from 'socket.io'
-import type { Team, UserEntity } from 'src/entities'
+import type { Team, User } from 'src/entities'
 import express, { Express } from 'express'
 
 export default (
@@ -7,7 +7,7 @@ export default (
   teams: Team[]
 ): {
   app: Express
-  listen: (socket: Socket, { login }: { login: UserEntity | undefined }) => void
+  listen: (socket: Socket, { login }: { login: User | undefined }) => void
 } => {
   const app = express()
 
@@ -28,7 +28,7 @@ export default (
 
   const listen = (
     socket: Socket,
-    { login }: { login: UserEntity | undefined }
+    { login }: { login: User | undefined }
   ): void => {
     if (!login) return
     socket.on('game', () => {

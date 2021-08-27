@@ -1,5 +1,5 @@
 import type { Server, Socket } from 'socket.io'
-import type { Message, User, UserEntity } from 'src/entities'
+import type { Message, User } from 'src/entities'
 import express, { Express } from 'express'
 // eslint-disable-next-line import/order,import/default
 import pkg from '@prisma/client'
@@ -9,7 +9,7 @@ export default (
   io: Server
 ): {
   app: Express
-  listen: (socket: Socket, { login }: { login: UserEntity | undefined }) => void
+  listen: (socket: Socket, { login }: { login: User | undefined }) => void
 } => {
   const app = express()
 
