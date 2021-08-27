@@ -1,6 +1,6 @@
 <script lang="ts">
+  import type { Message, User, Team } from '@prisma/client'
   import type { Socket } from 'socket.io-client'
-  import type { Message, User } from 'src/entities'
   import { createEventDispatcher, onMount } from 'svelte'
   import Messages from './Messages.svelte'
 
@@ -8,10 +8,10 @@
   export let mod = false
   export let socket: Socket | undefined = undefined
 
-  let messages: Message[] = []
+  let messages: Array<Message & { author: User & { team: Team } }> = []
   let value = ''
 
-  const users = new Map<number, User>()
+  const users = new Map<number, User & { team: Team }>()
   $: for (const message of messages) {
     const { author } = message
     if (!users.has(author.id)) users.set(author.id, author)
@@ -40,9 +40,12 @@
   const listen = (socket: Socket | undefined) => {
     if (!socket) return
 
-    socket.on('chat message', async (msg: Message) => {
-      messages = [...messages.slice(-999), msg]
-    })
+    socket.on(
+      'chat message',
+      async (msg: Message & { author: User & { team: Team } }) => {
+        messages = [...messages.slice(-999), msg]
+      }
+    )
 
     socket.on('del message', async (id: number) => {
       messages = messages.filter((msg) => msg.id !== id)

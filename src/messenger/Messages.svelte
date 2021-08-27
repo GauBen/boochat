@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { Message } from 'src/entities'
+  import type { Message, Team, User } from '@prisma/client'
   import { afterUpdate, beforeUpdate, createEventDispatcher } from 'svelte'
   import MessageComponent from './Message.svelte'
 
-  export let messages: Message[] = []
+  export let messages: Array<Message & { author: User & { team: Team } }> = []
 
   export let mod = false
 

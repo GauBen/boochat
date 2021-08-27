@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Team } from 'src/entities'
+  import type { Team } from '@prisma/client'
   import { onMount } from 'svelte'
   import { goto } from '$app/navigation'
 

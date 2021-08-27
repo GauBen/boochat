@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { User } from '../entities'
+  import type { Team, User } from '.prisma/client'
   import { createEventDispatcher } from 'svelte'
   import twemoji from 'twemoji'
 
   export let mod = false
-  export let author: User
+  export let author: User & { team: Team }
   export let body: string
 
   const dispatch = createEventDispatcher<{ delete: void }>()

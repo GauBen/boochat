@@ -1,14 +1,25 @@
 <script lang="ts">
-  import type { User, Message } from 'src/entities'
+  import type { User, Message, Team } from '@prisma/client'
   import { io, Socket } from 'socket.io-client'
   import { onMount } from 'svelte'
   import GameScreen from '../components/GameScreen.svelte'
   import Messages from '../messenger/Messages.svelte'
 
-  let messages: Message[] = []
+  let messages: Array<
+    Message & {
+      author: User & {
+        team: Team
+      }
+    }
+  > = []
   let socket: Socket | undefined
 
-  const users = new Map<number, User>()
+  const users = new Map<
+    number,
+    User & {
+      team: Team
+    }
+  >()
   $: for (const message of messages) {
     const { author } = message
     if (!users.has(author.id)) users.set(author.id, author)
@@ -33,9 +44,18 @@
 
     socket = io(':3001')
 
-    socket.on('chat message', async (msg: Message) => {
-      messages = [...messages.slice(-999), msg]
-    })
+    socket.on(
+      'chat message',
+      async (
+        msg: Message & {
+          author: User & {
+            team: Team
+          }
+        }
+      ) => {
+        messages = [...messages.slice(-999), msg]
+      }
+    )
 
     socket.on('del message', async (id: number) => {
       messages = messages.filter((msg) => msg.id !== id)

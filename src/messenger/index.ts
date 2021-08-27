@@ -1,5 +1,5 @@
+import type { Message, User } from '@prisma/client'
 import type { Server, Socket } from 'socket.io'
-import type { Message, User } from 'src/entities'
 import express, { Express } from 'express'
 // eslint-disable-next-line import/order,import/default
 import pkg from '@prisma/client'

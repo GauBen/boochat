@@ -1,6 +1,6 @@
 <script lang="ts">
+  import type { Team } from '@prisma/client'
   import type { Socket } from 'socket.io-client'
-  import type { Team } from 'src/entities'
   import { onMount } from 'svelte'
 
   export let socket: Socket | undefined = undefined

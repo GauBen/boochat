@@ -1,6 +1,7 @@
-import type { User } from './entities.js'
 import { statSync } from 'fs'
 import { createServer } from 'http'
+// eslint-disable-next-line import/default
+import pkg, { User, Team } from '@prisma/client'
 import cors from 'cors'
 import express, { json } from 'express'
 import { nanoid } from 'nanoid'
@@ -8,14 +9,12 @@ import sirv from 'sirv'
 import { Server } from 'socket.io'
 import createQuizz from './games/quizz/index.js'
 import createMessenger from './messenger/index.js'
-// eslint-disable-next-line import/order,import/default
-import pkg from '@prisma/client'
 
 const { PrismaClient } = pkg
 
 const PORT = 3001
 
-const tokens = new Map<string, User>()
+const tokens = new Map<string, User & { team: Team }>()
 
 const app = express()
 const server = createServer(app)
