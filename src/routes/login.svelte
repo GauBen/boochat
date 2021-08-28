@@ -2,28 +2,25 @@
   import type { Team } from '@prisma/client'
   import { onMount } from 'svelte'
   import { goto } from '$app/navigation'
+  import { post, PostRequest } from '../api'
 
   let login = ''
-  let team = ''
+  let team = 0
   let teams: Team[] | undefined
   let error: string | undefined
 
   const submit = async () => {
-    const response = await fetch(`//localhost:3001/api/login`, {
-      method: 'POST',
-      body: JSON.stringify({ login, teamId: team }),
-      headers: { 'Content-Type': 'application/json' },
+    const { json: data } = await post(PostRequest.Login, {
+      login,
+      teamId: team,
     })
-    const data = await response.json()
-    if (response.status !== 200)
+    if ('error' in data) {
       error = data.error ?? 'Le serveur a rencontré une erreur...'
-
-    if ('token' in data) {
-      sessionStorage.setItem('token', data.token)
-      await goto('.')
-    } else if ('error' in data) {
-      error = data.error
+      return
     }
+
+    sessionStorage.setItem('token', data.token)
+    await goto('.')
   }
 
   onMount(async () => {

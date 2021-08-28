@@ -1,7 +1,8 @@
 <script lang="ts">
-  import type { Message, User, Team } from '@prisma/client'
+  import type { Message, Team, User } from '@prisma/client'
   import type { Socket } from 'socket.io-client'
   import { createEventDispatcher, onMount } from 'svelte'
+  import { get, GetRequest } from '../api'
   import Messages from './Messages.svelte'
 
   export let loggedIn: boolean | undefined = undefined
@@ -26,15 +27,9 @@
 
   const dispatch = createEventDispatcher<{ logout: void; send: string }>()
 
-  onMount(() => {
-    fetch('//localhost:3001/api/messages')
-      .then(async (r) => r.json())
-      .then((m) => {
-        messages = m
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+  onMount(async () => {
+    const { json } = await get(GetRequest.Messages)
+    messages = json
   })
 
   const listen = (socket: Socket | undefined) => {

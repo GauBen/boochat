@@ -8,25 +8,14 @@ import express, { json } from 'express'
 import { nanoid } from 'nanoid'
 import sirv from 'sirv'
 import { Server } from 'socket.io'
+import { schemas, PostRequest } from './api.js'
 import createQuizz from './games/quizz/index.js'
 import createMessenger from './messenger/index.js'
 
 const ajv = new Ajv()
 
-const schemaLogin = {
-  properties: {
-    teamId: { type: 'int32' },
-    login: { type: 'string' },
-  },
-} as const
-const validateLogin = ajv.compile(schemaLogin)
-
-const schemaToken = {
-  properties: {
-    token: { type: 'string' },
-  },
-} as const
-const validateToken = ajv.compile(schemaToken)
+const validateLogin = ajv.compile(schemas[PostRequest.Login])
+const validateToken = ajv.compile(schemas[PostRequest.Token])
 
 const { PrismaClient } = pkg
 

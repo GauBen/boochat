@@ -2,6 +2,7 @@
   import type { User, Message, Team } from '@prisma/client'
   import { io, Socket } from 'socket.io-client'
   import { onMount } from 'svelte'
+  import { get, GetRequest } from '../api'
   import GameScreen from '../components/GameScreen.svelte'
   import Messages from '../messenger/Messages.svelte'
 
@@ -33,14 +34,9 @@
   }
 
   onMount(() => {
-    fetch('//localhost:3001/api/messages')
-      .then(async (r) => r.json())
-      .then((m) => {
-        messages = m
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+    void get(GetRequest.Messages).then(({ json }) => {
+      messages = json
+    })
 
     socket = io(':3001')
 
