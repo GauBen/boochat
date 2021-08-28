@@ -13,12 +13,15 @@
       method: 'POST',
       body: JSON.stringify({ login, teamId: team }),
       headers: { 'Content-Type': 'application/json' },
-    }).then(async (r) => r.json())
-    if ('token' in response) {
-      sessionStorage.setItem('token', response.token)
+    })
+    if (response.status !== 200) error = 'Le serveur a rencontré une erreur...'
+
+    const data = await response.json()
+    if ('token' in data) {
+      sessionStorage.setItem('token', data.token)
       await goto('.')
-    } else if ('error' in response) {
-      error = response.error
+    } else if ('error' in data) {
+      error = data.error
     }
   }
 

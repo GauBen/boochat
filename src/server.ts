@@ -2,6 +2,7 @@ import { statSync } from 'fs'
 import { createServer } from 'http'
 // eslint-disable-next-line import/default
 import pkg, { User, Team } from '@prisma/client'
+import Ajv from 'ajv/dist/jtd.js'
 import cors from 'cors'
 import express, { json } from 'express'
 import { nanoid } from 'nanoid'
@@ -9,6 +10,23 @@ import sirv from 'sirv'
 import { Server } from 'socket.io'
 import createQuizz from './games/quizz/index.js'
 import createMessenger from './messenger/index.js'
+
+const ajv = new Ajv()
+
+const schemaLogin = {
+  properties: {
+    teamId: { type: 'int32' },
+    login: { type: 'string' },
+  },
+} as const
+const validateLogin = ajv.compile(schemaLogin)
+
+const schemaToken = {
+  properties: {
+    token: { type: 'string' },
+  },
+} as const
+const validateToken = ajv.compile(schemaToken)
 
 const { PrismaClient } = pkg
 
@@ -40,14 +58,13 @@ api.get('/teams', (_req, res) => {
 })
 
 api.post('/login', async (req, res) => {
-  if (!req.body || typeof req.body !== 'object' || !('login' in req.body)) {
+  if (!validateLogin(req.body)) {
     res.writeHead(400, { 'Content-Type': 'application/json' })
     res.end('{}')
     return
   }
 
-  // TODO: check that login and color exists, and typed correctly
-  const { login, teamId } = req.body as { login: string; teamId: number }
+  const { login, teamId } = req.body
   const team = teams.find(({ id }) => id === teamId)
 
   if (!team) {
@@ -71,7 +88,12 @@ api.post('/login', async (req, res) => {
 })
 
 api.post('/is-logged-in', (req, res) => {
-  const { token } = req.body as { token: string }
+  if (!validateToken(req.body)) {
+    res.status(400)
+    return
+  }
+
+  const { token } = req.body
   res.json(tokens.has(token))
 })
 
