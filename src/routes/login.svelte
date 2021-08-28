@@ -14,9 +14,10 @@
       body: JSON.stringify({ login, teamId: team }),
       headers: { 'Content-Type': 'application/json' },
     })
-    if (response.status !== 200) error = 'Le serveur a rencontré une erreur...'
-
     const data = await response.json()
+    if (response.status !== 200)
+      error = data.error ?? 'Le serveur a rencontré une erreur...'
+
     if ('token' in data) {
       sessionStorage.setItem('token', data.token)
       await goto('.')
@@ -43,7 +44,13 @@
     {#each teams as { id, name, color } (id)}
       <p>
         <label for="team-{id}" style="--color: {color}">
-          <input type="radio" bind:group={team} value={id} id="team-{id}" />
+          <input
+            type="radio"
+            bind:group={team}
+            value={id}
+            id="team-{id}"
+            required
+          />
           <strong>{name}</strong>
         </label>
       </p>

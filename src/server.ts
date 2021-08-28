@@ -58,19 +58,13 @@ api.get('/teams', (_req, res) => {
 })
 
 api.post('/login', async (req, res) => {
-  if (!validateLogin(req.body)) {
-    res.writeHead(400, { 'Content-Type': 'application/json' })
-    res.end('{}')
-    return
-  }
+  if (!validateLogin(req.body))
+    return res.status(400).json({ error: 'Formulaire incomplet' })
 
   const { login, teamId } = req.body
   const team = teams.find(({ id }) => id === teamId)
 
-  if (!team) {
-    res.status(400)
-    return
-  }
+  if (!team) return res.status(400)
 
   const token = nanoid()
   try {
