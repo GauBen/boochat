@@ -66,8 +66,23 @@ api.post('/login', async (req, res) => {
 
   if (!team) return res.status(400)
 
+  const user = await prisma.user.findUnique({
+    where: { name: login },
+    include: { team: true },
+  })
+
   const token = nanoid()
-  try {
+
+  if (user) {
+    tokens.set(
+      token,
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { teamId },
+        include: { team: true },
+      })
+    )
+  } else {
     tokens.set(
       token,
       await prisma.user.create({
@@ -75,10 +90,9 @@ api.post('/login', async (req, res) => {
         include: { team: true },
       })
     )
-    res.json({ token })
-  } catch {
-    res.status(400).json({ error: 'Nom déjà enregistré' })
   }
+
+  res.json({ token })
 })
 
 api.post('/is-logged-in', (req, res) => {

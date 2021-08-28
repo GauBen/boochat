@@ -49,6 +49,7 @@
             bind:group={team}
             value={id}
             id="team-{id}"
+            name="team"
             required
           />
           <strong>{name}</strong>
