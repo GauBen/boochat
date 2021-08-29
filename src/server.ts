@@ -30,10 +30,13 @@ const tokens = new Map<string, User & { team: Team }>()
 const app = express()
 const server = createServer(app)
 
-const io = new Server(server, {
-  cors: { origin: '*' },
-  serveClient: false,
-})
+const io = new Server<Record<string, never>, { 'logged out': () => void }>(
+  server,
+  {
+    cors: { origin: '*' },
+    serveClient: false,
+  }
+)
 
 const prisma = new PrismaClient()
 
