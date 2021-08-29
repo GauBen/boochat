@@ -3,6 +3,7 @@
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
   import { writable } from 'svelte/store'
+  import { post, PostRequest } from '../api'
   import Admin from '../components/Admin.svelte'
   import GameController from '../components/GameController.svelte'
   import Messenger from '../messenger/Messenger.svelte'
@@ -16,14 +17,9 @@
     if (token === null) {
       loggedIn = false
     } else {
-      fetch('//localhost:3001/api/is-logged-in', {
-        method: 'POST',
-        body: JSON.stringify({ token }),
-        headers: { 'Content-Type': 'application/json' },
-      })
-        .then(async (r) => r.json())
-        .then((response) => {
-          loggedIn = response
+      post(PostRequest.Token, { token })
+        .then(({ json }) => {
+          loggedIn = json
         })
         .catch((error) => {
           console.error(error)

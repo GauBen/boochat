@@ -46,7 +46,17 @@ const messenger = createMessenger(io)
 const quizz = createQuizz(io, teams)
 
 const api = express()
-api.use(json(), cors())
+api.use(json(), cors(), (req, _res, next) => {
+  const { authorization: auth } = req.headers
+
+  if (auth?.startsWith('Token ')) {
+    const token = auth.slice(6)
+    if (tokens.has(token)) req.user = tokens.get(token)
+  }
+
+  next()
+})
+
 api.use(messenger.app)
 api.use(quizz.app)
 api.get('/teams', (_req, res) => {
