@@ -1,23 +1,27 @@
+import type { JTDDataType } from 'ajv/dist/jtd'
+import type { ValidateFunction } from 'ajv/dist/types'
 import { statSync } from 'fs'
 import { createServer } from 'http'
 // eslint-disable-next-line import/default
-import pkg, { User, Team } from '@prisma/client'
+import pkg, { Team, User } from '@prisma/client'
 import Ajv from 'ajv/dist/jtd.js'
 import cors from 'cors'
-import express, { json } from 'express'
+import express, { Express, json } from 'express'
 import { nanoid } from 'nanoid'
 import sirv from 'sirv'
 import { Server } from 'socket.io'
-import { schemas, PostRequest } from './api.js'
+import { PostRequest, Response, schemas } from './api.js'
 import createQuizz from './games/quizz/index.js'
 import createMessenger from './messenger/index.js'
 
-const ajv = new Ajv()
-
-const validateLogin = ajv.compile(schemas[PostRequest.Login])
-const validateToken = ajv.compile(schemas[PostRequest.Token])
-
 const { PrismaClient } = pkg
+
+const ajv = new Ajv()
+const validate = Object.fromEntries(
+  Object.entries(schemas).map(([key, schema]) => [key, ajv.compile(schema)])
+) as {
+  [k in keyof typeof schemas]: ValidateFunction<JTDDataType<typeof schemas[k]>>
+}
 
 const PORT = 3001
 
@@ -46,14 +50,33 @@ api.get('/teams', (_req, res) => {
   res.json(teams)
 })
 
-api.post('/login', async (req, res) => {
-  if (!validateLogin(req.body))
-    return res.status(400).json({ error: 'Formulaire incomplet' })
+const post = <T extends PostRequest>(
+  app: Express,
+  path: T,
+  handler: (
+    body: JTDDataType<typeof schemas[T]>
+  ) => Response[T] | Promise<Response[T]>
+) => {
+  app.post(path, async (req, res) => {
+    if (!('body' in req) || !validate[path](req.body)) {
+      res.status(400).json({ error: 'Invalid data' })
+    } else {
+      try {
+        res.json(await handler(req.body as JTDDataType<typeof schemas[T]>))
+      } catch (error: unknown) {
+        console.error(error)
+        res.status(400).json({
+          error: error instanceof Error ? error.message : 'Bad Request',
+        })
+      }
+    }
+  })
+}
 
-  const { login, teamId } = req.body
+post(api, PostRequest.Login, async ({ login, teamId }) => {
   const team = teams.find(({ id }) => id === teamId)
 
-  if (!team) return res.status(400)
+  if (!team) throw new Error("Cette équipe n'existe pas")
 
   const user = await prisma.user.findUnique({
     where: { name: login },
@@ -81,18 +104,10 @@ api.post('/login', async (req, res) => {
     )
   }
 
-  res.json({ token })
+  return { token }
 })
 
-api.post('/is-logged-in', (req, res) => {
-  if (!validateToken(req.body)) {
-    res.status(400)
-    return
-  }
-
-  const { token } = req.body
-  res.json(tokens.has(token))
-})
+post(api, PostRequest.Token, ({ token }) => tokens.has(token))
 
 io.on('connection', (socket) => {
   const { token } = socket.handshake.auth
