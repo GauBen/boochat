@@ -1,4 +1,4 @@
-import type { Message, User } from '@prisma/client'
+import type { Message } from '@prisma/client'
 import type { Server, Socket } from 'socket.io'
 import express, { Express } from 'express'
 // eslint-disable-next-line import/order,import/default
@@ -9,7 +9,7 @@ export default (
   io: Server
 ): {
   app: Express
-  listen: (socket: Socket, { login }: { login: User | undefined }) => void
+  listen: (socket: Socket) => void
 } => {
   const app = express()
 
@@ -26,17 +26,15 @@ export default (
     res.json(messages)
   })
 
-  const listen = (
-    socket: Socket,
-    { login }: { login: User | undefined }
-  ): void => {
-    if (!login) return
+  const listen = (socket: Socket): void => {
+    const { user } = socket
+    if (!user) return
 
     socket.on('chat message', async (msg: string) => {
       const message = await prisma.message.create({
         data: {
           body: msg,
-          authorId: login.id,
+          authorId: user.id,
         },
         include: { author: { include: { team: true } } },
       })

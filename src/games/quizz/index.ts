@@ -1,4 +1,4 @@
-import type { Team, User } from '@prisma/client'
+import type { Team } from '@prisma/client'
 import type { Server, Socket } from 'socket.io'
 import express, { Express } from 'express'
 
@@ -7,10 +7,7 @@ export default (
   teams: Team[]
 ): {
   app: Express
-  listen: (
-    socket: Socket,
-    { login }: { login: (User & { team: Team }) | undefined }
-  ) => void
+  listen: (socket: Socket) => void
 } => {
   const app = express()
 
@@ -29,13 +26,11 @@ export default (
     res.end()
   })
 
-  const listen = (
-    socket: Socket,
-    { login }: { login: (User & { team: Team }) | undefined }
-  ): void => {
-    if (!login) return
+  const listen = (socket: Socket): void => {
+    const { user } = socket
+    if (!user) return
     socket.on('game', () => {
-      results.set(login.team.id, (results.get(login.team.id) ?? 0) + 1)
+      results.set(user.team.id, (results.get(user.team.id) ?? 0) + 1)
       io.emit('game', [...results.entries()])
     })
   }

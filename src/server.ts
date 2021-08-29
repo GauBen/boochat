@@ -124,12 +124,12 @@ post(api, PostRequest.Token, ({ token }) => tokens.has(token))
 
 io.on('connection', (socket) => {
   const { token } = socket.handshake.auth
-  const login = tokens.get(token)
+  socket.user = tokens.get(token)
 
-  if (token && !login) socket.emit('logged out')
+  if (token && !socket.user) socket.emit('logged out')
 
-  messenger.listen(socket, { login })
-  quizz.listen(socket, { login })
+  messenger.listen(socket)
+  quizz.listen(socket)
 })
 
 app.use('/api', api)

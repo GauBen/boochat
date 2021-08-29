@@ -7,3 +7,9 @@ declare global {
     }
   }
 }
+
+declare module 'socket.io' {
+  export class Socket {
+    user: (User & { team: Team }) | undefined
+  }
+}
