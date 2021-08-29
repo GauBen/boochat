@@ -122,11 +122,14 @@ post(api, PostRequest.Login, async ({ login, teamId }) => {
 
 post(api, PostRequest.Token, ({ token }) => tokens.has(token))
 
-io.on('connection', (socket) => {
+io.use((socket, next) => {
   const { token } = socket.handshake.auth
   socket.user = tokens.get(token)
+  next()
+})
 
-  if (token && !socket.user) socket.emit('logged out')
+io.on('connection', (socket) => {
+  if (!socket.user) socket.emit('logged out')
 
   messenger.listen(socket)
   quizz.listen(socket)
