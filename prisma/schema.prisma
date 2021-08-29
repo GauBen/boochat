@@ -7,15 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Message {
-  id       Int    @id @default(autoincrement())
-  body     String
-  authorId Int    @map("user_id")
-  author   User   @relation(fields: [authorId], references: [id])
-
-  @@map("messages")
-}
-
 model Team {
   id    Int    @id @default(autoincrement())
   name  String @unique
@@ -27,10 +18,20 @@ model Team {
 
 model User {
   id       Int       @id @default(autoincrement())
-  name     String    @unique
-  team     Team      @relation(fields: [teamId], references: [id])
   teamId   Int       @map("team_id")
+  name     String    @unique
+  level    Int       @default(1)
+  team     Team      @relation(fields: [teamId], references: [id])
   messages Message[]
 
   @@map("users")
+}
+
+model Message {
+  id       Int    @id @default(autoincrement())
+  authorId Int    @map("author_id")
+  body     String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  @@map("messages")
 }
