@@ -4,6 +4,7 @@ import type { JTDDataType } from 'ajv/dist/core'
 const API = '//localhost:3001/api'
 
 export enum GetRequest {
+  Teams = '/teams',
   Messages = '/messages',
   GameSettings = '/game-settings',
   GameResults = '/game-results',
@@ -37,6 +38,7 @@ export const schemas = {
 export type RichMessage = Message & { author: User & { team: Team } }
 
 export interface Response {
+  [GetRequest.Teams]: Team[]
   [GetRequest.Messages]: RichMessage[]
   [GetRequest.GameSettings]: { value: string }
   [GetRequest.GameResults]: Array<[number, number]>

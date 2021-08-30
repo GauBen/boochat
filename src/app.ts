@@ -57,9 +57,7 @@ export class App implements AppAttributes {
       next()
     })
 
-    this.api.get('/teams', (_req, res) => {
-      res.json(this.teams)
-    })
+    this.get(GetRequest.Teams, () => this.teams)
 
     this.post(PostRequest.Login, async ({ login, teamId }) => {
       const team = this.teams.find(({ id }) => id === teamId)

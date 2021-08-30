@@ -6,6 +6,7 @@
   import type { Team } from '@prisma/client'
   import type { Socket } from 'socket.io-client'
   import { onMount } from 'svelte'
+  import { get, GetRequest } from '../../api'
   import { ServerEvent } from '../../socket-api'
 
   export let socket:
@@ -17,30 +18,15 @@
   let teams: Team[] | undefined
 
   onMount(() => {
-    fetch('//localhost:3001/api/game-settings')
-      .then(async (r) => r.json())
-      .then((x) => {
-        question = x.value
-      })
-      .catch((error) => {
-        console.error(error)
-      })
-    fetch('//localhost:3001/api/game-results')
-      .then(async (r) => r.json())
-      .then((x) => {
-        results = new Map(x)
-      })
-      .catch((error) => {
-        console.error(error)
-      })
-    fetch('//localhost:3001/api/teams')
-      .then(async (r) => r.json())
-      .then((x) => {
-        teams = x
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+    void get(GetRequest.GameSettings).then(({ json }) => {
+      question = json.value
+    })
+    void get(GetRequest.GameResults).then(({ json }) => {
+      results = new Map(json)
+    })
+    void get(GetRequest.Teams).then(({ json }) => {
+      teams = json
+    })
   })
 
   const listen = (
