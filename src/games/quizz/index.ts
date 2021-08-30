@@ -1,6 +1,6 @@
 import type { App } from '../../app'
-import { GetRequest, PostRequest } from '../../api.js'
-import { ClientEvent, ServerEvent } from '../../socket-api.js'
+import { GetRequest, PostRequest } from '../../api'
+import { ClientEvent, ServerEvent } from '../../socket-api'
 
 export default (app: App): void => {
   const results = new Map<number, number>()

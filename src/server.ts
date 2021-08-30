@@ -1,21 +1,18 @@
-import type {
-  ClientToServerEvents,
-  ServerToClientEvents,
-} from './socket-api.js'
+import type { ClientToServerEvents, ServerToClientEvents } from './socket-api'
 import type { JTDDataType } from 'ajv/dist/jtd'
 import type { ValidateFunction } from 'ajv/dist/types'
 import { statSync } from 'fs'
 import { createServer } from 'http'
 // eslint-disable-next-line import/default
 import pkg from '@prisma/client'
-import Ajv from 'ajv/dist/jtd.js'
+import Ajv from 'ajv/dist/jtd'
 import express from 'express'
 import sirv from 'sirv'
 import { Server } from 'socket.io'
-import { schemas } from './api.js'
-import { App } from './app.js'
-import createQuizz from './games/quizz/index.js'
-import createMessenger from './messenger/index.js'
+import { schemas } from './api'
+import { App } from './app'
+import createQuizz from './games/quizz/index'
+import createMessenger from './messenger/index'
 
 const { PrismaClient } = pkg
 const ajv = new Ajv()

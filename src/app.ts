@@ -5,12 +5,12 @@ import type { Server } from 'socket.io'
 import cors from 'cors'
 import express, { Express, json } from 'express'
 import { nanoid } from 'nanoid'
-import { GetRequest, PostRequest, Response, schemas } from './api.js'
+import { GetRequest, PostRequest, Response, schemas } from './api'
 import {
   ClientToServerEvents,
   ServerEvent,
   ServerToClientEvents,
-} from './socket-api.js'
+} from './socket-api'
 export interface AppAttributes {
   readonly io: Server<ClientToServerEvents, ServerToClientEvents>
   readonly validate: {

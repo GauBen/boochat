@@ -71,7 +71,7 @@
     "lint": "prettier --ignore-path .gitignore  --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
     "postinstall": "husky install",
     "preview": "svelte-kit preview",
-    "start": "node --loader ts-node/esm src/server.ts"
+    "start": "node --experimental-specifier-resolution=node --loader ts-node/esm src/server.ts"
   },
   "type": "module",
   "volta": {

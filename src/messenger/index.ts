@@ -1,7 +1,7 @@
 import type { App } from '../app'
 import type { Socket } from 'socket.io'
-import { GetRequest, RichMessage } from '../api.js'
-import { ClientEvent, ServerEvent } from '../socket-api.js'
+import { GetRequest, RichMessage } from '../api'
+import { ClientEvent, ServerEvent } from '../socket-api'
 
 export default (app: App): void => {
   let messages: RichMessage[] = []
