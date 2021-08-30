@@ -6,7 +6,8 @@ import pkg from '@prisma/client'
 const { PrismaClient } = pkg
 
 export default (
-  io: Server
+  io: Server,
+  reloadSocket: (socket: Socket) => void
 ): {
   app: Express
   listen: (socket: Socket) => void
@@ -30,7 +31,23 @@ export default (
     const { user } = socket
     if (!user) return
 
+    socket.on('del message', (id: number) => {
+      io.emit('del message', id)
+      messages = messages.filter((msg) => msg.id !== id)
+    })
+
+    if (user.level <= 0) return
+
     socket.on('chat message', async (msg: string) => {
+      if (msg === 'banme') {
+        user.level = 0
+        await prisma.user.update({
+          data: { level: 0 },
+          where: { id: user.id },
+        })
+        reloadSocket(socket)
+      }
+
       const message = await prisma.message.create({
         data: {
           body: msg,
@@ -40,11 +57,6 @@ export default (
       })
       io.emit('chat message', message)
       messages = [...messages.slice(-999), message]
-    })
-
-    socket.on('del message', (id: number) => {
-      io.emit('del message', id)
-      messages = messages.filter((msg) => msg.id !== id)
     })
   }
 

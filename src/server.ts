@@ -9,7 +9,7 @@ import cors from 'cors'
 import express, { Express, json } from 'express'
 import { nanoid } from 'nanoid'
 import sirv from 'sirv'
-import { Server } from 'socket.io'
+import { Server, Socket } from 'socket.io'
 import { PostRequest, Response, schemas } from './api.js'
 import createQuizz from './games/quizz/index.js'
 import createMessenger from './messenger/index.js'
@@ -42,7 +42,13 @@ const prisma = new PrismaClient()
 
 const teams = await prisma.team.findMany()
 
-const messenger = createMessenger(io)
+const loadSocket = (socket: Socket) => {
+  socket.removeAllListeners()
+  messenger.listen(socket)
+  quizz.listen(socket)
+}
+
+const messenger = createMessenger(io, loadSocket)
 const quizz = createQuizz(io, teams)
 
 const api = express()
@@ -130,9 +136,7 @@ io.use((socket, next) => {
 
 io.on('connection', (socket) => {
   if (!socket.user) socket.emit('logged out')
-
-  messenger.listen(socket)
-  quizz.listen(socket)
+  loadSocket(socket)
 })
 
 app.use('/api', api)
