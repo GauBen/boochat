@@ -1,13 +1,20 @@
 <script lang="ts">
+  import type {
+    ClientToServerEvents,
+    ServerToClientEvents,
+  } from '../socket-api'
   import type { Message, Team, User } from '@prisma/client'
   import type { Socket } from 'socket.io-client'
   import { createEventDispatcher, onMount } from 'svelte'
   import { get, GetRequest } from '../api'
+  import { ClientEvent, ServerEvent } from '../socket-api'
   import Messages from './Messages.svelte'
 
   export let loggedIn: boolean | undefined = undefined
   export let mod = false
-  export let socket: Socket | undefined = undefined
+  export let socket:
+    | Socket<ServerToClientEvents, ClientToServerEvents>
+    | undefined = undefined
 
   let messages: Array<Message & { author: User & { team: Team } }> = []
   let value = ''
@@ -35,14 +42,11 @@
   const listen = (socket: Socket | undefined) => {
     if (!socket) return
 
-    socket.on(
-      'chat message',
-      async (msg: Message & { author: User & { team: Team } }) => {
-        messages = [...messages.slice(-999), msg]
-      }
-    )
+    socket.on(ServerEvent.Message, async (msg) => {
+      messages = [...messages.slice(-999), msg]
+    })
 
-    socket.on('del message', async (id: number) => {
+    socket.on(ServerEvent.DeleteMessage, async (id) => {
       messages = messages.filter((msg) => msg.id !== id)
     })
   }
@@ -51,13 +55,13 @@
 
   const send = () => {
     if (!socket) return
-    socket.emit('chat message', value)
+    socket.emit(ClientEvent.Message, value)
     value = ''
   }
 
   const del = ({ detail: id }: { detail: number }) => {
     if (!socket) return
-    socket.emit('del message', id)
+    socket.emit(ClientEvent.DeleteMessage, id)
   }
 </script>
 

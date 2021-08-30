@@ -1,9 +1,16 @@
 <script lang="ts">
+  import type {
+    ClientToServerEvents,
+    ServerToClientEvents,
+  } from '../../socket-api'
   import type { Team } from '@prisma/client'
   import type { Socket } from 'socket.io-client'
   import { onMount } from 'svelte'
+  import { ServerEvent } from '../../socket-api'
 
-  export let socket: Socket | undefined = undefined
+  export let socket:
+    | Socket<ServerToClientEvents, ClientToServerEvents>
+    | undefined = undefined
 
   let question = ''
   let results: Map<Team['id'], number> | undefined
@@ -38,10 +45,10 @@
 
   const listen = (socket: Socket | undefined) => {
     if (!socket) return
-    socket.on('game', (evt) => {
+    socket.on(ServerEvent.Game, (evt) => {
       results = new Map(evt)
     })
-    socket.on('game-settings', (x) => {
+    socket.on(ServerEvent.GameSettings, (x) => {
       question = x.value
     })
   }

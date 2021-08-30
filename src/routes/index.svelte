@@ -1,4 +1,8 @@
 <script lang="ts">
+  import type {
+    ClientToServerEvents,
+    ServerToClientEvents,
+  } from '../socket-api'
   import type { Socket } from 'socket.io-client'
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
@@ -7,8 +11,9 @@
   import Admin from '../components/Admin.svelte'
   import GameController from '../components/GameController.svelte'
   import Messenger from '../messenger/Messenger.svelte'
+  import { ServerEvent } from '../socket-api'
 
-  let socket: Socket | undefined
+  let socket: Socket<ServerToClientEvents, ClientToServerEvents> | undefined
 
   let loggedIn: boolean | undefined
 
@@ -30,7 +35,7 @@
       auth: { token },
     })
 
-    socket.on('logged out', () => {
+    socket.on(ServerEvent.LoggedOut, () => {
       loggedIn = false
     })
   })

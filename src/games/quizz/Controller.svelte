@@ -1,18 +1,25 @@
 <script lang="ts">
+  import type {
+    ClientToServerEvents,
+    ServerToClientEvents,
+  } from '../../socket-api'
   import type { Socket } from 'socket.io-client'
   import { onMount } from 'svelte'
+  import { get, GetRequest } from '../../api'
+  import { ClientEvent, ServerEvent } from '../../socket-api'
 
-  export let socket: Socket | undefined = undefined
+  export let socket:
+    | Socket<ServerToClientEvents, ClientToServerEvents>
+    | undefined = undefined
 
   let ready = true
   let question = 'zerteyrtu'
 
   onMount(() => {
-    fetch('//localhost:3001/api/game-settings')
-      .then(async (r) => r.json())
-      .then((x) => {
+    get(GetRequest.GameSettings)
+      .then(({ json }) => {
+        question = json.value
         ready = true
-        question = x.value
       })
       .catch((error) => {
         console.error(error)
@@ -21,7 +28,7 @@
 
   const listen = (socket: Socket | undefined) => {
     if (!socket) return
-    socket.on('game-settings', (x) => {
+    socket.on(ServerEvent.GameSettings, (x) => {
       question = x.value
     })
   }
@@ -34,7 +41,7 @@
     <h1>{question}</h1>
     <button
       on:click={() => {
-        socket?.emit('game', 'yo')
+        socket?.emit(ClientEvent.Game)
       }}
     >
       CLICK
