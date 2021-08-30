@@ -43,13 +43,15 @@
       })
   })
 
-  const listen = (socket: Socket | undefined) => {
+  const listen = (
+    socket: Socket<ServerToClientEvents, ClientToServerEvents> | undefined
+  ) => {
     if (!socket) return
     socket.on(ServerEvent.Game, (evt) => {
       results = new Map(evt)
     })
-    socket.on(ServerEvent.GameSettings, (x) => {
-      question = x.value
+    socket.on(ServerEvent.GameSettings, ({ value }) => {
+      question = value
     })
   }
 

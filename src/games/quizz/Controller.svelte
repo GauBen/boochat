@@ -26,10 +26,15 @@
       })
   })
 
-  const listen = (socket: Socket | undefined) => {
+  const listen = (
+    socket:
+      | Socket<ServerToClientEvents, ClientToServerEvents>
+      | undefined
+      | undefined
+  ) => {
     if (!socket) return
-    socket.on(ServerEvent.GameSettings, (x) => {
-      question = x.value
+    socket.on(ServerEvent.GameSettings, ({ value }) => {
+      question = value
     })
   }
 
