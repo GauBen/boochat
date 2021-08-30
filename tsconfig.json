@@ -21,6 +21,7 @@
   },
   "include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.ts", "src/**/*.svelte"],
   "ts-node": {
+    "transpileOnly": true,
     "files": true
   }
 }
