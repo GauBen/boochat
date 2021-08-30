@@ -2,7 +2,7 @@
   import type { Team } from '@prisma/client'
   import { onMount } from 'svelte'
   import { goto } from '$app/navigation'
-  import { post, PostRequest } from '../api'
+  import { get, GetRequest, post, PostRequest } from '../api'
 
   let login = ''
   let team = 0
@@ -24,10 +24,7 @@
   }
 
   onMount(async () => {
-    teams = (await fetch(`//localhost:3001/api/teams`).then(async (r) =>
-      r.json()
-    )) as Team[]
-    console.log(teams)
+    teams = (await get(GetRequest.Teams)).json
   })
 </script>
 
