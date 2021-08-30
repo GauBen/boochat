@@ -1,39 +1,27 @@
-import type { Team } from '@prisma/client'
-import type { Server, Socket } from 'socket.io'
-import express, { Express } from 'express'
+import type { App } from '../../app'
+import { GetRequest, PostRequest } from '../../api.js'
+import { ClientEvent, ServerEvent } from '../../socket-api.js'
 
-export default (
-  io: Server,
-  teams: Team[]
-): {
-  app: Express
-  listen: (socket: Socket) => void
-} => {
-  const app = express()
-
-  const results = new Map<number, number>(teams.map(({ id }) => [id, 0]))
+export default (app: App): void => {
+  const results = new Map<number, number>()
   let gameSettings: { value: string } = { value: 'Ca va ?' }
 
-  app.get('/game-settings', (_req, res) => {
-    res.json(gameSettings)
-  })
-  app.get('/game-results', (_req, res) => {
-    res.json([...results.entries()])
-  })
-  app.post('/setup-game', (req, res) => {
-    gameSettings = req.body as typeof gameSettings
-    io.emit('game-settings', gameSettings)
-    res.end()
+  app.get(GetRequest.GameSettings, () => gameSettings)
+  app.get(GetRequest.GameResults, () => [...results.entries()])
+
+  app.post(app.api, PostRequest.SetupGame, (gS) => {
+    gameSettings = gS
+    app.io.emit(ServerEvent.GameSettings, gS)
   })
 
-  const listen = (socket: Socket): void => {
+  app.io.use((socket, next) => {
     const { user } = socket
-    if (!user) return
-    socket.on('game', () => {
+    socket.on(ClientEvent.Game, () => {
+      if (!user) return
       results.set(user.team.id, (results.get(user.team.id) ?? 0) + 1)
-      io.emit('game', [...results.entries()])
+      app.io.emit(ServerEvent.Game, [...results.entries()])
     })
-  }
 
-  return { app, listen }
+    next()
+  })
 }

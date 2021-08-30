@@ -1,64 +1,49 @@
-import type { Message } from '@prisma/client'
-import type { Server, Socket } from 'socket.io'
-import express, { Express } from 'express'
-// eslint-disable-next-line import/order,import/default
-import pkg from '@prisma/client'
-const { PrismaClient } = pkg
+import type { App } from '../app'
+import type { Socket } from 'socket.io'
+import { GetRequest, RichMessage } from '../api.js'
+import { ClientEvent, ServerEvent } from '../socket-api.js'
 
-export default (
-  io: Server,
-  reloadSocket: (socket: Socket) => void
-): {
-  app: Express
-  listen: (socket: Socket) => void
-} => {
-  const app = express()
+export default (app: App): void => {
+  let messages: RichMessage[] = []
 
-  let messages: Message[] = []
-
-  const prisma = new PrismaClient()
-  void prisma.message
+  void app.prisma.message
     .findMany({ include: { author: { include: { team: true } } } })
     .then((res) => {
       messages = res
     })
 
-  app.get('/messages', (_req, res) => {
-    res.json(messages)
-  })
+  app.get(GetRequest.Messages, () => messages)
 
-  const listen = (socket: Socket): void => {
+  app.io.use((socket: Socket, next) => {
     const { user } = socket
     if (!user) return
 
-    socket.on('del message', (id: number) => {
-      io.emit('del message', id)
+    socket.on(ClientEvent.DeleteMessage, (id: number) => {
+      app.io.emit(ServerEvent.DeleteMessage, id)
       messages = messages.filter((msg) => msg.id !== id)
     })
+    socket.on(ClientEvent.Message, async (msg: string) => {
+      if (user.level < 1) return
 
-    if (user.level <= 0) return
-
-    socket.on('chat message', async (msg: string) => {
       if (msg === 'banme') {
         user.level = 0
-        await prisma.user.update({
+        await app.prisma.user.update({
           data: { level: 0 },
           where: { id: user.id },
         })
-        reloadSocket(socket)
       }
 
-      const message = await prisma.message.create({
+      const message = await app.prisma.message.create({
         data: {
           body: msg,
           authorId: user.id,
         },
         include: { author: { include: { team: true } } },
       })
-      io.emit('chat message', message)
+      app.io.emit(ServerEvent.Message, message)
       messages = [...messages.slice(-999), message]
     })
-  }
 
-  return { app, listen }
+    next()
+  })
 }

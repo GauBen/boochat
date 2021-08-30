@@ -5,11 +5,14 @@ const API = '//localhost:3001/api'
 
 export enum GetRequest {
   Messages = '/messages',
+  GameSettings = '/game-settings',
+  GameResults = '/game-results',
 }
 
 export enum PostRequest {
   Login = '/login',
   Token = '/is-logged-in',
+  SetupGame = '/setup-game',
 }
 
 export const schemas = {
@@ -24,14 +27,22 @@ export const schemas = {
       token: { type: 'string' },
     },
   },
+  [PostRequest.SetupGame]: {
+    properties: {
+      value: { type: 'string' },
+    },
+  },
 } as const
 
 export type RichMessage = Message & { author: User & { team: Team } }
 
 export interface Response {
   [GetRequest.Messages]: RichMessage[]
+  [GetRequest.GameSettings]: { value: string }
+  [GetRequest.GameResults]: Array<[number, number]>
   [PostRequest.Login]: { token: string } | { error: string }
   [PostRequest.Token]: boolean
+  [PostRequest.SetupGame]: void
 }
 
 export const get = async <T extends GetRequest>(
