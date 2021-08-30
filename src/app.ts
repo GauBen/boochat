@@ -61,7 +61,7 @@ export class App implements AppAttributes {
       res.json(this.teams)
     })
 
-    this.post(this.api, PostRequest.Login, async ({ login, teamId }) => {
+    this.post(PostRequest.Login, async ({ login, teamId }) => {
       const team = this.teams.find(({ id }) => id === teamId)
 
       if (!team) throw new Error("Cette équipe n'existe pas")
@@ -90,9 +90,7 @@ export class App implements AppAttributes {
       return { token }
     })
 
-    this.post(this.api, PostRequest.Token, ({ token }) =>
-      this.tokens.has(token)
-    )
+    this.post(PostRequest.Token, ({ token }) => this.tokens.has(token))
 
     io.use((socket, next) => {
       const { token } = socket.handshake.auth
@@ -102,13 +100,12 @@ export class App implements AppAttributes {
   }
 
   post<T extends PostRequest>(
-    app: Express,
     path: T,
     handler: (
       body: JTDDataType<typeof schemas[T]>
     ) => Response[T] | Promise<Response[T]>
   ): void {
-    app.post(path, async (req, res) => {
+    this.api.post(path, async (req, res) => {
       if (!('body' in req) || !this.validate[path](req.body)) {
         res.status(400).json({ error: 'Invalid data' })
       } else {

@@ -9,7 +9,7 @@ export default (app: App): void => {
   app.get(GetRequest.GameSettings, () => gameSettings)
   app.get(GetRequest.GameResults, () => [...results.entries()])
 
-  app.post(app.api, PostRequest.SetupGame, (gS) => {
+  app.post(PostRequest.SetupGame, (gS) => {
     gameSettings = gS
     app.io.emit(ServerEvent.GameSettings, gS)
   })
