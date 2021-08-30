@@ -39,7 +39,9 @@
     messages = json
   })
 
-  const listen = (socket: Socket | undefined) => {
+  const listen = (
+    socket: Socket<ServerToClientEvents, ClientToServerEvents> | undefined
+  ) => {
     if (!socket) return
 
     socket.on(ServerEvent.Message, async (msg) => {
