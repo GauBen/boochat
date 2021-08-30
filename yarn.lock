@@ -524,6 +524,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@napi-rs/triples@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@napi-rs/triples@npm:1.0.3"
+  checksum: c83a4cc55f69115bf4ce1d5924efce7f5faf2dc79fd52257385559f668ce91a03c5d7d004df01ebba56028a9b663955eb97f31b65ac0acff7a93c143f0d809af
+  languageName: node
+  linkType: hard
+
+"@node-rs/helper@npm:^1.0.0":
+  version: 1.2.1
+  resolution: "@node-rs/helper@npm:1.2.1"
+  dependencies:
+    "@napi-rs/triples": ^1.0.3
+  checksum: c7b96e46df8a4195e62e51b6f60ed05aff398653c270dc9cffaed749303a4c428215d5826de8511b57cf66f2b0165fb3544fb2aec2aaf385c13ac3b9468bb000
+  languageName: node
+  linkType: hard
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -696,6 +712,143 @@ __metadata:
     diff-match-patch:
       optional: true
   checksum: 8e61bb6d2b9db2c58bef82b9c9c3788e047b86b86af235e8daf3b6d254603ba718800a4f5ef649626943cdce11754d47f48da98c8b1f9b68684aed95486f3e07
+  languageName: node
+  linkType: hard
+
+"@swc/core-android-arm64@npm:^1.2.83":
+  version: 1.2.83
+  resolution: "@swc/core-android-arm64@npm:1.2.83"
+  checksum: 8909da8a1c3573709c3612afaaafc1353b48ac3cba353d40d0a55db26cd8a83ef46614d4029e71d9fe6fc0881d18225033e2128e3a76fdfce2faacc2a4ecded1
+  languageName: node
+  linkType: hard
+
+"@swc/core-darwin-arm64@npm:^1.2.83":
+  version: 1.2.83
+  resolution: "@swc/core-darwin-arm64@npm:1.2.83"
+  checksum: b1d27aa1aa8f219d61a5def8f97c9e393f342b184fa03e9d90836b34a10b55813e398490cd187a3a9460b0ac3fd2ad4da5f58e0a0830d92827bdb2f2260dfc58
+  languageName: node
+  linkType: hard
+
+"@swc/core-darwin-x64@npm:^1.2.83":
+  version: 1.2.83
+  resolution: "@swc/core-darwin-x64@npm:1.2.83"
+  checksum: 12d15e91886fa3a332b86d12e28d428505f5a9b47967531f7113e500187fb88fc541561acb21561f47a70f3153694b5d946a37373f9f8880169c9356600791c1
+  languageName: node
+  linkType: hard
+
+"@swc/core-freebsd-x64@npm:^1.2.83":
+  version: 1.2.83
+  resolution: "@swc/core-freebsd-x64@npm:1.2.83"
+  checksum: b3989e6dcf08f5672dc275f31078e6d5da27903e88af0dce6f59cc3e8b432acbf9606208c272f9822be44a2830342466d2b5c3d71e5c246ffe10b488ac385522
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm-gnueabihf@npm:^1.2.83":
+  version: 1.2.83
+  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.2.83"
+  checksum: 9742fb2d6ca75c565c33e63b39d1a2af22c3fe46c0f9282da627a8aa91dadbe071882308602370c699f30c1fe1865b561c2e688eeb9393d2d5af8d5818685e31
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm64-gnu@npm:^1.2.83":
+  version: 1.2.83
+  resolution: "@swc/core-linux-arm64-gnu@npm:1.2.83"
+  checksum: 9925f6d804ec942d47c08bcefb4883ec9317e8ec4a7f8ba3072f3081c1e7ec526105fcd780ee59fcc528ccb52a5be4410b7b954be41f4c35afb4fa179bf79c0e
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm64-musl@npm:^1.2.83":
+  version: 1.2.83
+  resolution: "@swc/core-linux-arm64-musl@npm:1.2.83"
+  checksum: 8cd9e91d5fae7d1a23934aac3fdfaa73ab35d1f87bd5a3f9e9dc5174bb5f1c298122546cb04344476efae04ff80cc0c0e419d37d109533ea462f1df0ef4f3be9
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-x64-gnu@npm:^1.2.83":
+  version: 1.2.83
+  resolution: "@swc/core-linux-x64-gnu@npm:1.2.83"
+  checksum: 60d64381e2a5726bd6cd33600c52e85e76f0e72967fe6a5f52abbaafc346d18af6611af40a0d3c59eed673c2d7eda653de35d4d49af7900a7deee109a1b04356
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-x64-musl@npm:^1.2.83":
+  version: 1.2.83
+  resolution: "@swc/core-linux-x64-musl@npm:1.2.83"
+  checksum: d522077aac78532689d808a67bd1975a6eb904181856c04930a42efb2fde1698b55cd88c895b206a7d690bccd291235619b9cc09c62b897cece2a3b58038da30
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-arm64-msvc@npm:^1.2.83":
+  version: 1.2.83
+  resolution: "@swc/core-win32-arm64-msvc@npm:1.2.83"
+  checksum: e5d7946419b1025b246c01c8443c161b1ac904f0588b3cc0af6ce54c3bedec5637f5b40a071c85d41e120554fbf13302cfe1782e8ac57d6cbb1d8b3d89dfaa42
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-ia32-msvc@npm:^1.2.83":
+  version: 1.2.83
+  resolution: "@swc/core-win32-ia32-msvc@npm:1.2.83"
+  checksum: dadcea5748da0aa4d52462b8e27bd141ea27f0b5298f553c9a7a3f2e4ef566ba7bd6c962bcb4cd6c8b747318b18668ccb100ae0514d770ef3c1598fe001436f1
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-x64-msvc@npm:^1.2.83":
+  version: 1.2.83
+  resolution: "@swc/core-win32-x64-msvc@npm:1.2.83"
+  checksum: 5a91fa0f73ab653c87056a67d0e4d69685b9256d9805d7c223ab09b490e4b126e5fd35a4af98757997f1fb466199891048b6b8754dde843a552f7439e0a41263
+  languageName: node
+  linkType: hard
+
+"@swc/core@npm:^1.2.83":
+  version: 1.2.83
+  resolution: "@swc/core@npm:1.2.83"
+  dependencies:
+    "@node-rs/helper": ^1.0.0
+    "@swc/core-android-arm64": ^1.2.83
+    "@swc/core-darwin-arm64": ^1.2.83
+    "@swc/core-darwin-x64": ^1.2.83
+    "@swc/core-freebsd-x64": ^1.2.83
+    "@swc/core-linux-arm-gnueabihf": ^1.2.83
+    "@swc/core-linux-arm64-gnu": ^1.2.83
+    "@swc/core-linux-arm64-musl": ^1.2.83
+    "@swc/core-linux-x64-gnu": ^1.2.83
+    "@swc/core-linux-x64-musl": ^1.2.83
+    "@swc/core-win32-arm64-msvc": ^1.2.83
+    "@swc/core-win32-ia32-msvc": ^1.2.83
+    "@swc/core-win32-x64-msvc": ^1.2.83
+  dependenciesMeta:
+    "@swc/core-android-arm64":
+      optional: true
+    "@swc/core-darwin-arm64":
+      optional: true
+    "@swc/core-darwin-x64":
+      optional: true
+    "@swc/core-freebsd-x64":
+      optional: true
+    "@swc/core-linux-arm-gnueabihf":
+      optional: true
+    "@swc/core-linux-arm64-gnu":
+      optional: true
+    "@swc/core-linux-arm64-musl":
+      optional: true
+    "@swc/core-linux-x64-gnu":
+      optional: true
+    "@swc/core-linux-x64-musl":
+      optional: true
+    "@swc/core-win32-arm64-msvc":
+      optional: true
+    "@swc/core-win32-ia32-msvc":
+      optional: true
+    "@swc/core-win32-x64-msvc":
+      optional: true
+  checksum: a51f67a39c856f784780c85f788bd872ff8ed428b0c8305f00e2c7e81ce00d1f400c4f21c267f3910e58373ec8c17ebb70a8505a1e07a811e12b7f1685acfec8
+  languageName: node
+  linkType: hard
+
+"@swc/helpers@npm:^0.2.13":
+  version: 0.2.13
+  resolution: "@swc/helpers@npm:0.2.13"
+  checksum: 712f15dfb42fa8bdca64fe3556001ac11c93e95b27ea0ea0c4c3f718b770d414b3a93bb9260ad68fbbcac624a834bf14c4a2261aeabf156917d532a3981bd378
   languageName: node
   linkType: hard
 
@@ -1585,6 +1738,8 @@ __metadata:
     "@prisma/client": 2.30.0
     "@sveltejs/adapter-static": next
     "@sveltejs/kit": next
+    "@swc/core": ^1.2.83
+    "@swc/helpers": ^0.2.13
     "@types/cors": ^2
     "@types/eslint-plugin-prettier": ^3
     "@types/express": ^4

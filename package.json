@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "dependencies": {
     "@prisma/client": "2.30.0",
+    "@swc/core": "^1.2.83",
+    "@swc/helpers": "^0.2.13",
     "ajv": "^8.6.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",

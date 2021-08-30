@@ -21,7 +21,8 @@
   },
   "include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.ts", "src/**/*.svelte"],
   "ts-node": {
+    "files": true,
     "transpileOnly": true,
-    "files": true
+    "transpiler": "ts-node/transpilers/swc-experimental"
   }
 }
