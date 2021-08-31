@@ -16,14 +16,13 @@ export default (app: App): void => {
 
   app.io.use((socket: Socket, next) => {
     const { user } = socket
-    if (!user) return
 
     socket.on(ClientEvent.DeleteMessage, (id: number) => {
       app.io.emit(ServerEvent.DeleteMessage, id)
       messages = messages.filter((msg) => msg.id !== id)
     })
     socket.on(ClientEvent.Message, async (msg: string) => {
-      if (user.level < 1) return
+      if (!user || user.level < 1) return
 
       if (msg === 'banme') {
         user.level = 0
