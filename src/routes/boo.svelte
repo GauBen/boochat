@@ -34,7 +34,7 @@
   }
 
   onMount(() => {
-    void get(GetRequest.Messages).then(({ json }) => {
+    void get(GetRequest.Messages).then(({ body: json }) => {
       messages = json
     })
 

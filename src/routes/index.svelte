@@ -23,7 +23,7 @@
       loggedIn = false
     } else {
       post(PostRequest.Token, { token })
-        .then(({ json }) => {
+        .then(({ body: json }) => {
           loggedIn = json
         })
         .catch((error) => {

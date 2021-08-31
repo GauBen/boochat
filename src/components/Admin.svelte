@@ -17,7 +17,7 @@
   let stats: Response[GetRequest.UsersOnline] | undefined
 
   onMount(() => {
-    void get(GetRequest.UsersOnline).then(({ json }) => {
+    void get(GetRequest.UsersOnline).then(({ body: json }) => {
       stats = json
     })
   })

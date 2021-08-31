@@ -35,7 +35,7 @@
   const dispatch = createEventDispatcher<{ logout: void; send: string }>()
 
   onMount(async () => {
-    const { json } = await get(GetRequest.Messages)
+    const { body: json } = await get(GetRequest.Messages)
     messages = json
   })
 

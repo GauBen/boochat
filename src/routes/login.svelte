@@ -10,21 +10,21 @@
   let error: string | undefined
 
   const submit = async () => {
-    const { json: data } = await post(PostRequest.Login, {
+    const { body } = await post(PostRequest.Login, {
       login,
       teamId: team,
     })
-    if ('error' in data) {
-      error = data.error ?? 'Le serveur a rencontré une erreur...'
+    if ('error' in body) {
+      error = body.error ?? 'Le serveur a rencontré une erreur...'
       return
     }
 
-    sessionStorage.setItem('token', data.token)
+    sessionStorage.setItem('token', body.token)
     await goto('.')
   }
 
   onMount(async () => {
-    teams = (await get(GetRequest.Teams)).json
+    teams = (await get(GetRequest.Teams)).body
   })
 </script>
 

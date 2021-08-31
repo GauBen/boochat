@@ -17,7 +17,7 @@
 
   onMount(() => {
     get(GetRequest.GameSettings)
-      .then(({ json }) => {
+      .then(({ body: json }) => {
         question = json.value
         ready = true
       })

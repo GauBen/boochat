@@ -18,13 +18,13 @@
   let teams: Team[] | undefined
 
   onMount(() => {
-    void get(GetRequest.GameSettings).then(({ json }) => {
+    void get(GetRequest.GameSettings).then(({ body: json }) => {
       question = json.value
     })
-    void get(GetRequest.GameResults).then(({ json }) => {
+    void get(GetRequest.GameResults).then(({ body: json }) => {
       results = new Map(json)
     })
-    void get(GetRequest.Teams).then(({ json }) => {
+    void get(GetRequest.Teams).then(({ body: json }) => {
       teams = json
     })
   })
