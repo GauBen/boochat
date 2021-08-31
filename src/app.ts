@@ -46,9 +46,14 @@ export class App implements AppAttributes {
     this.users = new Map()
     this.tokens = new Map()
 
-    this.io.on('connection', (socket) => {
+    this.io.on('connect', (socket) => {
       if (!socket.user) socket.emit(ServerEvent.LoggedOut)
+      io.emit(ServerEvent.Stats, this.computeStats())
+      socket.on('disconnect', () => {
+        io.emit(ServerEvent.Stats, this.computeStats())
+      })
     })
+
     this.api.use(json(), cors(), (req, _res, next) => {
       const { authorization: auth } = req.headers
 
@@ -62,10 +67,7 @@ export class App implements AppAttributes {
     })
 
     this.get(GetRequest.Teams, () => this.teams)
-    this.get(GetRequest.UsersOnline, () => {
-      console.log(io.sockets.sockets.size)
-      return []
-    })
+    this.get(GetRequest.UsersOnline, () => this.computeStats())
 
     this.post(PostRequest.Login, async ({ login, teamId }) => {
       const team = this.teams.find(({ id }) => id === teamId)
@@ -129,6 +131,34 @@ export class App implements AppAttributes {
   use(...subapps: CreateSubApp[]): void {
     this.subapps = [...this.subapps, ...subapps]
     for (const subapp of subapps) subapp(this)
+  }
+
+  computeStats(): {
+    online: number
+    connected: number
+    users: Array<{
+      user: User & {
+        team: Team
+      }
+      online: number
+    }>
+  } {
+    let online = 0
+    let connected = 0
+    const users = new Map<User & { team: Team }, number>()
+
+    for (const socket of this.io.sockets.sockets.values()) {
+      online++
+      if (!socket.user) continue
+      connected++
+      users.set(socket.user, (users.get(socket.user) ?? 0) + 1)
+    }
+
+    return {
+      online,
+      connected,
+      users: [...users.entries()].map(([user, online]) => ({ user, online })),
+    }
   }
 }
 

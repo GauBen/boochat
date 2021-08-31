@@ -81,7 +81,7 @@
       <GameController {socket} {loggedIn} />
     </section>
     <section>
-      <Admin />
+      <Admin {socket} />
     </section>
   </div>
 </main>

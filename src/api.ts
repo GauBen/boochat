@@ -43,8 +43,14 @@ export interface Response {
   [GetRequest.Messages]: RichMessage[]
   [GetRequest.GameSettings]: { value: string }
   [GetRequest.GameResults]: Array<[number, number]>
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  [GetRequest.UsersOnline]: []
+  [GetRequest.UsersOnline]: {
+    online: number
+    connected: number
+    users: Array<{
+      user: User & { team: Team }
+      online: number
+    }>
+  }
   [PostRequest.Login]: { token: string } | { error: string }
   [PostRequest.Token]: boolean
   [PostRequest.SetupGame]: void

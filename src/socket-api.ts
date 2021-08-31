@@ -1,4 +1,5 @@
 import type { RichMessage } from './api'
+import type { User, Team } from '@prisma/client'
 
 export enum ClientEvent {
   Message = 'chat message',
@@ -12,6 +13,7 @@ export enum ServerEvent {
   LoggedOut = 'logged out',
   GameSettings = 'game settings',
   Game = 'game',
+  Stats = 'stats',
 }
 
 export interface ClientToServerEvents {
@@ -26,4 +28,14 @@ export interface ServerToClientEvents {
   [ServerEvent.LoggedOut]: () => void
   [ServerEvent.GameSettings]: (settings: { value: string }) => void
   [ServerEvent.Game]: (results: Array<[number, number]>) => void
+  [ServerEvent.Stats]: (stats: {
+    online: number
+    connected: number
+    users: Array<{
+      user: User & {
+        team: Team
+      }
+      online: number
+    }>
+  }) => void
 }
