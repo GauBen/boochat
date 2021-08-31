@@ -69,7 +69,7 @@ export class App implements AppAttributes {
     this.get(GetRequest.Teams, () => this.teams)
     this.get(GetRequest.UsersOnline, () => this.computeStats())
 
-    this.post(PostRequest.Login, async ({ login, teamId }) => {
+    this.post(PostRequest.Login, async ({ name: login, teamId }) => {
       const team = this.teams.find(({ id }) => id === teamId)
 
       if (!team) throw new Error("Cette équipe n'existe pas")

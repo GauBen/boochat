@@ -20,7 +20,7 @@ export enum PostRequest {
 export const schemas = {
   [PostRequest.Login]: {
     properties: {
-      login: { type: 'string' },
+      name: { type: 'string' },
       teamId: { type: 'int32' },
     },
   },

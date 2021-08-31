@@ -9,6 +9,7 @@ datasource db {
 
 model Team {
   id    Int    @id @default(autoincrement())
+  code  String @unique
   name  String @unique
   color String
   users User[]
