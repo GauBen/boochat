@@ -62,6 +62,10 @@ export class App implements AppAttributes {
     })
 
     this.get(GetRequest.Teams, () => this.teams)
+    this.get(GetRequest.UsersOnline, () => {
+      console.log(io.sockets.sockets.size)
+      return []
+    })
 
     this.post(PostRequest.Login, async ({ login, teamId }) => {
       const team = this.teams.find(({ id }) => id === teamId)
@@ -74,7 +78,6 @@ export class App implements AppAttributes {
         where: { name: login },
         include: { team: true },
       })
-      console.log(user)
 
       const token = nanoid()
       this.users.set(user.id, user)

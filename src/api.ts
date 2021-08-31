@@ -8,6 +8,7 @@ export enum GetRequest {
   Messages = '/messages',
   GameSettings = '/game-settings',
   GameResults = '/game-results',
+  UsersOnline = '/users-online',
 }
 
 export enum PostRequest {
@@ -42,6 +43,8 @@ export interface Response {
   [GetRequest.Messages]: RichMessage[]
   [GetRequest.GameSettings]: { value: string }
   [GetRequest.GameResults]: Array<[number, number]>
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  [GetRequest.UsersOnline]: []
   [PostRequest.Login]: { token: string } | { error: string }
   [PostRequest.Token]: boolean
   [PostRequest.SetupGame]: void
