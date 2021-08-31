@@ -28,8 +28,9 @@ export class App implements AppAttributes {
   readonly prisma
   readonly api: Express
 
+  users: Map<number, User & { team: Team }>
   teams: Team[] = []
-  tokens: Map<string, User & { team: Team }>
+  tokens: Map<string, number>
   subapps: CreateSubApp[] = []
 
   constructor({ io, validate, prisma }: AppAttributes) {
@@ -41,7 +42,9 @@ export class App implements AppAttributes {
     void prisma.team.findMany().then((teams) => {
       this.teams = teams
     })
-    this.tokens = new Map<string, User & { team: Team }>()
+
+    this.users = new Map()
+    this.tokens = new Map()
 
     this.io.on('connection', (socket) => {
       if (!socket.user) socket.emit(ServerEvent.LoggedOut)
@@ -51,7 +54,8 @@ export class App implements AppAttributes {
 
       if (auth?.startsWith('Token ')) {
         const token = auth.slice(6)
-        if (this.tokens.has(token)) req.user = this.tokens.get(token)
+        if (this.tokens.has(token))
+          req.user = this.users.get(this.tokens.get(token) ?? -1)
       }
 
       next()
@@ -64,26 +68,17 @@ export class App implements AppAttributes {
 
       if (!team) throw new Error("Cette équipe n'existe pas")
 
-      const user = await prisma.user.findUnique({
+      const user = await prisma.user.upsert({
+        create: { name: login, teamId },
+        update: { teamId },
         where: { name: login },
         include: { team: true },
       })
+      console.log(user)
 
       const token = nanoid()
-
-      this.tokens.set(
-        token,
-        user
-          ? await prisma.user.update({
-              where: { id: user.id },
-              data: { teamId },
-              include: { team: true },
-            })
-          : await prisma.user.create({
-              data: { name: login, teamId },
-              include: { team: true },
-            })
-      )
+      this.users.set(user.id, user)
+      this.tokens.set(token, user.id)
 
       return { token }
     })
@@ -92,7 +87,7 @@ export class App implements AppAttributes {
 
     io.use((socket, next) => {
       const { token } = socket.handshake.auth
-      socket.user = this.tokens.get(token)
+      socket.user = this.users.get(this.tokens.get(token) ?? -1)
       next()
     })
   }

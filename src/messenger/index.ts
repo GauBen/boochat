@@ -23,6 +23,7 @@ export default (app: App): void => {
       messages = messages.filter((msg) => msg.id !== id)
     })
     socket.on(ClientEvent.Message, async (msg: string) => {
+      console.log(msg)
       if (user.level < 1) return
 
       if (msg === 'banme') {

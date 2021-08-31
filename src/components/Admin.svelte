@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Admin from '../games/quizz/Admin.svelte'
+  import GameAdmin from '../games/quizz/Admin.svelte'
 </script>
 
-<svelte:component this={Admin} />
+<svelte:component this={GameAdmin} />
