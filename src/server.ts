@@ -4,7 +4,7 @@ import type { ValidateFunction } from 'ajv/dist/types'
 import { statSync } from 'fs'
 import { createServer } from 'http'
 // eslint-disable-next-line import/default
-import pkg from '@prisma/client'
+import Prisma from '@prisma/client'
 import Ajv from 'ajv/dist/jtd'
 import express from 'express'
 import sirv from 'sirv'
@@ -14,7 +14,6 @@ import { App } from './app'
 import createQuizz from './games/quizz/index'
 import createMessenger from './messenger/index'
 
-const { PrismaClient } = pkg
 const ajv = new Ajv()
 
 const PORT = 3001
@@ -26,7 +25,7 @@ const app = new App({
     cors: { origin: '*' },
     serveClient: false,
   }),
-  prisma: new PrismaClient(),
+  prisma: new Prisma.PrismaClient(),
   validate: Object.fromEntries(
     Object.entries(schemas).map(([key, schema]) => [key, ajv.compile(schema)])
   ) as {
