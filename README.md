@@ -18,3 +18,13 @@ yarn build
 # To start the production server:
 yarn nodemon
 ```
+
+## Create the database
+
+```bash
+# Create an empty database:
+yarn prisma db push
+
+# Populate it with data:
+yarn prisma db seed --preview-feature
+```
