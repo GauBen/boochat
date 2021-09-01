@@ -150,7 +150,7 @@
 
   .teams {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 8rem);
+    grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
     gap: 1rem;
     align-items: center;
     justify-content: space-evenly;
@@ -178,9 +178,10 @@
       transition: transform 0.2s;
 
       > img {
-        width: 8rem;
+        width: 100%;
         height: 8rem;
         padding: 0.5rem;
+        object-fit: contain;
         background-color: var(--color);
         border-radius: 0.25rem;
         transition: box-shadow 0.5s;
