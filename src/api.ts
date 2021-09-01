@@ -1,7 +1,7 @@
 import type { Message, Team, User } from '@prisma/client'
 import type { JTDDataType } from 'ajv/dist/core'
 
-const API = '//localhost:3001/api'
+const API = `//${globalThis?.location?.hostname ?? 'localhost'}:3001/api`
 
 export enum GetRequest {
   Teams = '/teams',
