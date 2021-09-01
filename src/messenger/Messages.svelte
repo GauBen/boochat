@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { RichMessage } from '../api'
+  import type { Me, RichMessage } from '../api'
   import { afterUpdate, beforeUpdate, createEventDispatcher } from 'svelte'
   import MessageComponent from './Message.svelte'
 
@@ -8,6 +8,7 @@
     | { type: 'notice'; message: string }
   > = []
 
+  export let me: Me | undefined = undefined
   export let mod = false
 
   const dispatch = createEventDispatcher<{ delete: number }>()
@@ -31,7 +32,9 @@
   {#each thread as item}
     {#if item.type === 'message'}
       <MessageComponent
-        {...item.message}
+        author={item.message.author}
+        body={item.message.body}
+        {me}
         {mod}
         on:delete={() => {
           dispatch('delete', item.message.id)

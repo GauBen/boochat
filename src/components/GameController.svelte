@@ -1,14 +1,15 @@
 <script lang="ts">
+  import type { Me } from '../api'
   import type { Socket } from 'socket.io-client'
   import Controller from '../games/quizz/Controller.svelte'
 
   export let socket: Socket | undefined = undefined
-  export let loggedIn: boolean | undefined = undefined
+  export let me: Me | undefined = undefined
 </script>
 
-{#if loggedIn}
+{#if me}
   <svelte:component this={Controller} {socket} />
-{:else}
+{:else if me === false}
   <a href="/login">Se connecter</a>
 {/if}
 

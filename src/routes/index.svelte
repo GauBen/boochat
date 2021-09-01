@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Me } from '../api'
   import type {
     ClientToServerEvents,
     ServerToClientEvents,
@@ -15,16 +16,14 @@
 
   let socket: Socket<ServerToClientEvents, ClientToServerEvents> | undefined
 
-  let loggedIn: boolean | undefined
+  let me: Me | undefined
 
   onMount(async () => {
     const token = sessionStorage.getItem('token')
-    if (token === null) {
-      loggedIn = false
-    } else {
-      post(PostRequest.Token, { token })
-        .then(({ body: json }) => {
-          loggedIn = json
+    if (token !== null) {
+      post(PostRequest.Me, { token })
+        .then(({ body }) => {
+          me = body
         })
         .catch((error) => {
           console.error(error)
@@ -36,13 +35,13 @@
     })
 
     socket.on(ServerEvent.LoggedOut, () => {
-      loggedIn = false
+      me = false
     })
   })
 
   const logout = () => {
     sessionStorage.removeItem('token')
-    loggedIn = false
+    me = false
   }
 
   let app: HTMLElement
@@ -75,10 +74,10 @@
   </nav>
   <div bind:this={app} class="app">
     <section>
-      <Messenger {socket} {loggedIn} on:logout={logout} />
+      <Messenger {socket} {me} on:logout={logout} />
     </section>
     <section>
-      <GameController {socket} {loggedIn} />
+      <GameController {socket} {me} />
     </section>
     <section>
       <Admin {socket} />

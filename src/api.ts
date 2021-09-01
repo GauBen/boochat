@@ -13,7 +13,7 @@ export enum GetRequest {
 
 export enum PostRequest {
   Login = '/login',
-  Token = '/is-logged-in',
+  Me = '/me',
   SetupGame = '/setup-game',
 }
 
@@ -24,7 +24,7 @@ export const schemas = {
       teamId: { type: 'int32' },
     },
   },
-  [PostRequest.Token]: {
+  [PostRequest.Me]: {
     properties: {
       token: { type: 'string' },
     },
@@ -36,6 +36,7 @@ export const schemas = {
   },
 } as const
 
+export type Me = (User & { team: Team }) | false
 export type RichMessage = Message & { author: User & { team: Team } }
 
 export interface Response {
@@ -52,7 +53,7 @@ export interface Response {
     }>
   }
   [PostRequest.Login]: { token: string } | { error: string }
-  [PostRequest.Token]: boolean
+  [PostRequest.Me]: (User & { team: Team }) | false
   [PostRequest.SetupGame]: void
 }
 

@@ -1,23 +1,58 @@
 <script lang="ts">
-  import type { Team, User } from '.prisma/client'
+  import type { Me } from '../api'
+  import type { Team, User } from '@prisma/client'
   import { createEventDispatcher } from 'svelte'
   import twemoji from 'twemoji'
 
+  export let me: Me | undefined
   export let mod = false
   export let author: User & { team: Team }
   export let body: string
 
   const dispatch = createEventDispatcher<{ delete: void }>()
 
-  const emoji = (node: HTMLElement) => {
+  const richText = (
+    node: HTMLElement,
+    { me, body }: { body: string; me: Me | undefined }
+  ) => {
+    // Reset the text
+    node.textContent = body
+
+    // Replace emojis
     // eslint-disable-next-line import/no-named-as-default-member
     twemoji.parse(node, { folder: 'svg', ext: '.svg' })
+
+    // Mark @name
+    if (me) tag(node, me.name, me.team.color)
+
+    return {
+      update(args: { body: string; me: Me | undefined }) {
+        richText(node, args)
+      },
+    }
+  }
+
+  /** Replaces `@name` with `<mark>@name</mark>`. */
+  const tag = (node: HTMLElement, name: string, color: string) => {
+    for (const child of node.childNodes) {
+      if (child.nodeType !== Node.TEXT_NODE) continue
+      const text = child.textContent
+      const pattern = `@${name}`
+      const index = text?.indexOf(pattern) ?? -1
+      if (index === -1) continue
+      const tag = (child as Text).splitText(index)
+      tag.splitText(pattern.length)
+      const mark = document.createElement('mark')
+      mark.style.setProperty('--color', color)
+      mark.append(tag)
+      child.after(' ', mark, ' ')
+    }
   }
 </script>
 
 <p>
   <strong style="color:{author.team.color}">{author.name}:</strong>
-  <span use:emoji>{body}</span>
+  <span use:richText={{ body, me }} />
   {#if mod}
     <button
       on:click={() => {
@@ -31,6 +66,14 @@
 <style lang="scss">
   p {
     margin: 0;
+
+    :global(mark) {
+      padding: 0 0.125em;
+      background-color: var(--color);
+      border-radius: 0.25rem;
+      box-decoration-break: clone;
+      line-break: strict;
+    }
 
     :global(.emoji) {
       width: 1em;

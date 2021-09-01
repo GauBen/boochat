@@ -78,7 +78,10 @@ export class App implements AppAttributes {
     this.get(GetRequest.UsersOnline, () => this.computeStats())
 
     // Post requests
-    this.post(PostRequest.Token, ({ token }) => this.tokens.has(token))
+    this.post(
+      PostRequest.Me,
+      ({ token }) => this.users.get(this.tokens.get(token) ?? -1) ?? false
+    )
     this.post(PostRequest.Login, async ({ name: login, teamId }) => {
       const team = this.teams.get(teamId)
 

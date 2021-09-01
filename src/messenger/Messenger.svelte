@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { RichMessage } from '../api'
+  import type { Me, RichMessage } from '../api'
   import type {
     ClientToServerEvents,
     ServerToClientEvents,
@@ -11,7 +11,7 @@
   import { ClientEvent, ServerEvent } from '../socket-api'
   import Messages from './Messages.svelte'
 
-  export let loggedIn: boolean | undefined = undefined
+  export let me: Me | undefined = undefined
   export let mod = false
   export let socket:
     | Socket<ServerToClientEvents, ClientToServerEvents>
@@ -95,7 +95,7 @@
 </script>
 
 <div class="messenger">
-  {#if loggedIn === true}
+  {#if me}
     <p class="center">
       <label for="mod">
         <input type="checkbox" id="mod" bind:checked={mod} /> Mod view
@@ -104,16 +104,16 @@
         type="button"
         on:click={() => {
           dispatch('logout')
-        }}>Se déconnecter</button
+        }}>Se déconnecter ({me.name})</button
       >
     </p>
   {/if}
 
-  <Messages {thread} {mod} on:delete={del} />
+  <Messages {thread} {me} {mod} on:delete={del} />
 
-  {#if loggedIn === undefined}
+  {#if me === undefined}
     <p class="center">Chargement...</p>
-  {:else if loggedIn === true}
+  {:else if me}
     <form on:submit|preventDefault={send}>
       <input type="text" bind:value />
       <button>Envoyer</button>
