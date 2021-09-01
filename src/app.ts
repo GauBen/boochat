@@ -33,14 +33,14 @@ export class App implements AppAttributes {
   readonly validate
   readonly prisma
 
+  readonly api: Express
   readonly emitter: TypedEventEmitter<{
     [AppEvent.UserUpdated]: (user: User) => void
   }>
 
-  readonly api: Express
-  readonly users: Map<number, User & { team: Team }>
-  teams: Team[] = []
-  readonly tokens: Map<string, number>
+  readonly teams: Map<Team['id'], Team> = new Map()
+  readonly users: Map<number, User & { team: Team }> = new Map()
+  readonly tokens: Map<string, number> = new Map()
 
   constructor({ io, validate, prisma }: AppAttributes) {
     this.io = io
@@ -48,14 +48,11 @@ export class App implements AppAttributes {
     this.prisma = prisma
 
     this.emitter = new EventEmitter()
-
     this.api = express()
-    this.users = new Map()
-    this.tokens = new Map()
 
     // Fetch data
     void prisma.team.findMany().then((teams) => {
-      this.teams = teams
+      for (const team of teams) this.teams.set(team.id, team)
     })
 
     // Register middlewares
@@ -77,13 +74,13 @@ export class App implements AppAttributes {
     })
 
     // Get requests
-    this.get(GetRequest.Teams, () => this.teams)
+    this.get(GetRequest.Teams, () => [...this.teams.values()])
     this.get(GetRequest.UsersOnline, () => this.computeStats())
 
     // Post requests
     this.post(PostRequest.Token, ({ token }) => this.tokens.has(token))
     this.post(PostRequest.Login, async ({ name: login, teamId }) => {
-      const team = this.teams.find(({ id }) => id === teamId)
+      const team = this.teams.get(teamId)
 
       if (!team) throw new Error("Cette équipe n'existe pas")
 
