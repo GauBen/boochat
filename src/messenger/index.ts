@@ -1,6 +1,6 @@
+import type { App } from '../app'
 import type { Socket } from 'socket.io'
 import { GetRequest, RichMessage } from '../api'
-import { App } from '../app'
 import { ClientEvent, ServerEvent } from '../socket-api'
 
 export default (app: App): void => {
