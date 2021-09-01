@@ -1,8 +1,8 @@
 // eslint-disable-next-line import/default
 import Prisma from '@prisma/client'
 
-export const seed = async (): Promise<void> => {
-  const prisma = new Prisma.PrismaClient()
+const prisma = new Prisma.PrismaClient()
+const seed = async (): Promise<void> => {
   await prisma.team.create({
     data: {
       code: 'sn',
@@ -25,3 +25,5 @@ export const seed = async (): Promise<void> => {
     },
   })
 }
+
+seed().finally(async () => prisma.$disconnect())
