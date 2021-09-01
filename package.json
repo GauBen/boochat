@@ -2,7 +2,7 @@
   "name": "boochat",
   "version": "0.0.1",
   "dependencies": {
-    "@prisma/client": "2.30.0",
+    "@prisma/client": "^2.30.2",
     "@swc/core": "^1.2.83",
     "@swc/helpers": "^0.2.13",
     "ajv": "^8.6.2",
@@ -68,12 +68,13 @@
     "check": "tsc --noEmit & eslint --fix 'src/**/*.{ts,js,svelte}' & stylelint --fix 'src/**/*' & svelte-check --tsconfig ./tsconfig.json &",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
     "clean": "rm -rf .svelte-kit/ build/",
-    "dev": "nodemon -e ts & svelte-kit dev &",
+    "dev": "nodemon -e ts & svelte-kit dev --host &",
     "format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
     "lint": "prettier --ignore-path .gitignore  --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
     "postinstall": "husky install",
     "preview": "svelte-kit preview",
-    "start": "node --experimental-specifier-resolution=node --loader ts-node/esm src/server.ts"
+    "start": "yarn ts-node src/server.ts",
+    "ts-node": "node --experimental-specifier-resolution=node --loader ts-node/esm"
   },
   "type": "module",
   "volta": {
