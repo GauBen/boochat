@@ -4,21 +4,22 @@ import { GetRequest, RichMessage } from '../api'
 import { ClientEvent, ServerEvent } from '../socket-api'
 
 export default (app: App): void => {
+  const { io, prisma } = app
+
   let messages: RichMessage[] = []
 
-  void app.prisma.message
+  void prisma.message
     .findMany({ include: { author: { include: { team: true } } } })
     .then((res) => {
       messages = res
     })
 
-  app.get(GetRequest.Messages, () => messages)
-
-  app.io.use((socket: Socket, next) => {
+  // Register a middleware to handle incoming socket events
+  io.use((socket: Socket, next) => {
     const { user } = socket
 
     socket.on(ClientEvent.DeleteMessage, (id: number) => {
-      app.io.emit(ServerEvent.DeleteMessage, id)
+      io.emit(ServerEvent.DeleteMessage, id)
       messages = messages.filter((msg) => msg.id !== id)
     })
     socket.on(ClientEvent.Message, async (msg: string) => {
@@ -26,23 +27,26 @@ export default (app: App): void => {
 
       if (msg === 'banme') {
         user.level = 0
-        await app.prisma.user.update({
+        await prisma.user.update({
           data: { level: 0 },
           where: { id: user.id },
         })
       }
 
-      const message = await app.prisma.message.create({
+      const message = await prisma.message.create({
         data: {
           body: msg,
           authorId: user.id,
         },
         include: { author: { include: { team: true } } },
       })
-      app.io.emit(ServerEvent.Message, message)
+      io.emit(ServerEvent.Message, message)
       messages = [...messages.slice(-999), message]
     })
 
     next()
   })
+
+  // Get the latest messages
+  app.get(GetRequest.Messages, () => messages)
 }
