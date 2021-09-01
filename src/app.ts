@@ -2,6 +2,8 @@ import type { PrismaClient, Team, User } from '@prisma/client'
 import type { ValidateFunction } from 'ajv'
 import type { JTDDataType } from 'ajv/dist/core'
 import type { Server } from 'socket.io'
+import type TypedEventEmitter from 'typed-emitter'
+import EventEmitter from 'events'
 import cors from 'cors'
 import express, { Express, json } from 'express'
 import { nanoid } from 'nanoid'
@@ -22,10 +24,18 @@ export interface AppAttributes {
   }
 }
 
+export enum AppEvent {
+  UserUpdated = 'user-updated',
+}
+
 export class App implements AppAttributes {
   readonly io
   readonly validate
   readonly prisma
+
+  readonly emitter: TypedEventEmitter<{
+    [AppEvent.UserUpdated]: (user: User) => void
+  }>
 
   readonly api: Express
   readonly users: Map<number, User & { team: Team }>
@@ -36,6 +46,8 @@ export class App implements AppAttributes {
     this.io = io
     this.validate = validate
     this.prisma = prisma
+
+    this.emitter = new EventEmitter()
 
     this.api = express()
     this.users = new Map()
