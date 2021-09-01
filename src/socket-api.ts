@@ -9,6 +9,7 @@ export enum ClientEvent {
 
 export enum ServerEvent {
   Message = 'chat message',
+  Notice = 'notice',
   DeleteMessage = 'delete message',
   LoggedOut = 'logged out',
   GameSettings = 'game settings',
@@ -25,6 +26,7 @@ export interface ClientToServerEvents {
 
 export interface ServerToClientEvents {
   [ServerEvent.Message]: (message: RichMessage) => void
+  [ServerEvent.Notice]: (message: string) => void
   [ServerEvent.DeleteMessage]: (id: number) => void
   [ServerEvent.LoggedOut]: () => void
   [ServerEvent.Connected]: () => void

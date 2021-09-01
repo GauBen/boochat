@@ -1,11 +1,11 @@
 import type { PrismaClient, Team, User } from '@prisma/client'
 import type { ValidateFunction } from 'ajv'
 import type { JTDDataType } from 'ajv/dist/core'
-import type { Server } from 'socket.io'
+import type { Server, Socket } from 'socket.io'
 import type TypedEventEmitter from 'typed-emitter'
 import EventEmitter from 'events'
 import cors from 'cors'
-import express, { Express, json } from 'express'
+import express, { json } from 'express'
 import { nanoid } from 'nanoid'
 import { GetRequest, PostRequest, Response, schemas } from './api'
 import {
@@ -28,15 +28,20 @@ export enum AppEvent {
   UserUpdated = 'user-updated',
 }
 
+export enum Room {
+  Chat = 'chat',
+  Moderation = 'moderation',
+}
+
 export class App implements AppAttributes {
   readonly io
   readonly validate
   readonly prisma
 
-  readonly api: Express
+  readonly api = express()
   readonly emitter: TypedEventEmitter<{
     [AppEvent.UserUpdated]: (user: User) => void
-  }>
+  }> = new EventEmitter()
 
   readonly teams: Map<Team['id'], Team> = new Map()
   readonly users: Map<number, User & { team: Team }> = new Map()
@@ -46,9 +51,6 @@ export class App implements AppAttributes {
     this.io = io
     this.validate = validate
     this.prisma = prisma
-
-    this.emitter = new EventEmitter()
-    this.api = express()
 
     // Fetch data
     void prisma.team.findMany().then((teams) => {
@@ -108,6 +110,17 @@ export class App implements AppAttributes {
       socket.on('disconnect', () => {
         io.emit(ServerEvent.Stats, this.computeStats())
       })
+      if (socket.user) this.emitter.emit(AppEvent.UserUpdated, socket.user)
+    })
+
+    // Listen for user updates
+    this.emitter.on(AppEvent.UserUpdated, (user) => {
+      for (const socket of this.getUserSockets(user)) {
+        void socket.join(Room.Chat)
+
+        if (user.level > 1) void socket.join(Room.Moderation)
+        else void socket.leave(Room.Moderation)
+      }
     })
   }
 
@@ -172,6 +185,16 @@ export class App implements AppAttributes {
       connected,
       users: [...users.entries()].map(([user, online]) => ({ user, online })),
     }
+  }
+
+  getUserSockets({
+    id,
+  }: {
+    id: User['id']
+  }): Array<Socket<ClientToServerEvents, ServerToClientEvents>> {
+    return [...this.io.sockets.sockets.values()].filter(
+      ({ user }) => user && user.id === id
+    )
   }
 }
 

@@ -73,6 +73,10 @@
       thread = [...thread, { type: 'message', message }]
     })
 
+    socket.on(ServerEvent.Notice, async (message) => {
+      thread = [...thread, { type: 'notice', message }]
+    })
+
     socket.on(ServerEvent.DeleteMessage, async (id) => {
       thread = thread.filter(
         (item) => item.type !== 'message' || item.message.id !== id
