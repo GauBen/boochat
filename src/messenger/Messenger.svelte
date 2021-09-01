@@ -22,6 +22,8 @@
     | { type: 'notice'; message: string }
   > = []
 
+  $: if (thread.length > 1000) thread = thread.slice(-1000)
+
   $: messages = thread
     .filter(
       (item): item is { type: 'message'; message: RichMessage } =>
@@ -48,9 +50,10 @@
 
   onMount(async () => {
     const { body } = await get(GetRequest.Messages)
+    // Load messages above notices
     thread = [
-      ...thread.slice(-999),
       ...body.map((message) => ({ type: 'message' as const, message })),
+      ...thread,
     ]
   })
 
@@ -59,8 +62,15 @@
   ) => {
     if (!socket) return
 
+    socket.on(ServerEvent.Connected, () => {
+      thread = [
+        ...thread,
+        { type: 'notice', message: 'Bienvenue sur Boochat !' },
+      ]
+    })
+
     socket.on(ServerEvent.Message, async (message) => {
-      thread = [...thread.slice(-999), { type: 'message', message }]
+      thread = [...thread, { type: 'message', message }]
     })
 
     socket.on(ServerEvent.DeleteMessage, async (id) => {

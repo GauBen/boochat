@@ -18,6 +18,8 @@ export default (app: App): void => {
   io.use((socket: Socket, next) => {
     const { user } = socket
 
+    socket.emit(ServerEvent.Connected)
+
     socket.on(ClientEvent.DeleteMessage, (id: number) => {
       io.emit(ServerEvent.DeleteMessage, id)
       messages = messages.filter((msg) => msg.id !== id)
