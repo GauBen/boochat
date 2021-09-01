@@ -11,49 +11,42 @@ import {
   ServerEvent,
   ServerToClientEvents,
 } from './socket-api'
+
 export interface AppAttributes {
   readonly io: Server<ClientToServerEvents, ServerToClientEvents>
+  readonly prisma: PrismaClient
   readonly validate: {
     [k in keyof typeof schemas]: ValidateFunction<
       JTDDataType<typeof schemas[k]>
     >
   }
-
-  readonly prisma: PrismaClient
 }
 
 export class App implements AppAttributes {
   readonly io
   readonly validate
   readonly prisma
-  readonly api: Express
 
-  users: Map<number, User & { team: Team }>
+  readonly api: Express
+  readonly users: Map<number, User & { team: Team }>
   teams: Team[] = []
-  tokens: Map<string, number>
-  subapps: CreateSubApp[] = []
+  readonly tokens: Map<string, number>
 
   constructor({ io, validate, prisma }: AppAttributes) {
-    this.api = express()
     this.io = io
     this.validate = validate
     this.prisma = prisma
 
+    this.api = express()
+    this.users = new Map()
+    this.tokens = new Map()
+
+    // Fetch data
     void prisma.team.findMany().then((teams) => {
       this.teams = teams
     })
 
-    this.users = new Map()
-    this.tokens = new Map()
-
-    this.io.on('connect', (socket) => {
-      if (!socket.user) socket.emit(ServerEvent.LoggedOut)
-      io.emit(ServerEvent.Stats, this.computeStats())
-      socket.on('disconnect', () => {
-        io.emit(ServerEvent.Stats, this.computeStats())
-      })
-    })
-
+    // Register middlewares
     this.api.use(json(), cors(), (req, _res, next) => {
       const { authorization: auth } = req.headers
 
@@ -65,10 +58,18 @@ export class App implements AppAttributes {
 
       next()
     })
+    this.io.use((socket, next) => {
+      const { token } = socket.handshake.auth
+      socket.user = this.users.get(this.tokens.get(token) ?? -1)
+      next()
+    })
 
+    // Get requests
     this.get(GetRequest.Teams, () => this.teams)
     this.get(GetRequest.UsersOnline, () => this.computeStats())
 
+    // Post requests
+    this.post(PostRequest.Token, ({ token }) => this.tokens.has(token))
     this.post(PostRequest.Login, async ({ name: login, teamId }) => {
       const team = this.teams.find(({ id }) => id === teamId)
 
@@ -88,12 +89,22 @@ export class App implements AppAttributes {
       return { token }
     })
 
-    this.post(PostRequest.Token, ({ token }) => this.tokens.has(token))
+    // Socket events
+    this.io.on('connect', (socket) => {
+      if (!socket.user) socket.emit(ServerEvent.LoggedOut)
+      io.emit(ServerEvent.Stats, this.computeStats())
+      socket.on('disconnect', () => {
+        io.emit(ServerEvent.Stats, this.computeStats())
+      })
+    })
+  }
 
-    io.use((socket, next) => {
-      const { token } = socket.handshake.auth
-      socket.user = this.users.get(this.tokens.get(token) ?? -1)
-      next()
+  get<T extends GetRequest>(
+    path: T,
+    handler: () => Response[T] | Promise<Response[T]>
+  ): void {
+    this.api.get(path, async (_req, res) => {
+      res.json(await handler())
     })
   }
 
@@ -119,17 +130,7 @@ export class App implements AppAttributes {
     })
   }
 
-  get<T extends GetRequest>(
-    path: T,
-    handler: () => Response[T] | Promise<Response[T]>
-  ): void {
-    this.api.get(path, async (_req, res) => {
-      res.json(await handler())
-    })
-  }
-
   use(...subapps: CreateSubApp[]): void {
-    this.subapps = [...this.subapps, ...subapps]
     for (const subapp of subapps) subapp(this)
   }
 
