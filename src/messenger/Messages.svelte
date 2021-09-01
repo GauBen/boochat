@@ -1,9 +1,12 @@
 <script lang="ts">
-  import type { Message, Team, User } from '@prisma/client'
+  import type { RichMessage } from '../api'
   import { afterUpdate, beforeUpdate, createEventDispatcher } from 'svelte'
   import MessageComponent from './Message.svelte'
 
-  export let messages: Array<Message & { author: User & { team: Team } }> = []
+  export let thread: Array<
+    | { type: 'message'; message: RichMessage }
+    | { type: 'notice'; message: string }
+  > = []
 
   export let mod = false
 
@@ -25,15 +28,18 @@
 </script>
 
 <div class="messages" bind:this={div}>
-  {#each messages as { id, author, body } (id)}
-    <MessageComponent
-      {author}
-      {body}
-      {mod}
-      on:delete={() => {
-        dispatch('delete', id)
-      }}
-    />
+  {#each thread as item}
+    {#if item.type === 'message'}
+      <MessageComponent
+        {...item.message}
+        {mod}
+        on:delete={() => {
+          dispatch('delete', item.message.id)
+        }}
+      />
+    {:else if item.type === 'notice'}
+      <div class="notice">{item.message}</div>
+    {/if}
   {/each}
 </div>
 
@@ -49,5 +55,9 @@
     > :global(:first-child) {
       margin-top: auto;
     }
+  }
+
+  .notice {
+    color: #999;
   }
 </style>

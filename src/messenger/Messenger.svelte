@@ -1,9 +1,10 @@
 <script lang="ts">
+  import type { RichMessage } from '../api'
   import type {
     ClientToServerEvents,
     ServerToClientEvents,
   } from '../socket-api'
-  import type { Message, Team, User } from '@prisma/client'
+  import type { Team, User } from '@prisma/client'
   import type { Socket } from 'socket.io-client'
   import { createEventDispatcher, onMount } from 'svelte'
   import { get, GetRequest } from '../api'
@@ -16,7 +17,18 @@
     | Socket<ServerToClientEvents, ClientToServerEvents>
     | undefined = undefined
 
-  let messages: Array<Message & { author: User & { team: Team } }> = []
+  let thread: Array<
+    | { type: 'message'; message: RichMessage }
+    | { type: 'notice'; message: string }
+  > = []
+
+  $: messages = thread
+    .filter(
+      (item): item is { type: 'message'; message: RichMessage } =>
+        item.type === 'message'
+    )
+    .map(({ message }) => message)
+
   let value = ''
 
   const users = new Map<number, User & { team: Team }>()
@@ -35,8 +47,11 @@
   const dispatch = createEventDispatcher<{ logout: void; send: string }>()
 
   onMount(async () => {
-    const { body: json } = await get(GetRequest.Messages)
-    messages = json
+    const { body } = await get(GetRequest.Messages)
+    thread = [
+      ...thread.slice(-999),
+      ...body.map((message) => ({ type: 'message' as const, message })),
+    ]
   })
 
   const listen = (
@@ -44,12 +59,14 @@
   ) => {
     if (!socket) return
 
-    socket.on(ServerEvent.Message, async (msg) => {
-      messages = [...messages.slice(-999), msg]
+    socket.on(ServerEvent.Message, async (message) => {
+      thread = [...thread.slice(-999), { type: 'message', message }]
     })
 
     socket.on(ServerEvent.DeleteMessage, async (id) => {
-      messages = messages.filter((msg) => msg.id !== id)
+      thread = thread.filter(
+        (item) => item.type !== 'message' || item.message.id !== id
+      )
     })
   }
 
@@ -82,7 +99,7 @@
     </p>
   {/if}
 
-  <Messages {messages} {mod} on:delete={del} />
+  <Messages {thread} {mod} on:delete={del} />
 
   {#if loggedIn === undefined}
     <p class="center">Chargement...</p>
