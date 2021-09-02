@@ -3,6 +3,7 @@ import type { RichMessage, User, Team, DetailedMessage } from './types'
 export enum ClientEvent {
   Message = 'chat message',
   DeleteMessage = 'delete message',
+  RestoreMessage = 'restore message',
   Game = 'game',
 }
 
@@ -11,6 +12,7 @@ export enum ServerEvent {
   Message = 'chat message',
   Notice = 'notice',
   DeleteMessage = 'delete message',
+  RestoreMessage = 'restore message',
   LoggedOut = 'logged out',
   GameSettings = 'game settings',
   Connected = 'connected',
@@ -21,6 +23,7 @@ export enum ServerEvent {
 export interface ClientToServerEvents {
   [ClientEvent.Message]: (message: string) => void
   [ClientEvent.DeleteMessage]: (id: number) => void
+  [ClientEvent.RestoreMessage]: (id: number) => void
   [ClientEvent.Game]: () => void
 }
 
@@ -29,6 +32,7 @@ export interface ServerToClientEvents {
   [ServerEvent.Message]: (message: RichMessage) => void
   [ServerEvent.Notice]: (message: string) => void
   [ServerEvent.DeleteMessage]: (id: number) => void
+  [ServerEvent.RestoreMessage]: (id: number) => void
   [ServerEvent.LoggedOut]: () => void
   [ServerEvent.Connected]: () => void
   [ServerEvent.GameSettings]: (settings: { value: string }) => void

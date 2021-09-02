@@ -16,16 +16,57 @@
     code: teamCode = '',
   } = teams.get(author.teamId) ?? { color: '#fff', name: '', code: '' })
 
-  const dispatch = createEventDispatcher<{ delete: void }>()
+  const dispatch = createEventDispatcher<{ delete: void; restore: void }>()
 </script>
 
 <p class:invisible={!visible} style="--color:{color}">
+  {#if mod}
+    {#if deleted}
+      <button
+        on:click={() => {
+          dispatch('restore')
+        }}
+        type="button"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M18.885 3.515c-4.617-4.618-12.056-4.676-16.756-.195l-2.129-2.258v7.938h7.484l-2.066-2.191c2.82-2.706 7.297-2.676 10.073.1 4.341 4.341 1.737 12.291-5.491 12.291v4.8c3.708 0 6.614-1.244 8.885-3.515 4.686-4.686 4.686-12.284 0-16.97z"
+          />
+        </svg>
+      </button>
+    {:else}
+      <button
+        on:click={() => {
+          dispatch('delete')
+        }}
+        type="button"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z"
+          />
+        </svg>
+      </button>
+    {/if}
+  {/if}
   {#if teamCode}
     <img src="/images/badges/{teamCode}.png" alt={teamName} />
   {:else}
     <span class="placeholder" />
   {/if}
-  <strong>{author.name}</strong>{#if mod} ({author.inpId}){/if}:
+  <strong>{author.name}</strong>{#if mod}&nbsp;<span class="inp-id"
+      >({author.inpId})</span
+    >{/if}:
   {#if deleted}
     {#if mod}
       <span use:richText={{ body, me }} class:deleted />
@@ -34,14 +75,6 @@
     {/if}
   {:else}
     <span use:richText={{ body, me }} />
-  {/if}
-  {#if mod}
-    <button
-      on:click={() => {
-        dispatch('delete')
-      }}
-      type="button">X</button
-    >
   {/if}
 </p>
 
@@ -73,8 +106,26 @@
     border-radius: 0.25rem;
   }
 
+  button {
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    vertical-align: bottom;
+    border: 0;
+
+    > svg {
+      width: 1rem;
+      height: 1rem;
+      vertical-align: middle;
+    }
+  }
+
   strong {
     color: var(--color);
+  }
+
+  .inp-id {
+    color: #888;
   }
 
   .placeholder {

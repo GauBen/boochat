@@ -12,7 +12,7 @@
   export let mod = false
   export let teams: Map<Team['id'], Team>
 
-  const dispatch = createEventDispatcher<{ delete: number }>()
+  const dispatch = createEventDispatcher<{ delete: number; restore: number }>()
 
   /** Main div. */
   let div: HTMLElement | undefined
@@ -41,6 +41,9 @@
         {mod}
         on:delete={() => {
           dispatch('delete', item.message.id)
+        }}
+        on:restore={() => {
+          dispatch('restore', item.message.id)
         }}
       />
     {:else if item.type === Type.Notice}

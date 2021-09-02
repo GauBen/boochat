@@ -31,14 +31,26 @@ export default (app: App): void => {
 
     socket.emit(ServerEvent.Connected)
 
-    socket.on(ClientEvent.DeleteMessage, async (id: number) => {
-      if (!user || user.level < 2) return
-      io.emit(ServerEvent.DeleteMessage, id)
-      messages = messages.filter((msg) => msg.id !== id)
+    const setDeleted = async (id: number, deleted: boolean): Promise<void> => {
+      if (!user || user.level < Level.Moderator) return
+      io.emit(
+        deleted ? ServerEvent.DeleteMessage : ServerEvent.RestoreMessage,
+        id
+      )
+      messages = messages.map((msg) =>
+        msg.id === id ? { ...msg, deleted } : msg
+      )
       await prisma.message.update({
-        data: { deleted: true },
+        data: { deleted },
         where: { id },
       })
+    }
+
+    socket.on(ClientEvent.DeleteMessage, async (id: number) => {
+      await setDeleted(id, true)
+    })
+    socket.on(ClientEvent.RestoreMessage, async (id: number) => {
+      await setDeleted(id, false)
     })
 
     socket.on(ClientEvent.Message, async (msg: string) => {

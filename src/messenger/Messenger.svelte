@@ -83,6 +83,20 @@
     ]
   })
 
+  const setDeleted = (id: number, deleted: boolean) => {
+    const message = messages.get(id)
+    if (message) {
+      message.deleted = deleted
+      thread = thread
+    }
+
+    const detailedMessage = detailedMessages.get(id)
+    if (detailedMessage) {
+      detailedMessage.deleted = deleted
+      thread = thread
+    }
+  }
+
   const listen = (
     socket: Socket<ServerToClientEvents, ClientToServerEvents> | undefined
   ) => {
@@ -119,11 +133,10 @@
     })
 
     socket.on(ServerEvent.DeleteMessage, async (id) => {
-      const m = messages.get(id)
-      if (m) {
-        m.deleted = true
-        thread = thread
-      }
+      setDeleted(id, true)
+    })
+    socket.on(ServerEvent.RestoreMessage, async (id) => {
+      setDeleted(id, false)
     })
   }
 
@@ -138,6 +151,11 @@
   const del = ({ detail: id }: { detail: number }) => {
     if (!socket) return
     socket.emit(ClientEvent.DeleteMessage, id)
+  }
+
+  const restore = ({ detail: id }: { detail: number }) => {
+    if (!socket) return
+    socket.emit(ClientEvent.RestoreMessage, id)
   }
 </script>
 
@@ -158,7 +176,7 @@
     </p>
   {/if}
 
-  <Messages {teams} {thread} {me} {mod} on:delete={del} />
+  <Messages {teams} {thread} {me} {mod} on:delete={del} on:restore={restore} />
 
   {#if me === undefined}
     <p class="center">Chargement...</p>
