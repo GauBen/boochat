@@ -54,7 +54,11 @@
         {/each}
       </div>
     {:else}
-      <p>Chargement...</p>
+      <div class="teams">
+        <div class="placeholder" />
+        <div class="placeholder" />
+        <div class="placeholder" />
+      </div>
     {/if}
     <footer>
       <button>Créer</button>
@@ -190,6 +194,19 @@
       &:hover > img {
         box-shadow: 0 0 0.5rem var(--color);
       }
+    }
+
+    > .placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      height: 8rem;
+      margin-top: 1.5rem;
+      background: linear-gradient(to right, purple, tomato);
+      border-radius: 0.25rem;
+      opacity: 0.5;
+      transition: transform 0.2s;
     }
   }
 </style>
