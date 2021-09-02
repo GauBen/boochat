@@ -3,6 +3,13 @@ import type { JTDDataType } from 'ajv/dist/core'
 
 const API = `//${globalThis?.location?.hostname ?? 'localhost'}:3001/api`
 
+export enum Level {
+  Banned = 0,
+  Chat = 1,
+  Moderator = 2,
+  Admin = 3,
+}
+
 export enum GetRequest {
   Teams = '/teams',
   Messages = '/messages',
@@ -37,7 +44,9 @@ export const schemas = {
 } as const
 
 export type Me = (User & { team: Team }) | false
-export type RichMessage = Message & { author: User & { team: Team } }
+export type RichMessage = Message & { author: User & { team: Team } } & {
+  visible: boolean
+}
 
 export interface Response {
   [GetRequest.Teams]: Team[]

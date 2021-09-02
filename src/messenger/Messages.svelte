@@ -1,12 +1,10 @@
 <script lang="ts">
-  import type { Me, RichMessage } from '../api'
+  import type { Me } from '../api'
+  import type { Thread } from './types'
   import { afterUpdate, beforeUpdate, createEventDispatcher } from 'svelte'
   import MessageComponent from './Message.svelte'
 
-  export let thread: Array<
-    | { type: 'message'; message: RichMessage }
-    | { type: 'notice'; message: string }
-  > = []
+  export let thread: Thread = []
 
   export let me: Me | undefined = undefined
   export let mod = false
@@ -32,8 +30,7 @@
   {#each thread as item}
     {#if item.type === 'message'}
       <MessageComponent
-        author={item.message.author}
-        body={item.message.body}
+        message={item.message}
         {me}
         {mod}
         on:delete={() => {

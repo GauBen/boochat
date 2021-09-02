@@ -29,10 +29,12 @@ model User {
 }
 
 model Message {
-  id       Int    @id @default(autoincrement())
-  authorId Int    @map("author_id")
-  body     String
-  author   User   @relation(fields: [authorId], references: [id])
+  id        Int      @id @default(autoincrement())
+  authorId  Int      @map("author_id")
+  body      String
+  deleted   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  author    User     @relation(fields: [authorId], references: [id])
 
   @@map("messages")
 }

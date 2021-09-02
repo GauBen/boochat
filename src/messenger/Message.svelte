@@ -1,13 +1,13 @@
 <script lang="ts">
-  import type { Me } from '../api'
-  import type { Team, User } from '@prisma/client'
+  import type { Me, RichMessage } from '../api'
   import { createEventDispatcher } from 'svelte'
   import twemoji from 'twemoji'
 
   export let me: Me | undefined
+  export let message: RichMessage
   export let mod = false
-  export let author: User & { team: Team }
-  export let body: string
+
+  $: ({ body, author, deleted, visible } = message)
 
   const dispatch = createEventDispatcher<{ delete: void }>()
 
@@ -50,7 +50,7 @@
   }
 </script>
 
-<p>
+<p class:invisible={!visible} class:deleted>
   <strong style="color:{author.team.color}">{author.name}:</strong>
   <span use:richText={{ body, me }} />
   {#if mod}
@@ -81,5 +81,13 @@
       margin: 0 0.05em 0 0.1em;
       vertical-align: -0.1em;
     }
+  }
+
+  .invisible {
+    opacity: 0.5;
+  }
+
+  .deleted {
+    text-decoration: line-through;
   }
 </style>

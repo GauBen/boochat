@@ -7,9 +7,10 @@ import EventEmitter from 'events'
 import cors from 'cors'
 import express, { json } from 'express'
 import { nanoid } from 'nanoid'
-import { GetRequest, PostRequest, Response, schemas } from './api'
+import { GetRequest, Level, PostRequest, Response, schemas } from './api'
 import {
   ClientToServerEvents,
+  Room,
   ServerEvent,
   ServerToClientEvents,
 } from './socket-api'
@@ -26,19 +27,6 @@ export interface AppAttributes {
 
 export enum AppEvent {
   UserUpdated = 'user-updated',
-}
-
-export enum Level {
-  Banned = 0,
-  Chat = 1,
-  Moderator = 2,
-  Admin = 3,
-}
-
-export enum Room {
-  Chat = 'chat',
-  Moderator = 'moderator',
-  Admin = 'admin',
 }
 
 export class App implements AppAttributes {
@@ -113,12 +101,13 @@ export class App implements AppAttributes {
 
     // Socket events
     this.io.on('connect', (socket) => {
-      if (!socket.user) socket.emit(ServerEvent.LoggedOut)
-      io.emit(ServerEvent.Stats, this.computeStats())
-      socket.on('disconnect', () => {
-        io.emit(ServerEvent.Stats, this.computeStats())
-      })
       if (socket.user) this.emitter.emit(AppEvent.UserUpdated, socket.user)
+      else socket.emit(ServerEvent.LoggedOut)
+
+      io.to(Room.Moderator).emit(ServerEvent.Stats, this.computeStats())
+      socket.on('disconnect', () => {
+        io.to(Room.Moderator).emit(ServerEvent.Stats, this.computeStats())
+      })
     })
 
     // Listen for user updates
@@ -126,8 +115,11 @@ export class App implements AppAttributes {
       for (const socket of this.getUserSockets(user)) {
         void socket.join(Room.Chat)
 
-        if (user.level > 1) void socket.join(Room.Moderator)
+        if (user.level >= Level.Moderator) void socket.join(Room.Moderator)
         else void socket.leave(Room.Moderator)
+
+        if (user.level >= Level.Admin) void socket.join(Room.Admin)
+        else void socket.leave(Room.Admin)
       }
     })
   }

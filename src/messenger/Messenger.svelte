@@ -4,10 +4,11 @@
     ClientToServerEvents,
     ServerToClientEvents,
   } from '../socket-api'
+  import type { Thread } from './types'
   import type { Team, User } from '@prisma/client'
   import type { Socket } from 'socket.io-client'
   import { createEventDispatcher, onMount } from 'svelte'
-  import { get, GetRequest } from '../api'
+  import { get, GetRequest, Level } from '../api'
   import { ClientEvent, ServerEvent } from '../socket-api'
   import Messages from './Messages.svelte'
 
@@ -17,24 +18,20 @@
     | Socket<ServerToClientEvents, ClientToServerEvents>
     | undefined = undefined
 
-  let thread: Array<
-    | { type: 'message'; message: RichMessage }
-    | { type: 'notice'; message: string }
-  > = []
+  let thread: Thread = []
 
   $: if (thread.length > 1000) thread = thread.slice(-1000)
 
-  $: messages = thread
-    .filter(
-      (item): item is { type: 'message'; message: RichMessage } =>
-        item.type === 'message'
-    )
-    .map(({ message }) => message)
+  $: messages = new Map(
+    thread
+      .filter(
+        (item): item is { type: 'message'; message: RichMessage } =>
+          item.type === 'message'
+      )
+      .map(({ message }) => [message.id, message])
+  )
 
-  let value = ''
-
-  const users = new Map<number, User & { team: Team }>()
-  $: for (const message of messages) {
+  $: for (const message of messages.values()) {
     const { author } = message
     if (!users.has(author.id)) users.set(author.id, author)
 
@@ -45,6 +42,10 @@
       u.team = author.team
     }
   }
+
+  let value = ''
+
+  const users = new Map<number, User & { team: Team }>()
 
   const dispatch = createEventDispatcher<{ logout: void; send: string }>()
 
@@ -69,7 +70,21 @@
       ]
     })
 
+    socket.on(ServerEvent.DetailedMessage, async (message) => {
+      thread = [...thread, { type: 'message', message }]
+    })
+
     socket.on(ServerEvent.Message, async (message) => {
+      if (messages.has(message.id)) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const m = messages.get(message.id)!
+        m.body = message.body
+        m.deleted = message.deleted
+        m.visible = message.visible
+        thread = thread
+        return
+      }
+
       thread = [...thread, { type: 'message', message }]
     })
 
@@ -101,9 +116,11 @@
 <div class="messenger">
   {#if me}
     <p class="center">
-      <label for="mod">
-        <input type="checkbox" id="mod" bind:checked={mod} /> Mod view
-      </label>
+      {#if me.level > Level.Chat}
+        <label for="mod">
+          <input type="checkbox" id="mod" bind:checked={mod} /> Mod view
+        </label>
+      {/if}
       <button
         type="button"
         on:click={() => {

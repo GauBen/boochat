@@ -8,6 +8,7 @@ export enum ClientEvent {
 }
 
 export enum ServerEvent {
+  DetailedMessage = 'detailed message',
   Message = 'chat message',
   Notice = 'notice',
   DeleteMessage = 'delete message',
@@ -25,6 +26,7 @@ export interface ClientToServerEvents {
 }
 
 export interface ServerToClientEvents {
+  [ServerEvent.DetailedMessage]: (message: RichMessage) => void
   [ServerEvent.Message]: (message: RichMessage) => void
   [ServerEvent.Notice]: (message: string) => void
   [ServerEvent.DeleteMessage]: (id: number) => void
@@ -42,4 +44,10 @@ export interface ServerToClientEvents {
       online: number
     }>
   }) => void
+}
+
+export enum Room {
+  Chat = 'chat',
+  Moderator = 'moderator',
+  Admin = 'admin',
 }
