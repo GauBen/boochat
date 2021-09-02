@@ -9,7 +9,7 @@
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
   import { writable } from 'svelte/store'
-  import { get, post, GetRequest, PostRequest } from '../api'
+  import { Level, get, post, GetRequest, PostRequest } from '../api'
   import Admin from '../components/Admin.svelte'
   import GameController from '../components/GameController.svelte'
   import Messenger from '../messenger/Messenger.svelte'
@@ -74,8 +74,10 @@
     <label for="chat">Chat</label>
     <input type="radio" bind:group={$nav} value="1" id="game" />
     <label for="game">Jeu</label>
-    <input type="radio" bind:group={$nav} value="2" id="admin" />
-    <label for="admin">Admin</label>
+    {#if me && me.level >= Level.Moderator}
+      <input type="radio" bind:group={$nav} value="2" id="admin" />
+      <label for="admin">Admin</label>
+    {/if}
   </nav>
   <div bind:this={app} class="app">
     <section>
@@ -84,9 +86,11 @@
     <section>
       <GameController {socket} {me} />
     </section>
-    <section>
-      <Admin {socket} />
-    </section>
+    {#if me && me.level >= Level.Moderator}
+      <section>
+        <Admin {socket} />
+      </section>
+    {/if}
   </div>
 </main>
 
