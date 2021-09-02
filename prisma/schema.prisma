@@ -19,6 +19,7 @@ model Team {
 
 model User {
   id       Int       @id @default(autoincrement())
+  inpId    String    @unique
   teamId   Int       @map("team_id")
   name     String    @unique
   level    Int       @default(1)

@@ -86,7 +86,7 @@ export class App implements AppAttributes {
       if (!team) throw new Error("Cette équipe n'existe pas")
 
       const user = await prisma.user.upsert({
-        create: { name: login, teamId },
+        create: { name: login, teamId, inpId: nanoid() },
         update: { teamId },
         where: { name: login },
         include: { team: true },
