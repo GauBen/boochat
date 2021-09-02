@@ -17,7 +17,6 @@ export default (app: App): void => {
 
   void prisma.message
     .findMany({
-      where: { deleted: false },
       include: { author: { include: { team: true } } },
     })
     .then((res) => {

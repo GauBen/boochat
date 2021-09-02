@@ -93,9 +93,11 @@
     })
 
     socket.on(ServerEvent.DeleteMessage, async (id) => {
-      thread = thread.filter(
-        (item) => item.type !== 'message' || item.message.id !== id
-      )
+      const m = messages.get(id)
+      if (m) {
+        m.deleted = true
+        thread = thread
+      }
     })
   }
 

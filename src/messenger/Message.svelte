@@ -50,9 +50,17 @@
   }
 </script>
 
-<p class:invisible={!visible} class:deleted>
+<p class:invisible={!visible}>
   <strong style="color:{author.team.color}">{author.name}:</strong>
-  <span use:richText={{ body, me }} />
+  {#if deleted}
+    {#if mod}
+      <span use:richText={{ body, me }} class:deleted />
+    {:else}
+      <em>supprimé</em>
+    {/if}
+  {:else}
+    <span use:richText={{ body, me }} />
+  {/if}
   {#if mod}
     <button
       on:click={() => {
