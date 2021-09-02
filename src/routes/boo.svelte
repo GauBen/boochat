@@ -4,7 +4,6 @@
   import { onMount } from 'svelte'
   import { get, GetRequest } from '../api'
   import GameScreen from '../components/GameScreen.svelte'
-  import Messages from '../messenger/Messages.svelte'
 
   let messages: Array<
     Message & {
@@ -60,7 +59,7 @@
 </script>
 
 <main>
-  <Messages {messages} />
+  <!-- <Messages {messages} /> -->
   <GameScreen {socket} />
 </main>
 
