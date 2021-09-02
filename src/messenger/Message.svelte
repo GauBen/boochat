@@ -1,27 +1,12 @@
-<script lang="ts">
+<script context="module" lang="ts">
   import type { Me } from '../api'
   import type { RichMessage, Team } from '../types'
-  import { createEventDispatcher } from 'svelte'
   import twemoji from 'twemoji'
 
-  export let teams: Map<Team['id'], Team>
-  export let me: Me | undefined
-  export let message: RichMessage
-  export let mod = false
-
-  $: ({ body, author, deleted, visible } = message)
-  $: ({
-    color,
-    name: teamName = '',
-    code: teamCode = '',
-  } = teams.get(author.teamId) ?? { color: '#fff', name: '', code: '' })
-
-  const dispatch = createEventDispatcher<{ delete: void }>()
-
-  const richText = (
+  export const richText = (
     node: HTMLElement,
     { me, body }: { body: string; me: Me | undefined }
-  ) => {
+  ): { update: (args: { body: string; me: Me | undefined }) => void } => {
     // Reset the text
     node.textContent = body
 
@@ -57,6 +42,19 @@
   }
 </script>
 
+<script lang="ts">
+  export let teams: Map<Team['id'], Team>
+  export let me: Me | undefined
+  export let message: RichMessage
+
+  $: ({ body, author, deleted, visible } = message)
+  $: ({
+    color,
+    name: teamName = '',
+    code: teamCode = '',
+  } = teams.get(author.teamId) ?? { color: '#fff', name: '', code: '' })
+</script>
+
 <p class:invisible={!visible} style="--color:{color}">
   {#if teamCode}
     <img src="/images/badges/{teamCode}.png" alt={teamName} />
@@ -65,21 +63,9 @@
   {/if}
   <strong>{author.name}</strong>:
   {#if deleted}
-    {#if mod}
-      <span use:richText={{ body, me }} class:deleted />
-    {:else}
-      <em>supprimé</em>
-    {/if}
+    <em>supprimé</em>
   {:else}
     <span use:richText={{ body, me }} />
-  {/if}
-  {#if mod}
-    <button
-      on:click={() => {
-        dispatch('delete')
-      }}
-      type="button">X</button
-    >
   {/if}
 </p>
 
@@ -126,9 +112,5 @@
 
   .invisible {
     opacity: 0.5;
-  }
-
-  .deleted {
-    text-decoration: line-through;
   }
 </style>

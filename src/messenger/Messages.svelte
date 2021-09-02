@@ -3,7 +3,9 @@
   import type { Team } from '../types'
   import type { Thread } from './types'
   import { afterUpdate, beforeUpdate, createEventDispatcher } from 'svelte'
-  import MessageComponent from './Message.svelte'
+  import DetailedMessage from './DetailedMessage.svelte'
+  import Message from './Message.svelte'
+  import { Type } from './types'
 
   export let thread: Thread = []
   export let me: Me | undefined = undefined
@@ -29,8 +31,10 @@
 
 <div class="messages" bind:this={div}>
   {#each thread as item}
-    {#if item.type === 'message'}
-      <MessageComponent
+    {#if item.type === Type.Basic}
+      <Message message={item.message} {teams} {me} />
+    {:else if item.type === Type.Detailed}
+      <DetailedMessage
         message={item.message}
         {teams}
         {me}
@@ -39,7 +43,7 @@
           dispatch('delete', item.message.id)
         }}
       />
-    {:else if item.type === 'notice'}
+    {:else if item.type === Type.Notice}
       <div class="notice">{item.message}</div>
     {/if}
   {/each}

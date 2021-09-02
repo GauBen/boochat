@@ -1,4 +1,5 @@
-import type { Team, User, RichMessage } from './types'
+import type { Type } from './messenger/types'
+import type { Team, User, RichMessage, DetailedMessage } from './types'
 import type { JTDDataType } from 'ajv/dist/core'
 
 const API = `//${globalThis?.location?.hostname ?? 'localhost'}:3001/api`
@@ -47,7 +48,9 @@ export type Me = (User & { team: Team }) | false
 
 export interface Response {
   [GetRequest.Teams]: Team[]
-  [GetRequest.Messages]: RichMessage[]
+  [GetRequest.Messages]:
+    | { type: Type.Basic; messages: RichMessage[] }
+    | { type: Type.Detailed; messages: DetailedMessage[] }
   [GetRequest.GameSettings]: { value: string }
   [GetRequest.GameResults]: Array<[number, number]>
   [GetRequest.UsersOnline]: {

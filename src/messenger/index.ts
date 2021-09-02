@@ -3,6 +3,7 @@ import type { Message, Team, User } from '../types'
 import type { Socket } from 'socket.io'
 import { GetRequest, Level } from '../api'
 import { ClientEvent, Room, ServerEvent } from '../socket-api'
+import { Type } from './types'
 
 export default (app: App): void => {
   const { io, prisma } = app
@@ -92,14 +93,23 @@ export default (app: App): void => {
 
   // Get the latest messages
   app.get(GetRequest.Messages, () =>
-    messages.map((x) => ({
-      ...x,
-      author: {
-        id: x.author.id,
-        name: x.author.name,
-        teamId: x.author.teamId,
-      },
-      visible: true,
-    }))
+    // Check user level
+    true
+      ? {
+          type: Type.Detailed,
+          messages: messages.map((message) => ({ ...message, visible: true })),
+        }
+      : {
+          type: Type.Basic,
+          messages: messages.map((x) => ({
+            ...x,
+            author: {
+              id: x.author.id,
+              name: x.author.name,
+              teamId: x.author.teamId,
+            },
+            visible: true,
+          })),
+        }
   )
 }

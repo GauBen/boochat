@@ -4,13 +4,19 @@
     ClientToServerEvents,
     ServerToClientEvents,
   } from '../socket-api'
-  import type { Team, RichMessage, MessageUser } from '../types'
+  import type {
+    Team,
+    RichMessage,
+    MessageUser,
+    DetailedMessage,
+  } from '../types'
   import type { Thread } from './types'
   import type { Socket } from 'socket.io-client'
   import { createEventDispatcher, onMount } from 'svelte'
   import { get, GetRequest, Level } from '../api'
   import { ClientEvent, ServerEvent } from '../socket-api'
   import Messages from './Messages.svelte'
+  import { Type } from './types'
 
   export let me: Me | undefined = undefined
   export let mod = false
@@ -26,8 +32,16 @@
   $: messages = new Map(
     thread
       .filter(
-        (item): item is { type: 'message'; message: RichMessage } =>
-          item.type === 'message'
+        (item): item is { type: Type.Basic; message: RichMessage } =>
+          item.type === Type.Basic
+      )
+      .map(({ message }) => [message.id, message])
+  )
+  $: detailedMessages = new Map(
+    thread
+      .filter(
+        (item): item is { type: Type.Detailed; message: DetailedMessage } =>
+          item.type === Type.Detailed
       )
       .map(({ message }) => [message.id, message])
   )
@@ -55,7 +69,16 @@
     const { body } = await get(GetRequest.Messages)
     // Load messages above notices
     thread = [
-      ...body.map((message) => ({ type: 'message' as const, message })),
+      ...body.messages.map(
+        (message) =>
+          // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+          ({
+            type: body.type,
+            message,
+          } as
+            | { type: Type.Basic; message: RichMessage }
+            | { type: Type.Detailed; message: DetailedMessage })
+      ),
       ...thread,
     ]
   })
@@ -68,33 +91,31 @@
     socket.on(ServerEvent.Connected, () => {
       thread = [
         ...thread,
-        { type: 'notice', message: 'Bienvenue sur Boochat !' },
+        { type: Type.Notice, message: 'Bienvenue sur Boochat !' },
       ]
     })
 
     socket.on(ServerEvent.DetailedMessage, async (message) => {
       updateUsers(message)
-      thread = [...thread, { type: 'detailed-message', message }]
+      thread = [...thread, { type: Type.Detailed, message }]
     })
 
     socket.on(ServerEvent.Message, async (message) => {
       updateUsers(message)
 
-      if (messages.has(message.id)) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const m = messages.get(message.id)!
-        m.body = message.body
-        m.deleted = message.deleted
-        m.visible = message.visible
+      const detailedMessage = detailedMessages.get(message.id)
+      if (detailedMessage) {
+        detailedMessage.deleted = message.deleted
+        detailedMessage.visible = message.visible
         thread = thread
         return
       }
 
-      thread = [...thread, { type: 'message', message }]
+      thread = [...thread, { type: Type.Basic, message }]
     })
 
     socket.on(ServerEvent.Notice, async (message) => {
-      thread = [...thread, { type: 'notice', message }]
+      thread = [...thread, { type: Type.Notice, message }]
     })
 
     socket.on(ServerEvent.DeleteMessage, async (id) => {
