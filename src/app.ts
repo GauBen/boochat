@@ -129,7 +129,14 @@ export class App implements AppAttributes {
     handler: () => Response[T] | Promise<Response[T]>
   ): void {
     this.api.get(path, async (_req, res) => {
-      res.json(await handler())
+      try {
+        res.json(await handler())
+      } catch (error: unknown) {
+        console.error(error)
+        res.status(400).json({
+          error: error instanceof Error ? error.message : 'Bad Request',
+        })
+      }
     })
   }
 
