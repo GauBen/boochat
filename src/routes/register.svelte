@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Team } from '@prisma/client'
+  import type { Team } from '../types'
   import { onMount } from 'svelte'
   import { goto } from '$app/navigation'
   import { get, GetRequest, post, PostRequest } from '../api'

@@ -1,13 +1,20 @@
 <script lang="ts">
-  import type { Me, RichMessage } from '../api'
+  import type { Me } from '../api'
+  import type { RichMessage, Team } from '../types'
   import { createEventDispatcher } from 'svelte'
   import twemoji from 'twemoji'
 
+  export let teams: Map<Team['id'], Team>
   export let me: Me | undefined
   export let message: RichMessage
   export let mod = false
 
   $: ({ body, author, deleted, visible } = message)
+  $: ({
+    color,
+    name: teamName = '',
+    code: teamCode = '',
+  } = teams.get(author.teamId) ?? { color: '#fff', name: '', code: '' })
 
   const dispatch = createEventDispatcher<{ delete: void }>()
 
@@ -50,8 +57,12 @@
   }
 </script>
 
-<p class:invisible={!visible} style="--color:{author.team.color}">
-  <img src="/images/badges/{author.team.code}.png" alt={author.team.name} />
+<p class:invisible={!visible} style="--color:{color}">
+  {#if teamCode}
+    <img src="/images/badges/{teamCode}.png" alt={teamName} />
+  {:else}
+    <span class="placeholder" />
+  {/if}
   <strong>{author.name}</strong>:
   {#if deleted}
     {#if mod}
@@ -102,6 +113,15 @@
 
   strong {
     color: var(--color);
+  }
+
+  .placeholder {
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    vertical-align: bottom;
+    background-color: var(--color);
+    border-radius: 0.25rem;
   }
 
   .invisible {

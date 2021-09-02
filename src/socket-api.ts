@@ -1,5 +1,4 @@
-import type { RichMessage } from './api'
-import type { User, Team } from '@prisma/client'
+import type { RichMessage, User, Team, DetailedMessage } from './types'
 
 export enum ClientEvent {
   Message = 'chat message',
@@ -26,7 +25,7 @@ export interface ClientToServerEvents {
 }
 
 export interface ServerToClientEvents {
-  [ServerEvent.DetailedMessage]: (message: RichMessage) => void
+  [ServerEvent.DetailedMessage]: (message: DetailedMessage) => void
   [ServerEvent.Message]: (message: RichMessage) => void
   [ServerEvent.Notice]: (message: string) => void
   [ServerEvent.DeleteMessage]: (id: number) => void

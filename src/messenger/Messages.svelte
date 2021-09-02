@@ -1,13 +1,14 @@
 <script lang="ts">
   import type { Me } from '../api'
+  import type { Team } from '../types'
   import type { Thread } from './types'
   import { afterUpdate, beforeUpdate, createEventDispatcher } from 'svelte'
   import MessageComponent from './Message.svelte'
 
   export let thread: Thread = []
-
   export let me: Me | undefined = undefined
   export let mod = false
+  export let teams: Map<Team['id'], Team>
 
   const dispatch = createEventDispatcher<{ delete: number }>()
 
@@ -31,6 +32,7 @@
     {#if item.type === 'message'}
       <MessageComponent
         message={item.message}
+        {teams}
         {me}
         {mod}
         on:delete={() => {

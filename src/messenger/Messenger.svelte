@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { Me, RichMessage } from '../api'
+  import type { Me } from '../api'
   import type {
     ClientToServerEvents,
     ServerToClientEvents,
   } from '../socket-api'
+  import type { Team, RichMessage, MessageUser } from '../types'
   import type { Thread } from './types'
-  import type { Team, User } from '@prisma/client'
   import type { Socket } from 'socket.io-client'
   import { createEventDispatcher, onMount } from 'svelte'
   import { get, GetRequest, Level } from '../api'
@@ -17,6 +17,7 @@
   export let socket:
     | Socket<ServerToClientEvents, ClientToServerEvents>
     | undefined = undefined
+  export let teams: Map<Team['id'], Team>
 
   let thread: Thread = []
 
@@ -31,21 +32,22 @@
       .map(({ message }) => [message.id, message])
   )
 
-  $: for (const message of messages.values()) {
+  let value = ''
+
+  const users = new Map<number, MessageUser>()
+
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  const updateUsers = (message: { author: Omit<MessageUser, 'inpId'> }) => {
     const { author } = message
     if (!users.has(author.id)) users.set(author.id, author)
 
-    const u = users.get(author.id)
-    if (u) {
-      message.author = u
-      u.name = author.name
-      u.team = author.team
+    const user = users.get(author.id)
+    if (user) {
+      message.author = user
+      user.name = author.name
+      user.teamId = author.teamId
     }
   }
-
-  let value = ''
-
-  const users = new Map<number, User & { team: Team }>()
 
   const dispatch = createEventDispatcher<{ logout: void; send: string }>()
 
@@ -71,10 +73,13 @@
     })
 
     socket.on(ServerEvent.DetailedMessage, async (message) => {
-      thread = [...thread, { type: 'message', message }]
+      updateUsers(message)
+      thread = [...thread, { type: 'detailed-message', message }]
     })
 
     socket.on(ServerEvent.Message, async (message) => {
+      updateUsers(message)
+
       if (messages.has(message.id)) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const m = messages.get(message.id)!
@@ -132,7 +137,7 @@
     </p>
   {/if}
 
-  <Messages {thread} {me} {mod} on:delete={del} />
+  <Messages {teams} {thread} {me} {mod} on:delete={del} />
 
   {#if me === undefined}
     <p class="center">Chargement...</p>

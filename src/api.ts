@@ -1,4 +1,4 @@
-import type { Message, Team, User } from '@prisma/client'
+import type { Team, User, RichMessage } from './types'
 import type { JTDDataType } from 'ajv/dist/core'
 
 const API = `//${globalThis?.location?.hostname ?? 'localhost'}:3001/api`
@@ -44,9 +44,6 @@ export const schemas = {
 } as const
 
 export type Me = (User & { team: Team }) | false
-export type RichMessage = Message & { author: User & { team: Team } } & {
-  visible: boolean
-}
 
 export interface Response {
   [GetRequest.Teams]: Team[]

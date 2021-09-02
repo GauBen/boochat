@@ -4,21 +4,26 @@
     ClientToServerEvents,
     ServerToClientEvents,
   } from '../socket-api'
+  import type { Team } from '../types'
   import type { Socket } from 'socket.io-client'
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
   import { writable } from 'svelte/store'
-  import { post, PostRequest } from '../api'
+  import { get, post, GetRequest, PostRequest } from '../api'
   import Admin from '../components/Admin.svelte'
   import GameController from '../components/GameController.svelte'
   import Messenger from '../messenger/Messenger.svelte'
   import { ServerEvent } from '../socket-api'
 
   let socket: Socket<ServerToClientEvents, ClientToServerEvents> | undefined
-
+  let teams: Map<Team['id'], Team> = new Map()
   let me: Me | undefined
 
   onMount(async () => {
+    void get(GetRequest.Teams).then(({ body }) => {
+      teams = new Map(body.map((team) => [team.id, team]))
+    })
+
     const token = sessionStorage.getItem('token')
     if (token !== null) {
       post(PostRequest.Me, { token })
@@ -74,7 +79,7 @@
   </nav>
   <div bind:this={app} class="app">
     <section>
-      <Messenger {socket} {me} on:logout={logout} />
+      <Messenger {teams} {socket} {me} on:logout={logout} />
     </section>
     <section>
       <GameController {socket} {me} />

@@ -3,7 +3,7 @@
     ClientToServerEvents,
     ServerToClientEvents,
   } from '../../socket-api'
-  import type { Team } from '@prisma/client'
+  import type { Team } from '../../types'
   import type { Socket } from 'socket.io-client'
   import { onMount } from 'svelte'
   import { get, GetRequest } from '../../api'

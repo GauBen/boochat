@@ -1,5 +1,5 @@
 import type { App } from '../app'
-import type { Message, Team, User } from '@prisma/client'
+import type { Message, Team, User } from '../types'
 import type { Socket } from 'socket.io'
 import { GetRequest, Level } from '../api'
 import { ClientEvent, Room, ServerEvent } from '../socket-api'
@@ -75,7 +75,15 @@ export default (app: App): void => {
 
       if (send) {
         messages = [...messages.slice(-999), message]
-        io.emit(ServerEvent.Message, { ...message, visible: true })
+        io.emit(ServerEvent.Message, {
+          ...message,
+          author: {
+            id: user.id,
+            name: user.name,
+            teamId: user.teamId,
+          },
+          visible: true,
+        })
       }
     })
 
@@ -84,6 +92,14 @@ export default (app: App): void => {
 
   // Get the latest messages
   app.get(GetRequest.Messages, () =>
-    messages.map((x) => ({ ...x, visible: true }))
+    messages.map((x) => ({
+      ...x,
+      author: {
+        id: x.author.id,
+        name: x.author.name,
+        teamId: x.author.teamId,
+      },
+      visible: true,
+    }))
   )
 }
