@@ -50,8 +50,9 @@
   }
 </script>
 
-<p class:invisible={!visible}>
-  <strong style="color:{author.team.color}">{author.name}:</strong>
+<p class:invisible={!visible} style="--color:{author.team.color}">
+  <img src="/images/badges/{author.team.code}.png" alt={author.team.name} />
+  <strong>{author.name}</strong>:
   {#if deleted}
     {#if mod}
       <span use:richText={{ body, me }} class:deleted />
@@ -89,6 +90,18 @@
       margin: 0 0.05em 0 0.1em;
       vertical-align: -0.1em;
     }
+  }
+
+  img {
+    width: 1.5em;
+    height: 1.5em;
+    vertical-align: bottom;
+    background-color: var(--color);
+    border-radius: 0.25rem;
+  }
+
+  strong {
+    color: var(--color);
   }
 
   .invisible {
