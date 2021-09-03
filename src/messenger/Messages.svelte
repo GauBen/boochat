@@ -2,7 +2,12 @@
   import type { Me } from '../api'
   import type { Team } from '../types'
   import type { Thread } from './types'
-  import { afterUpdate, beforeUpdate, createEventDispatcher } from 'svelte'
+  import {
+    afterUpdate,
+    beforeUpdate,
+    createEventDispatcher,
+    tick,
+  } from 'svelte'
   import DetailedMessage from './DetailedMessage.svelte'
   import Message from './Message.svelte'
   import { Type } from './types'
@@ -20,7 +25,8 @@
   /** Number of pixels to reach the bottom. */
   let scroll = 0
 
-  beforeUpdate(() => {
+  beforeUpdate(async () => {
+    await tick()
     if (div) scroll = div.scrollHeight - div.clientHeight - div.scrollTop
   })
 
