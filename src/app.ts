@@ -83,7 +83,7 @@ export class App implements AppAttributes {
     this.post(PostRequest.Login, async ({ name: login, teamId }) => {
       const team = this.teams.get(teamId)
 
-      if (!team) throw new Error("Cette équipe n'existe pas")
+      if (!team || !team.pickable) throw new Error("Cette équipe n'existe pas")
 
       const user = await prisma.user.upsert({
         create: { name: login, teamId, inpId: nanoid() },

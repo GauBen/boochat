@@ -8,11 +8,12 @@ datasource db {
 }
 
 model Team {
-  id    Int    @id @default(autoincrement())
-  code  String @unique
-  name  String @unique
-  color String
-  users User[]
+  id       Int     @id @default(autoincrement())
+  code     String  @unique
+  name     String  @unique
+  color    String
+  pickable Boolean @default(true)
+  users    User[]
 
   @@map("teams")
 }

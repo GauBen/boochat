@@ -38,7 +38,7 @@
     <h2>Équipe</h2>
     {#if teams}
       <div class="teams">
-        {#each teams as { id, name, color, code } (id)}
+        {#each teams.filter(({ pickable }) => pickable) as { id, name, color, code } (id)}
           <input
             type="radio"
             bind:group={teamId}

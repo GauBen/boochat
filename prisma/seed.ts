@@ -5,6 +5,14 @@ import { Level } from '../src/api'
 const prisma = new Prisma.PrismaClient()
 const seed = async (): Promise<void> => {
   // Teams
+  const bots = await prisma.team.create({
+    data: {
+      code: 'bot',
+      name: 'BOT',
+      color: '#ccc',
+      pickable: false,
+    },
+  })
   const sn = await prisma.team.create({
     data: {
       code: 'sn',
@@ -28,6 +36,14 @@ const seed = async (): Promise<void> => {
   })
 
   // Users
+  await prisma.user.create({
+    data: {
+      name: 'Boobot',
+      inpId: '#boobot',
+      level: Level.Admin,
+      teamId: bots.id,
+    },
+  })
   await prisma.user.create({
     data: {
       name: 'gautier',
