@@ -18,7 +18,9 @@ export default (app: App): void => {
 
   void prisma.message
     .findMany({
+      take: -1000,
       include: { author: { include: { team: true } } },
+      where: { createdAt: { gte: new Date(Date.now() - 1000 * 60 * 60 * 24) } },
     })
     .then((res) => {
       messages = res

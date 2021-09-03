@@ -14,29 +14,25 @@ model Team {
   color    String
   pickable Boolean @default(true)
   users    User[]
-
-  @@map("teams")
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  inpId    String    @unique
-  teamId   Int       @map("team_id")
-  name     String    @unique
-  level    Int       @default(1)
-  team     Team      @relation(fields: [teamId], references: [id])
-  messages Message[]
-
-  @@map("users")
+  id               Int       @id @default(autoincrement())
+  inpId            String    @unique
+  teamId           Int
+  name             String    @unique
+  level            Int       @default(1)
+  team             Team      @relation(fields: [teamId], references: [id])
+  lastMessage      DateTime?
+  cannotPostBefore DateTime?
+  messages         Message[]
 }
 
 model Message {
   id        Int      @id @default(autoincrement())
-  authorId  Int      @map("author_id")
+  authorId  Int
   body      String
   deleted   Boolean  @default(false)
   createdAt DateTime @default(now())
   author    User     @relation(fields: [authorId], references: [id])
-
-  @@map("messages")
 }
