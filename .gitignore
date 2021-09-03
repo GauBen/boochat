@@ -13,4 +13,5 @@ node_modules
 
 .env
 
-boochat.db
+storage/*
+!storage/.gitkeep

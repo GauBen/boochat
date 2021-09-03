@@ -1,6 +1,7 @@
 import type { PrismaClient, Team, User } from '@prisma/client'
 import type { ValidateFunction } from 'ajv'
 import type { JTDDataType } from 'ajv/dist/core'
+import type Conf from 'conf'
 import type { Server, Socket } from 'socket.io'
 import type TypedEventEmitter from 'typed-emitter'
 import EventEmitter from 'events'
@@ -23,6 +24,7 @@ export interface AppAttributes {
       JTDDataType<typeof schemas[k]>
     >
   }
+  readonly config: Conf<{ chat: { slowdown: number; moderationDelay: number } }>
 }
 
 export enum AppEvent {
@@ -33,6 +35,7 @@ export class App implements AppAttributes {
   readonly io
   readonly validate
   readonly prisma
+  readonly config
 
   readonly api = express()
   readonly emitter: TypedEventEmitter<{
@@ -43,10 +46,11 @@ export class App implements AppAttributes {
   readonly users: Map<number, User & { team: Team }> = new Map()
   readonly tokens: Map<string, number> = new Map()
 
-  constructor({ io, validate, prisma }: AppAttributes) {
+  constructor({ io, validate, prisma, config }: AppAttributes) {
     this.io = io
     this.validate = validate
     this.prisma = prisma
+    this.config = config
 
     // Fetch data
     void prisma.team.findMany().then((teams) => {

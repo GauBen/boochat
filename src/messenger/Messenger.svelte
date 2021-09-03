@@ -26,6 +26,9 @@
   export let teams: Map<Team['id'], Team>
 
   let thread: Thread = []
+  let settings = { moderationDelay: 0, slowdown: 0 }
+  let disabled = false
+  let countdown = 0
 
   $: if (thread.length > 1000) thread = thread.slice(-1000)
 
@@ -66,21 +69,26 @@
   const dispatch = createEventDispatcher<{ logout: void; send: string }>()
 
   onMount(async () => {
-    const { body } = await get(GetRequest.Messages)
-    // Load messages above notices
-    thread = [
-      ...body.messages.map(
-        (message) =>
-          // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-          ({
-            type: body.type,
-            message,
-          } as
-            | { type: Type.Basic; message: RichMessage }
-            | { type: Type.Detailed; message: DetailedMessage })
-      ),
-      ...thread,
-    ]
+    void get(GetRequest.Messages).then(({ body }) => {
+      // Load messages above notices
+      thread = [
+        ...body.messages.map(
+          (message) =>
+            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+            ({
+              type: body.type,
+              message,
+            } as
+              | { type: Type.Basic; message: RichMessage }
+              | { type: Type.Detailed; message: DetailedMessage })
+        ),
+        ...thread,
+      ]
+    })
+    void get(GetRequest.ChatSettings).then(({ body }) => {
+      // Load messages above notices
+      settings = body
+    })
   })
 
   const setDeleted = (id: number, deleted: boolean) => {
@@ -142,10 +150,21 @@
 
   $: listen(socket)
 
-  const send = () => {
-    if (!socket) return
+  const send = async () => {
+    if (!socket || disabled) return
     socket.emit(ClientEvent.Message, value)
     value = ''
+    if (me && me.level >= Level.Moderator) return
+    disabled = true
+    countdown = Math.floor(settings.slowdown / 1000)
+    const interval = setInterval(() => {
+      if (countdown < 0) clearInterval(interval)
+      countdown--
+    }, 1000)
+    await new Promise((resolve) => {
+      setTimeout(resolve, settings.slowdown)
+    })
+    disabled = false
   }
 
   const del = ({ detail: id }: { detail: number }) => {
@@ -183,7 +202,9 @@
   {:else if me}
     <form on:submit|preventDefault={send}>
       <input type="text" bind:value />
-      <button>Envoyer</button>
+      <button {disabled}>
+        {#if disabled}{countdown}{:else}Envoyer{/if}
+      </button>
     </form>
   {:else}
     <p class="center"><a href="/login">Se connecter</a></p>

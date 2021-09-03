@@ -3,9 +3,12 @@ import type { JTDDataType } from 'ajv/dist/jtd'
 import type { ValidateFunction } from 'ajv/dist/types'
 import { statSync } from 'fs'
 import { createServer } from 'http'
+import path from 'path'
+import { fileURLToPath } from 'url'
 // eslint-disable-next-line import/default
 import Prisma from '@prisma/client'
 import Ajv from 'ajv/dist/jtd'
+import Conf from 'conf'
 import express from 'express'
 import sirv from 'sirv'
 import { Server } from 'socket.io'
@@ -33,6 +36,20 @@ const app = new App({
       JTDDataType<typeof schemas[k]>
     >
   },
+  config: new Conf<{ chat: { slowdown: number; moderationDelay: number } }>({
+    cwd: path.join(
+      path.dirname(fileURLToPath(import.meta.url)),
+      '..',
+      'storage'
+    ),
+    configName: 'app-config',
+    defaults: {
+      chat: {
+        moderationDelay: 2000,
+        slowdown: 10_000,
+      },
+    },
+  }),
 })
 
 app.use(createMessenger, createQuizz)

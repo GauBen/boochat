@@ -6,7 +6,7 @@ import { ClientEvent, Room, ServerEvent } from '../socket-api'
 import { Type } from './types'
 
 export default (app: App): void => {
-  const { io, prisma } = app
+  const { io, prisma, config } = app
 
   let messages: Array<
     Message & {
@@ -102,6 +102,9 @@ export default (app: App): void => {
 
     next()
   })
+
+  // Get settings
+  app.get(GetRequest.ChatSettings, () => config.get('chat'))
 
   // Get the latest messages
   app.get(GetRequest.Messages, () =>

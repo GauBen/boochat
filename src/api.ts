@@ -14,6 +14,7 @@ export enum Level {
 export enum GetRequest {
   Teams = '/teams',
   Messages = '/messages',
+  ChatSettings = '/chat-settings',
   GameSettings = '/game-settings',
   GameResults = '/game-results',
   UsersOnline = '/users-online',
@@ -51,6 +52,7 @@ export interface Response {
   [GetRequest.Messages]:
     | { type: Type.Basic; messages: RichMessage[] }
     | { type: Type.Detailed; messages: DetailedMessage[] }
+  [GetRequest.ChatSettings]: { slowdown: number; moderationDelay: number }
   [GetRequest.GameSettings]: { value: string }
   [GetRequest.GameResults]: Array<[number, number]>
   [GetRequest.UsersOnline]: {
