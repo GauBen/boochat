@@ -153,13 +153,11 @@
     input.style.setProperty('animation-play-state', `running`)
     disabled = true
     countdown = Math.floor(settings.slowdown / 1000)
-    const interval = setInterval(() => {
-      if (countdown < 0) clearInterval(interval)
-      countdown--
-    }, 1000)
+    const interval = setInterval(() => countdown--, 1000)
     await new Promise((resolve) => {
       setTimeout(resolve, settings.slowdown)
     })
+    clearInterval(interval)
     disabled = false
   }
 
@@ -213,6 +211,7 @@
         on:animationend={() => {
           input.style.setProperty('animation-play-state', 'paused')
         }}
+        style="--delay: {settings.moderationDelay}ms"
       />
       <button {disabled}>
         {#if disabled}{countdown}{:else}Envoyer{/if}
@@ -241,7 +240,7 @@
       background-color: #fff;
       background-position: 100% 100%;
       background-size: 200% 100%;
-      animation: sending 2s ease-in;
+      animation: sending var(--delay) ease-in;
       animation-play-state: paused;
       animation-iteration-count: 0;
     }
@@ -299,7 +298,7 @@
     0% {
       background-position: 100% 100%;
     }
-    10% {
+    5% {
       background-color: var(--color);
     }
     100% {
