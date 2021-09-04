@@ -108,7 +108,7 @@
       padding: 0.5rem 2rem;
       color: #222;
       font-weight: bold;
-      background: linear-gradient(110deg, var(--color) 50%, #ddd 50.1%);
+      background: linear-gradient(110deg, var(--color) 50%, #ccc 50.1%);
       background-position: 100% 100%;
       background-size: 250% 100%;
       border: 0;

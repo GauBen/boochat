@@ -60,15 +60,21 @@
   }}
 />
 
-<main>
+<main style="--color: {me ? me.team.color : '#fff'}">
   <nav>
-    <input type="radio" bind:group={$nav} value="0" id="chat" />
-    <label for="chat">Chat</label>
-    <input type="radio" bind:group={$nav} value="1" id="game" />
-    <label for="game">Jeu</label>
+    <div class="tab">
+      <input type="radio" bind:group={$nav} value="0" id="chat" />
+      <label for="chat">Chat</label>
+    </div>
+    <div class="tab">
+      <input type="radio" bind:group={$nav} value="1" id="game" />
+      <label for="game">Jeu</label>
+    </div>
     {#if me && me.level >= Level.Moderator}
-      <input type="radio" bind:group={$nav} value="2" id="admin" />
-      <label for="admin">Admin</label>
+      <div class="tab">
+        <input type="radio" bind:group={$nav} value="2" id="admin" />
+        <label for="admin">Admin</label>
+      </div>
     {/if}
   </nav>
   <div bind:this={app} class="app">
@@ -91,24 +97,51 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
+    color: #fff;
+    background: #222;
   }
 
   nav {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1em;
     padding: 1em;
-    text-align: center;
+    overflow: auto;
+    box-shadow: 0 0 0.5em #111;
+  }
 
-    > label {
-      padding: 0.5em 1em;
-      border: 1px solid black;
+  .tab {
+    position: relative;
+    flex: 1;
+
+    input {
+      position: absolute;
+      opacity: 0;
     }
 
-    > input {
-      display: none;
+    label {
+      display: block;
+      padding: 0.5em;
+      color: #222;
+      font-weight: bold;
+      text-align: center;
+      background: linear-gradient(110deg, var(--color) 50%, #ccc 50.1%);
+      background-position: 100% 100%;
+      background-size: 250% 100%;
+      border: 0;
+      border-radius: 0.25rem;
+      transition: background-position 0.5s, box-shadow 0.5s;
+    }
 
-      &:checked + label {
-        background-color: #ccf;
-        outline: 1px solid black;
-      }
+    input:checked + label {
+      color: #222;
+      font-weight: bold;
+      background-position: 0% 100%;
+      box-shadow: 0 0 0.5rem var(--color);
+    }
+
+    input:focus + label {
+      box-shadow: 0 0 1rem var(--color);
     }
   }
 

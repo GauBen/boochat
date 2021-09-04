@@ -172,17 +172,25 @@
 
 <div class="messenger">
   {#if me}
-    <p class="center">
+    <p class="center me">
       {#if me.level > Level.Chat}
         <label for="mod">
           <input type="checkbox" id="mod" bind:checked={mod} /> Mod view
         </label>
       {/if}
-      <button
-        type="button"
-        on:click={() => {
+      <span>
+        <img
+          src="/images/badges/{me.team.code}.png"
+          alt={me.team.name}
+          class="badge"
+        />
+        <strong>{me.name}</strong>
+      </span>
+      <a
+        href="/logout"
+        on:click|preventDefault={() => {
           dispatch('logout')
-        }}>Se déconnecter ({me.name})</button
+        }}>Se déconnecter</a
       >
     </p>
   {/if}
@@ -193,7 +201,7 @@
     <p class="center">Chargement...</p>
   {:else if me}
     <form on:submit|preventDefault={send}>
-      <input type="text" bind:value />
+      <input type="text" bind:value required />
       <button {disabled}>
         {#if disabled}{countdown}{:else}Envoyer{/if}
       </button>
@@ -208,8 +216,6 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    color: #fff;
-    background-color: rgb(41, 37, 65);
   }
 
   form {
@@ -224,15 +230,19 @@
     input,
     button {
       padding: 0.5em;
-      color: #000;
+      color: #222;
       background: #fff;
-      border: 1px solid rgb(24, 24, 27);
+      border: 0;
       border-radius: 0.5em;
 
       &:focus {
         outline: 0;
-        box-shadow: 0 0 3px #fff;
+        box-shadow: 0 0 0.5rem var(--color);
       }
+    }
+
+    button:active {
+      background-color: var(--color);
     }
   }
 
@@ -242,5 +252,24 @@
 
   .center {
     text-align: center;
+  }
+
+  .me {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 1.5em;
+      height: 1.5em;
+      vertical-align: bottom;
+      background-color: var(--color);
+      border-radius: 0.25rem;
+    }
+
+    strong {
+      color: var(--color);
+    }
   }
 </style>
