@@ -1,11 +1,7 @@
 <script lang="ts">
   import type { Me } from '../api'
-  import type {
-    ClientToServerEvents,
-    ServerToClientEvents,
-  } from '../socket-api'
+  import type { Socket } from '../socket-api'
   import type { Team } from '../types'
-  import type { Socket } from 'socket.io-client'
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
   import { writable } from 'svelte/store'
@@ -15,7 +11,7 @@
   import Messenger from '../messenger/Messenger.svelte'
   import { ServerEvent } from '../socket-api'
 
-  let socket: Socket<ServerToClientEvents, ClientToServerEvents> | undefined
+  let socket: Socket | undefined
   let teams: Map<Team['id'], Team> = new Map()
   let me: Me | undefined
 
@@ -26,13 +22,9 @@
 
     const token = sessionStorage.getItem('token')
     if (token !== null) {
-      post(PostRequest.Me, { token })
-        .then(({ body }) => {
-          me = body
-        })
-        .catch((error) => {
-          console.error(error)
-        })
+      void post(PostRequest.Me, { token }).then(({ body }) => {
+        me = body
+      })
     }
 
     socket = io(':3001', {

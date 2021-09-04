@@ -1,9 +1,6 @@
 <script lang="ts">
   import type { Me } from '../api'
-  import type {
-    ClientToServerEvents,
-    ServerToClientEvents,
-  } from '../socket-api'
+  import type { Socket } from '../socket-api'
   import type {
     Team,
     RichMessage,
@@ -11,7 +8,6 @@
     DetailedMessage,
   } from '../types'
   import type { Thread } from './types'
-  import type { Socket } from 'socket.io-client'
   import { createEventDispatcher, onMount } from 'svelte'
   import { get, GetRequest, Level } from '../api'
   import { ClientEvent, ServerEvent } from '../socket-api'
@@ -20,9 +16,7 @@
 
   export let me: Me | undefined = undefined
   export let mod = false
-  export let socket:
-    | Socket<ServerToClientEvents, ClientToServerEvents>
-    | undefined = undefined
+  export let socket: Socket | undefined
   export let teams: Map<Team['id'], Team>
 
   let thread: Thread = []
@@ -105,9 +99,7 @@
     }
   }
 
-  const listen = (
-    socket: Socket<ServerToClientEvents, ClientToServerEvents> | undefined
-  ) => {
+  const listen = (socket: Socket | undefined) => {
     if (!socket) return
 
     socket.on(ServerEvent.Connected, () => {

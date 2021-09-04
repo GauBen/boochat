@@ -1,4 +1,7 @@
 import type { RichMessage, User, Team, DetailedMessage } from './types'
+import type { Socket as ClientSocket } from 'socket.io-client'
+
+export type Socket = ClientSocket<ServerToClientEvents, ClientToServerEvents>
 
 export enum ClientEvent {
   Message = 'chat message',
