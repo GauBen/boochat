@@ -23,6 +23,7 @@
   let settings = { moderationDelay: 0, slowdown: 0 }
   let disabled = false
   let countdown = 0
+  let input: HTMLInputElement
 
   $: if (thread.length > 1000) thread = thread.slice(-1000)
 
@@ -142,11 +143,14 @@
 
   $: listen(socket)
 
+  let count = 0
   const send = async () => {
     if (!socket || disabled) return
     socket.emit(ClientEvent.Message, value)
     value = ''
     if (me && me.level >= Level.Moderator) return
+    input.style.setProperty('animation-iteration-count', `${++count}`)
+    input.style.setProperty('animation-play-state', `running`)
     disabled = true
     countdown = Math.floor(settings.slowdown / 1000)
     const interval = setInterval(() => {
@@ -201,7 +205,15 @@
     <p class="center">Chargement...</p>
   {:else if me}
     <form on:submit|preventDefault={send}>
-      <input type="text" bind:value required />
+      <input
+        type="text"
+        bind:value
+        required
+        bind:this={input}
+        on:animationend={() => {
+          input.style.setProperty('animation-play-state', 'paused')
+        }}
+      />
       <button {disabled}>
         {#if disabled}{countdown}{:else}Envoyer{/if}
       </button>
@@ -225,13 +237,23 @@
 
     input {
       flex: 1;
+      background: linear-gradient(to right, #fff 50%, transparent 50.1%);
+      background-color: #fff;
+      background-position: 100% 100%;
+      background-size: 200% 100%;
+      animation: sending 2s ease-in;
+      animation-play-state: paused;
+      animation-iteration-count: 0;
+    }
+
+    button {
+      background: #fff;
     }
 
     input,
     button {
       padding: 0.5em;
       color: #222;
-      background: #fff;
       border: 0;
       border-radius: 0.5em;
 
@@ -270,6 +292,19 @@
 
     strong {
       color: var(--color);
+    }
+  }
+
+  @keyframes sending {
+    0% {
+      background-position: 100% 100%;
+    }
+    10% {
+      background-color: var(--color);
+    }
+    100% {
+      background-color: var(--color);
+      background-position: 0% 100%;
     }
   }
 </style>
