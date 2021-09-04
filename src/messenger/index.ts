@@ -76,7 +76,7 @@ export default (app: App): void => {
 
       if (!visible) {
         await new Promise((resolve) => {
-          setTimeout(resolve, 5000)
+          setTimeout(resolve, config.get('chat').moderationDelay)
         })
       }
 
