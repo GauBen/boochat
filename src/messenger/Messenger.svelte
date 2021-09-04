@@ -240,7 +240,7 @@
       background-color: #fff;
       background-position: 100% 100%;
       background-size: 200% 100%;
-      animation: sending var(--delay) ease-in;
+      animation: sending var(--delay) ease-out;
       animation-play-state: paused;
       animation-iteration-count: 0;
     }

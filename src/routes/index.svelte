@@ -60,6 +60,10 @@
   }}
 />
 
+<svelte:head>
+  <title>Boochat</title>
+</svelte:head>
+
 <main style="--color: {me ? me.team.color : '#fff'}">
   <nav>
     <div class="tab">
