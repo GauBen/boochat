@@ -63,9 +63,14 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: 0.5rem;
     padding: 0 1em;
     overflow: auto;
+
+    // `gap` is not supported by OBS webviews yet
+    // gap: 0.5rem;
+    > :global(*) {
+      margin: 0.25rem 0 !important;
+    }
 
     > :global(:first-child) {
       margin-top: auto;
