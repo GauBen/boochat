@@ -80,26 +80,25 @@ export default (app: App): void => {
         })
       }
 
-      const send =
-        visible ||
-        !(
-          await prisma.message.findUnique({
-            where: { id: message.id },
-          })
-        )?.deleted
-
-      if (send) {
-        messages = [...messages.slice(-999), message]
-        io.emit(ServerEvent.Message, {
-          ...message,
-          author: {
-            id: user.id,
-            name: user.name,
-            teamId: user.teamId,
-          },
-          visible: true,
+      const deleted = (
+        await prisma.message.findUnique({
+          where: { id: message.id },
         })
-      }
+      )?.deleted
+
+      if (deleted === undefined) return
+
+      messages = [...messages.slice(-999), message]
+      io.emit(ServerEvent.Message, {
+        ...message,
+        deleted,
+        author: {
+          id: user.id,
+          name: user.name,
+          teamId: user.teamId,
+        },
+        visible: true,
+      })
     })
 
     next()
@@ -118,12 +117,12 @@ export default (app: App): void => {
         }
       : {
           type: Type.Basic,
-          messages: messages.map((x) => ({
-            ...x,
+          messages: messages.map((message) => ({
+            ...message,
             author: {
-              id: x.author.id,
-              name: x.author.name,
-              teamId: x.author.teamId,
+              id: message.author.id,
+              name: message.author.name,
+              teamId: message.author.teamId,
             },
             visible: true,
           })),
