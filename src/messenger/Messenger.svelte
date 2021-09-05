@@ -46,7 +46,7 @@
 
   let value = ''
 
-  const users = new Map<number, MessageUser>()
+  const users = new Map<MessageUser['id'], MessageUser>()
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   const updateUsers = (message: { author: Omit<MessageUser, 'inpId'> }) => {
@@ -67,16 +67,16 @@
     void get(GetRequest.Messages).then(({ body }) => {
       // Load messages above notices
       thread = [
-        ...body.messages.map(
-          (message) =>
-            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-            ({
-              type: body.type,
-              message,
-            } as
-              | { type: Type.Basic; message: RichMessage }
-              | { type: Type.Detailed; message: DetailedMessage })
-        ),
+        ...body.messages.map((message) => {
+          updateUsers(message)
+          // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+          return {
+            type: body.type,
+            message,
+          } as
+            | { type: Type.Basic; message: RichMessage }
+            | { type: Type.Detailed; message: DetailedMessage }
+        }),
         ...thread,
       ]
     })
