@@ -10,8 +10,8 @@
   import type { Thread } from './types'
   import { createEventDispatcher, onMount } from 'svelte'
   import { get, GetRequest, Level } from '../api'
-  import MessageInput from '../components/MessageInput.svelte'
   import { ClientEvent, ServerEvent } from '../socket-api'
+  import MessageInput from './MessageInput.svelte'
   import Messages from './Messages.svelte'
   import { Type } from './types'
 
