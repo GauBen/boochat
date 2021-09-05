@@ -12,6 +12,7 @@
   export let users = new Map<MessageUser['id'], MessageUser>()
 
   $: usernames = new Set([...users.values()].map(({ name }) => name))
+  $: if (me && me.level <= Level.Banned) disabled = true
 
   let mobile = false
   let before = ''
@@ -85,7 +86,9 @@
   </datalist>
   <button {disabled}>
     Envoyer
-    {#if disabled}<span class="countdown">{countdown}</span>{/if}
+    {#if disabled && countdown >= 0}
+      <span class="countdown">{countdown} </span>
+    {/if}
   </button>
 </form>
 
@@ -135,6 +138,11 @@
     position: absolute;
     z-index: -1;
     opacity: 0;
+  }
+
+  form button:disabled {
+    color: #666;
+    background-color: #ccc;
   }
 
   .countdown {
