@@ -103,7 +103,7 @@
     overflow: hidden;
     color: #fff;
     font-weight: bold;
-    text-shadow: 0 0 0.25rem #222;
+    text-shadow: 0 0 0.25rem #000;
   }
 
   :global(.messages) {
