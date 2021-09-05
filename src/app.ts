@@ -182,19 +182,23 @@ export class App implements AppAttributes {
   } {
     let online = 0
     let connected = 0
-    const users = new Map<User & { team: Team }, number>()
+    const users = new Map<User['id'], number>()
 
     for (const socket of this.io.sockets.sockets.values()) {
       online++
       if (!socket.user) continue
       connected++
-      users.set(socket.user, (users.get(socket.user) ?? 0) + 1)
+      users.set(socket.user.id, (users.get(socket.user.id) ?? 0) + 1)
     }
 
     return {
       online,
       connected,
-      users: [...users.entries()].map(([user, online]) => ({ user, online })),
+      users: [...users.entries()].map(([id, online]) => ({
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        user: this.users.get(id)!,
+        online,
+      })),
     }
   }
 
