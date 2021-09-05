@@ -10,6 +10,7 @@
   import type { Thread } from './types'
   import { createEventDispatcher, onMount } from 'svelte'
   import { get, GetRequest, Level } from '../api'
+  import MessageInput from '../components/MessageInput.svelte'
   import { ClientEvent, ServerEvent } from '../socket-api'
   import Messages from './Messages.svelte'
   import { Type } from './types'
@@ -177,7 +178,7 @@
     <p class="center me">
       {#if me.level > Level.Chat}
         <label for="mod">
-          <input type="checkbox" id="mod" bind:checked={mod} /> Mod view
+          <input type="checkbox" id="mod" bind:checked={mod} /> Modération
         </label>
       {/if}
       <span>
@@ -202,21 +203,14 @@
   {#if me === undefined}
     <p class="center">Chargement...</p>
   {:else if me}
-    <form on:submit|preventDefault={send}>
-      <input
-        type="text"
-        bind:value
-        required
-        bind:this={input}
-        on:animationend={() => {
-          input.style.setProperty('animation-play-state', 'paused')
-        }}
-        style="--delay: {settings.moderationDelay}ms"
-      />
-      <button {disabled}>
-        {#if disabled}{countdown}{:else}Envoyer{/if}
-      </button>
-    </form>
+    <MessageInput
+      bind:value
+      bind:input
+      {countdown}
+      {disabled}
+      {settings}
+      on:submit={send}
+    />
   {:else}
     <p class="center"><a href="/login">Se connecter</a></p>
   {/if}
@@ -227,44 +221,6 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-  }
-
-  form {
-    display: flex;
-    gap: 0.5em;
-    padding: 1em;
-
-    input {
-      flex: 1;
-      background: linear-gradient(to right, #fff 50%, transparent 50.1%);
-      background-color: #fff;
-      background-position: 100% 100%;
-      background-size: 200% 100%;
-      animation: sending var(--delay) ease-out;
-      animation-play-state: paused;
-      animation-iteration-count: 0;
-    }
-
-    button {
-      background: #fff;
-    }
-
-    input,
-    button {
-      padding: 0.5em;
-      color: #222;
-      border: 0;
-      border-radius: 0.5em;
-
-      &:focus {
-        outline: 0;
-        box-shadow: 0 0 0.5rem var(--color);
-      }
-    }
-
-    button:active {
-      background-color: var(--color);
-    }
   }
 
   a {
@@ -291,19 +247,6 @@
 
     strong {
       color: var(--color);
-    }
-  }
-
-  @keyframes sending {
-    0% {
-      background-position: 100% 100%;
-    }
-    5% {
-      background-color: var(--color);
-    }
-    100% {
-      background-color: var(--color);
-      background-position: 0% 100%;
     }
   }
 </style>
