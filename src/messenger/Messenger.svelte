@@ -209,6 +209,8 @@
       {countdown}
       {disabled}
       {settings}
+      {me}
+      {users}
       on:submit={send}
     />
   {:else}
