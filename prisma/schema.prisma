@@ -8,12 +8,13 @@ datasource db {
 }
 
 model Team {
-  id       Int     @id @default(autoincrement())
-  code     String  @unique
-  name     String  @unique
-  color    String
-  pickable Boolean @default(true)
-  users    User[]
+  id            Int             @id @default(autoincrement())
+  code          String          @unique
+  name          String          @unique
+  color         String
+  pickable      Boolean         @default(true)
+  users         User[]
+  QuestionStats QuestionStats[]
 }
 
 model User {
@@ -35,4 +36,34 @@ model Message {
   deleted   Boolean  @default(false)
   createdAt DateTime @default(now())
   author    User     @relation(fields: [authorId], references: [id])
+}
+
+model Question {
+  id             Int             @id @default(autoincrement())
+  body           String
+  category       String
+  shuffleAnwsers Boolean         @default(true)
+  points         Int             @default(1)
+  timesUsed      Int             @default(0)
+  answers        Answer[]
+  questionStats  QuestionStats[]
+}
+
+model Answer {
+  id         Int      @id @default(autoincrement())
+  body       String
+  correct    Boolean  @default(false)
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id])
+}
+
+model QuestionStats {
+  id              Int      @id @default(autoincrement())
+  questionId      Int
+  teamId          Int
+  answers         Int
+  correctAnswsers Int
+  createdAt       DateTime @default(now())
+  question        Question @relation(fields: [questionId], references: [id])
+  team            Team     @relation(fields: [teamId], references: [id])
 }
