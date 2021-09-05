@@ -84,7 +84,8 @@
     {/each}
   </datalist>
   <button {disabled}>
-    {#if disabled}{countdown}{:else}Envoyer{/if}
+    Envoyer
+    {#if disabled}<span class="countdown">{countdown}</span>{/if}
   </button>
 </form>
 
@@ -107,6 +108,8 @@
     }
 
     button {
+      position: relative;
+      overflow: hidden;
       background: #fff;
     }
 
@@ -132,6 +135,19 @@
     position: absolute;
     z-index: -1;
     opacity: 0;
+  }
+
+  .countdown {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    background-color: #ccc;
   }
 
   @keyframes sending {
