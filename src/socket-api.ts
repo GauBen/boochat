@@ -21,6 +21,7 @@ export enum ServerEvent {
   Connected = 'connected',
   Game = 'game',
   Stats = 'stats',
+  UserUpdated = 'user updated',
 }
 
 export interface ClientToServerEvents {
@@ -50,6 +51,7 @@ export interface ServerToClientEvents {
       online: number
     }>
   }) => void
+  [ServerEvent.UserUpdated]: (user: User & { team: Team }) => void
 }
 
 export enum Room {

@@ -2,11 +2,18 @@ import type { App } from '../app'
 import type { Message, Team, User } from '../types'
 import type { Socket } from 'socket.io'
 import { GetRequest, Level } from '../api'
-import { ClientEvent, Room, ServerEvent } from '../socket-api'
+import { AppEvent } from '../app'
+import {
+  ClientEvent,
+  ClientToServerEvents,
+  Room,
+  ServerEvent,
+  ServerToClientEvents,
+} from '../socket-api'
 import { Type } from './types'
 
 export default (app: App): void => {
-  const { io, prisma, config } = app
+  const { io, prisma, config, emitter, users } = app
 
   let messages: Array<
     Message & {
@@ -25,6 +32,51 @@ export default (app: App): void => {
     .then((res) => {
       messages = res
     })
+
+  const handleCommand = async (
+    socket: Socket<ClientToServerEvents, ServerToClientEvents>,
+    user: User,
+    msg: string
+  ) => {
+    if (msg.startsWith('/ban ')) {
+      let name = msg.slice(5)
+      let field: 'inpId' | 'name' = 'inpId'
+
+      if (name.startsWith('@')) {
+        field = 'name'
+        name = name.slice(1)
+      }
+
+      const userFound = await prisma.user.findUnique({
+        where: {
+          [field]: name,
+        },
+      })
+
+      if (!userFound) {
+        socket.emit(ServerEvent.Notice, 'Utilisateur inexistant')
+        return
+      }
+
+      if (userFound.level >= user.level) {
+        socket.emit(ServerEvent.Notice, 'Permissions insuffisantes')
+        return
+      }
+
+      const updatedUser = await prisma.user.update({
+        data: { level: Level.Banned },
+        where: { id: userFound.id },
+        include: { team: true },
+      })
+      users.set(updatedUser.id, updatedUser)
+
+      emitter.emit(AppEvent.UserUpdated, updatedUser)
+      io.to(Room.Moderator).emit(
+        ServerEvent.Notice,
+        `Utilisateur ${updatedUser.inpId} (@${updatedUser.name}) banni`
+      )
+    }
+  }
 
   // Register a middleware to handle incoming socket events
   // eslint-disable-next-line sonarjs/cognitive-complexity
@@ -55,10 +107,16 @@ export default (app: App): void => {
       await setDeleted(id, false)
     })
 
+    // eslint-disable-next-line complexity
     socket.on(ClientEvent.Message, async (msg: string) => {
       if (!user || user.level < 1) return
 
       msg = msg.slice(0, 150)
+      if (msg.length <= 0) return
+      if (msg.startsWith('/')) {
+        await handleCommand(socket, user, msg)
+        return
+      }
 
       const visible = user.level > Level.Chat
 

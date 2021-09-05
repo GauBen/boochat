@@ -39,7 +39,7 @@ export class App implements AppAttributes {
 
   readonly api = express()
   readonly emitter: TypedEventEmitter<{
-    [AppEvent.UserUpdated]: (user: User) => void
+    [AppEvent.UserUpdated]: (user: User & { team: Team }) => void
   }> = new EventEmitter()
 
   readonly teams: Map<Team['id'], Team> = new Map()
@@ -124,6 +124,8 @@ export class App implements AppAttributes {
 
         if (user.level >= Level.Admin) void socket.join(Room.Admin)
         else void socket.leave(Room.Admin)
+
+        socket.emit(ServerEvent.UserUpdated, user)
       }
     })
   }

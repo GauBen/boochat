@@ -34,6 +34,10 @@
     socket.on(ServerEvent.LoggedOut, () => {
       me = false
     })
+
+    socket.on(ServerEvent.UserUpdated, (user) => {
+      me = user
+    })
   })
 
   const logout = () => {

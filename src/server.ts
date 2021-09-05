@@ -46,7 +46,7 @@ const app = new App({
     defaults: {
       chat: {
         moderationDelay: 2000,
-        slowdown: 10_000,
+        slowdown: 5000,
       },
     },
   }),
