@@ -69,9 +69,9 @@ export class App implements AppAttributes {
 
       next()
     })
-    this.io.use((socket, next) => {
+    this.io.use(async (socket, next) => {
       const { token } = socket.handshake.auth
-      socket.user = this.users.get(this.tokens.get(token) ?? -1)
+      socket.user = await this.getUserFromToken(token)
       next()
     })
 
@@ -82,21 +82,23 @@ export class App implements AppAttributes {
     // Post requests
     this.post(
       PostRequest.Me,
-      ({ token }) => this.users.get(this.tokens.get(token) ?? -1) ?? false
+      async ({ token }) => (await this.getUserFromToken(token)) ?? false
     )
-    this.post(PostRequest.Login, async ({ name: login, teamId }) => {
+
+    this.post(PostRequest.Login, async ({ name, teamId }) => {
       const team = this.teams.get(teamId)
 
       if (!team || !team.pickable) throw new Error("Cette équipe n'existe pas")
 
-      const user = await prisma.user.upsert({
-        create: { name: login, teamId, inpId: nanoid() },
-        update: { teamId },
-        where: { name: login },
+      const found = await prisma.user.findUnique({ where: { name } })
+      if (found) throw new Error('Ce compte existe déjà')
+
+      const token = nanoid()
+      const user = await prisma.user.create({
+        data: { name, teamId, token },
         include: { team: true },
       })
 
-      const token = nanoid()
       this.users.set(user.id, user)
       this.tokens.set(token, user.id)
 
@@ -212,6 +214,20 @@ export class App implements AppAttributes {
     return [...this.io.sockets.sockets.values()].filter(
       ({ user }) => user && user.id === id
     )
+  }
+
+  async getUserFromToken(
+    token: string
+  ): Promise<(User & { team: Team }) | undefined> {
+    const cache = this.users.get(this.tokens.get(token) ?? -1)
+    if (cache) return cache
+    const user = await this.prisma.user.findUnique({
+      where: { token },
+      include: { team: true },
+    })
+    if (!user) return undefined
+    this.users.set(user.id, user)
+    return user
   }
 }
 

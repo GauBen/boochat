@@ -19,9 +19,10 @@ model Team {
 
 model User {
   id               Int       @id @default(autoincrement())
-  inpId            String    @unique
+  // inpId            String    @unique
   teamId           Int
   name             String    @unique
+  token            String    @unique
   level            Int       @default(1)
   team             Team      @relation(fields: [teamId], references: [id])
   lastMessage      DateTime?

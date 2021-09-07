@@ -1,11 +1,10 @@
 // eslint-disable-next-line import/default
 import Prisma from '@prisma/client'
-import { Level } from '../src/api'
 
 const prisma = new Prisma.PrismaClient()
 const seed = async (): Promise<void> => {
   // Teams
-  const bots = await prisma.team.create({
+  await prisma.team.create({
     data: {
       code: 'bot',
       name: 'BOT',
@@ -13,7 +12,7 @@ const seed = async (): Promise<void> => {
       pickable: false,
     },
   })
-  const sn = await prisma.team.create({
+  await prisma.team.create({
     data: {
       code: 'sn',
       name: 'SN',
@@ -32,24 +31,6 @@ const seed = async (): Promise<void> => {
       code: 'mfee',
       name: 'MFEE',
       color: '#0099ff',
-    },
-  })
-
-  // Users
-  await prisma.user.create({
-    data: {
-      name: 'Boobot',
-      inpId: '#boobot',
-      level: Level.Admin,
-      teamId: bots.id,
-    },
-  })
-  await prisma.user.create({
-    data: {
-      name: 'gautier',
-      inpId: 'benaimg',
-      level: Level.Admin,
-      teamId: sn.id,
     },
   })
 }

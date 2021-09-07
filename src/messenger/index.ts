@@ -40,17 +40,11 @@ export default (app: App): void => {
   ) => {
     if (msg.startsWith('/ban ')) {
       let name = msg.slice(5)
-      let field: 'inpId' | 'name' = 'inpId'
 
-      if (name.startsWith('@')) {
-        field = 'name'
-        name = name.slice(1)
-      }
+      if (name.startsWith('@')) name = name.slice(1)
 
       const userFound = await prisma.user.findUnique({
-        where: {
-          [field]: name,
-        },
+        where: { name },
       })
 
       if (!userFound) {
@@ -73,7 +67,7 @@ export default (app: App): void => {
       emitter.emit(AppEvent.UserUpdated, updatedUser)
       io.to(Room.Moderator).emit(
         ServerEvent.Notice,
-        `Utilisateur ${updatedUser.inpId} (@${updatedUser.name}) banni`
+        `Utilisateur @${updatedUser.name} banni`
       )
     }
   }

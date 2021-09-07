@@ -73,7 +73,7 @@
     }
 
     > :global(:first-child) {
-      margin-top: auto;
+      margin-top: auto !important;
     }
   }
 

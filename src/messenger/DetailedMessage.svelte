@@ -50,9 +50,7 @@
   {:else}
     <span class="placeholder" />
   {/if}
-  <strong>{author.name}</strong>{#if mod}&nbsp;<span class="inp-id"
-      >({author.inpId})</span
-    >{/if}:
+  <strong>{author.name}</strong>:
   {#if deleted}
     {#if mod}
       <span use:richText={{ body, me }} class:deleted />
@@ -112,10 +110,6 @@
 
   strong {
     color: var(--color);
-  }
-
-  .inp-id {
-    color: #888;
   }
 
   .placeholder {
