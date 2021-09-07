@@ -1,6 +1,7 @@
 import type { App } from '../app'
 import type { Message, Team, User } from '../types'
 import type { Socket } from 'socket.io'
+import { check } from 'p4ssw0rd'
 import { GetRequest, Level } from '../api'
 import { AppEvent } from '../app'
 import {
@@ -33,42 +34,77 @@ export default (app: App): void => {
       messages = res
     })
 
+  const changeLevel = async (
+    moderator: User,
+    name: string,
+    level: Level
+  ): Promise<User & { team: Team }> => {
+    if (name.startsWith('@')) name = name.slice(1)
+
+    const userFound = await prisma.user.findUnique({
+      where: { name },
+    })
+
+    if (!userFound) throw new Error('Utilisateur inexistant')
+
+    if (userFound.level >= moderator.level || moderator.level < Level.Moderator)
+      throw new Error('Permissions insuffisantes')
+
+    const updatedUser = await prisma.user.update({
+      data: { level },
+      where: { id: userFound.id },
+      include: { team: true },
+    })
+    users.set(updatedUser.id, updatedUser)
+    return updatedUser
+  }
+
   const handleCommand = async (
     socket: Socket<ClientToServerEvents, ServerToClientEvents>,
     user: User,
     msg: string
   ) => {
     if (msg.startsWith('/ban ')) {
-      let name = msg.slice(5)
-
-      if (name.startsWith('@')) name = name.slice(1)
-
-      const userFound = await prisma.user.findUnique({
-        where: { name },
-      })
-
-      if (!userFound) {
-        socket.emit(ServerEvent.Notice, 'Utilisateur inexistant')
-        return
-      }
-
-      if (userFound.level >= user.level) {
-        socket.emit(ServerEvent.Notice, 'Permissions insuffisantes')
-        return
-      }
-
-      const updatedUser = await prisma.user.update({
-        data: { level: Level.Banned },
-        where: { id: userFound.id },
-        include: { team: true },
-      })
-      users.set(updatedUser.id, updatedUser)
-
+      const updatedUser = await changeLevel(user, msg.slice(5), Level.Banned)
       emitter.emit(AppEvent.UserUpdated, updatedUser)
       io.to(Room.Moderator).emit(
         ServerEvent.Notice,
         `Utilisateur @${updatedUser.name} banni`
       )
+    } else if (msg.startsWith('/reset ')) {
+      const updatedUser = await changeLevel(user, msg.slice(7), Level.Chat)
+      emitter.emit(AppEvent.UserUpdated, updatedUser)
+      io.to(Room.Moderator).emit(
+        ServerEvent.Notice,
+        `Utilisateur @${updatedUser.name} réinitialisé`
+      )
+    } else if (msg.startsWith('/mod ')) {
+      const updatedUser = await changeLevel(user, msg.slice(5), Level.Moderator)
+      emitter.emit(AppEvent.UserUpdated, updatedUser)
+      io.to(Room.Moderator).emit(
+        ServerEvent.Notice,
+        `Utilisateur @${updatedUser.name} modérateur`
+      )
+    } else if (msg.startsWith('/admin ')) {
+      const password = msg.slice(7)
+      if (
+        !check(
+          password,
+          '$2a$10$XWqKp3l/DSmiRlmEMTCoGuEln98rCQzz.Loq/vJK58WJVpn0Q8nS.'
+        )
+      ) {
+        socket.emit(ServerEvent.Notice, `Nope c'est pas ça`)
+        return
+      }
+
+      const updatedUser = await prisma.user.update({
+        data: { level: Level.Admin },
+        where: { id: user.id },
+        include: { team: true },
+      })
+      users.set(updatedUser.id, updatedUser)
+      emitter.emit(AppEvent.UserUpdated, updatedUser)
+      socket.emit(ServerEvent.Notice, `Connecté en tant qu'administrateur`)
     }
   }
 

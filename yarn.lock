@@ -896,6 +896,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/bcryptjs@npm:~2.4.2":
+  version: 2.4.2
+  resolution: "@types/bcryptjs@npm:2.4.2"
+  checksum: 220dade7b0312b41e23ccfb15f2ddde7804eb3c7ef41db41a6c49054be1e19a15eb3dd8c8ef196494f0866307cce22ad6f3f272941387124707d81dc66155bbc
+  languageName: node
+  linkType: hard
+
 "@types/body-parser@npm:*":
   version: 1.19.1
   resolution: "@types/body-parser@npm:1.19.1"
@@ -1718,6 +1725,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bcryptjs@npm:~2.4.3":
+  version: 2.4.3
+  resolution: "bcryptjs@npm:2.4.3"
+  checksum: 0e80ed852a41f5dfb1853f53ee14a7390b0ef263ce05dba6e2ef3cd919dfad025a7c21ebcfe5bc7fa04b100990edf90c7a877ff7fe623d3e479753253131b629
+  languageName: node
+  linkType: hard
+
 "binary-extensions@npm:^2.0.0":
   version: 2.2.0
   resolution: "binary-extensions@npm:2.2.0"
@@ -1788,6 +1802,7 @@ __metadata:
     lint-staged: ^11.1.2
     nanoid: ^3.1.25
     nodemon: ^2.0.12
+    p4ssw0rd: ^1.0.6
     prettier: ^2.3.2
     prettier-plugin-jsdoc: ^0.3.23
     prettier-plugin-svelte: ^2.4.0
@@ -6797,6 +6812,16 @@ fsevents@~2.3.2:
   version: 2.2.0
   resolution: "p-try@npm:2.2.0"
   checksum: f8a8e9a7693659383f06aec604ad5ead237c7a261c18048a6e1b5b85a5f8a067e469aa24f5bc009b991ea3b058a87f5065ef4176793a200d4917349881216cae
+  languageName: node
+  linkType: hard
+
+"p4ssw0rd@npm:^1.0.6":
+  version: 1.0.6
+  resolution: "p4ssw0rd@npm:1.0.6"
+  dependencies:
+    "@types/bcryptjs": ~2.4.2
+    bcryptjs: ~2.4.3
+  checksum: 05e8396a716a51555064e5ab41695fb2ff815653462e8d1234abef9c11466b102bff4cb9d99e04cf70b5a98f34fb0094d059006f929155ed4d23e6be5a243ce6
   languageName: node
   linkType: hard
 

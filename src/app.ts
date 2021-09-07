@@ -222,7 +222,7 @@ export class App implements AppAttributes {
     const cache = this.users.get(this.tokens.get(token) ?? -1)
     if (cache) return cache
     const user = await this.prisma.user.findUnique({
-      where: { token },
+      where: { token: `${token}` },
       include: { team: true },
     })
     if (!user) return undefined
