@@ -59,52 +59,60 @@ export default (app: App): void => {
     return updatedUser
   }
 
+  // eslint-disable-next-line complexity
   const handleCommand = async (
     socket: Socket<ClientToServerEvents, ServerToClientEvents>,
     user: User,
     msg: string
+    // eslint-disable-next-line sonarjs/cognitive-complexity
   ) => {
-    if (msg.startsWith('/ban ')) {
-      const updatedUser = await changeLevel(user, msg.slice(5), Level.Banned)
-      emitter.emit(AppEvent.UserUpdated, updatedUser)
-      io.to(Room.Moderator).emit(
-        ServerEvent.Notice,
-        `Utilisateur @${updatedUser.name} banni`
-      )
-    } else if (msg.startsWith('/reset ')) {
-      const updatedUser = await changeLevel(user, msg.slice(7), Level.Chat)
-      emitter.emit(AppEvent.UserUpdated, updatedUser)
-      io.to(Room.Moderator).emit(
-        ServerEvent.Notice,
-        `Utilisateur @${updatedUser.name} réinitialisé`
-      )
-    } else if (msg.startsWith('/mod ')) {
-      const updatedUser = await changeLevel(user, msg.slice(5), Level.Moderator)
-      emitter.emit(AppEvent.UserUpdated, updatedUser)
-      io.to(Room.Moderator).emit(
-        ServerEvent.Notice,
-        `Utilisateur @${updatedUser.name} modérateur`
-      )
-    } else if (msg.startsWith('/admin ')) {
-      const password = msg.slice(7)
-      if (
-        !check(
-          password,
-          '$2a$10$XWqKp3l/DSmiRlmEMTCoGuEln98rCQzz.Loq/vJK58WJVpn0Q8nS.'
+    try {
+      if (msg.startsWith('/ban ')) {
+        const updatedUser = await changeLevel(user, msg.slice(5), Level.Banned)
+        emitter.emit(AppEvent.UserUpdated, updatedUser)
+        io.to(Room.Moderator).emit(
+          ServerEvent.Notice,
+          `Utilisateur @${updatedUser.name} banni`
         )
-      ) {
-        socket.emit(ServerEvent.Notice, `Nope c'est pas ça`)
-        return
-      }
+      } else if (msg.startsWith('/reset ')) {
+        const updatedUser = await changeLevel(user, msg.slice(7), Level.Chat)
+        emitter.emit(AppEvent.UserUpdated, updatedUser)
+        io.to(Room.Moderator).emit(
+          ServerEvent.Notice,
+          `Utilisateur @${updatedUser.name} réinitialisé`
+        )
+      } else if (msg.startsWith('/mod ')) {
+        const updatedUser = await changeLevel(
+          user,
+          msg.slice(5),
+          Level.Moderator
+        )
+        emitter.emit(AppEvent.UserUpdated, updatedUser)
+        io.to(Room.Moderator).emit(
+          ServerEvent.Notice,
+          `Utilisateur @${updatedUser.name} modérateur`
+        )
+      } else if (msg.startsWith('/admin ')) {
+        const password = msg.slice(7)
+        if (
+          !check(
+            password,
+            '$2a$10$XWqKp3l/DSmiRlmEMTCoGuEln98rCQzz.Loq/vJK58WJVpn0Q8nS.'
+          )
+        )
+          throw new Error('Mauvais mot de passe')
 
-      const updatedUser = await prisma.user.update({
-        data: { level: Level.Admin },
-        where: { id: user.id },
-        include: { team: true },
-      })
-      users.set(updatedUser.id, updatedUser)
-      emitter.emit(AppEvent.UserUpdated, updatedUser)
-      socket.emit(ServerEvent.Notice, `Connecté en tant qu'administrateur`)
+        const updatedUser = await prisma.user.update({
+          data: { level: Level.Admin },
+          where: { id: user.id },
+          include: { team: true },
+        })
+        users.set(updatedUser.id, updatedUser)
+        emitter.emit(AppEvent.UserUpdated, updatedUser)
+        socket.emit(ServerEvent.Notice, `Connecté en tant qu'administrateur`)
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) socket.emit(ServerEvent.Notice, error.message)
     }
   }
 

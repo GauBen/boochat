@@ -129,6 +129,8 @@ export class App implements AppAttributes {
 
         socket.emit(ServerEvent.UserUpdated, user)
       }
+
+      io.to(Room.Moderator).emit(ServerEvent.Stats, this.computeStats())
     })
   }
 
