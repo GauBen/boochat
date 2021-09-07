@@ -46,7 +46,9 @@
   <datalist id="commands">
     {#if me && me.level >= Level.Moderator}
       <option value="/ban ">/ban [user]</option>
-      <option value="/kick ">/kick [user] [durée en secondes=120]</option>
+      <option value="/mod ">/mod [user]</option>
+      <option value="/reset ">/reset [user]</option>
+      <option value="/admin ">/admin [password]</option>
     {/if}
   </datalist>
   <input
