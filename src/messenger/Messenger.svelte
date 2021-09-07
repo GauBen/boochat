@@ -47,12 +47,12 @@
 
   let value = ''
 
-  const users = new Map<MessageUser['id'], MessageUser>()
+  let users = new Map<MessageUser['id'], MessageUser>()
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   const updateUsers = (message: { author: Omit<MessageUser, 'inpId'> }) => {
     const { author } = message
-    if (!users.has(author.id)) users.set(author.id, author)
+    if (!users.has(author.id)) users = users.set(author.id, author)
 
     const user = users.get(author.id)
     if (user) {
