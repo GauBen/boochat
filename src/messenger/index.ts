@@ -123,8 +123,18 @@ export default (app: App): void => {
 
     socket.emit(ServerEvent.Connected)
 
+    // eslint-disable-next-line complexity
     const setDeleted = async (id: number, deleted: boolean): Promise<void> => {
       if (!user || user.level < Level.Moderator) return
+      const message = await prisma.message.findUnique({
+        where: { id },
+        include: { author: true },
+      })
+      if (
+        !message ||
+        (message.author.level >= user.level && message.author.id !== user.id)
+      )
+        return
       io.emit(
         deleted ? ServerEvent.DeleteMessage : ServerEvent.RestoreMessage,
         id
@@ -139,10 +149,10 @@ export default (app: App): void => {
     }
 
     socket.on(ClientEvent.DeleteMessage, async (id: number) => {
-      await setDeleted(id, true)
+      await setDeleted(Number(id), true)
     })
     socket.on(ClientEvent.RestoreMessage, async (id: number) => {
-      await setDeleted(id, false)
+      await setDeleted(Number(id), false)
     })
 
     // eslint-disable-next-line complexity
