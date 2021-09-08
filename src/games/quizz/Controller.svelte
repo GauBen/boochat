@@ -2,7 +2,7 @@
   import type { Socket } from '../../socket-api'
   import { onMount } from 'svelte'
   import { writable } from 'svelte/store'
-  import { post, PostRequest } from '../../api'
+  import { get, GetRequest, post, PostRequest } from '../../api'
   import { ServerEvent } from '../../socket-api'
   import { State } from './types'
 
@@ -20,7 +20,39 @@
   let correctAnswers: Set<string>
 
   onMount(() => {
-    //
+    void get(GetRequest.GameState).then(({ body }) => {
+      state = body?.state
+      switch (body?.state) {
+        case State.Question: {
+          question = body.data.question
+          answers = body.data.answers
+          category = body.data.category
+          points = body.data.points
+          $anwserChosen = ''
+          disabled = false
+          break
+        }
+
+        case State.Answer: {
+          question = body.data.question
+          answers = body.data.answers
+          category = body.data.category
+          points = body.data.points
+          $anwserChosen = ''
+          disabled = true
+          correctAnswers = new Set(body.data.correctAnswers)
+          break
+        }
+
+        case State.Leaderboard:
+          break
+
+        case undefined:
+          break
+
+        // No default
+      }
+    })
   })
 
   const listen = (socket: Socket | undefined) => {
@@ -34,13 +66,12 @@
       points = data.points
       $anwserChosen = ''
       disabled = false
-      correctAnswers = new Set()
     })
 
     socket.on(ServerEvent.QuizzAnswers, (c) => {
       state = State.Answer
       disabled = true
-      correctAnswers = new Set(c)
+      correctAnswers = new Set(c.correctAnswers)
     })
   }
 
@@ -96,6 +127,8 @@
         {/each}
       </div>
     </div>
+  {:else if state === State.Leaderboard}
+    Attente de la prochaine question...
   {/if}
 </div>
 

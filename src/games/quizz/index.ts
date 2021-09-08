@@ -1,7 +1,7 @@
 import type { App } from '../../app'
-import type { User, Question, Team } from '../../types'
+import type { User, Question, Team, Answer } from '../../types'
 import arrayShuffle from 'array-shuffle'
-import { PostRequest } from '../../api'
+import { GetRequest, PostRequest } from '../../api'
 import { ServerEvent } from '../../socket-api'
 import { State } from './types'
 
@@ -9,9 +9,14 @@ export default (app: App): void => {
   const { prisma, io, users, teams, config } = app
 
   let state: State | undefined
-  let date: number
+  let date = 0
+  let question: Question & { answers: Answer[] }
   let answerSet: Set<string>
+  let correctAnswers: Set<string>
   let answersReceived: Map<User['id'], Question['body']>
+  let bestTeams = new Set<Team['id']>()
+  let ratios: Map<Team['id'], number>
+  let leaderboard: Map<Team['id'], number>
 
   // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
   const play = async (numberOfQuestions: number) => {
@@ -22,9 +27,12 @@ export default (app: App): void => {
     })
 
     while (questions.length > 0) {
-      const question = questions.shift()
-      if (!question) break
-      questions.push(question)
+      const q = questions.shift()
+      if (!q) break
+      question = q
+
+      questions.push(q) // TODO remove
+
       await prisma.question.update({
         data: { timesUsed: question.timesUsed + 1 },
         where: { id: question.id },
@@ -33,7 +41,7 @@ export default (app: App): void => {
       if (question.shuffleAnwsers) answers = arrayShuffle(answers)
       answerSet = new Set(answers)
 
-      const correctAnswers = new Set(
+      correctAnswers = new Set(
         question.answers
           .filter(({ correct }) => correct)
           .map(({ body }) => body)
@@ -70,13 +78,16 @@ export default (app: App): void => {
         }
       }
 
+      ratios = new Map<Team['id'], number>()
       let bestRatio = 0
-      let bestTeams = new Set<Team['id']>()
+      bestTeams = new Set<Team['id']>()
 
       for (const id of teams.keys()) {
+        ratios.set(id, 0)
         const aC = answerCount.get(id) ?? 0
         if (aC === 0) continue
         const ratio = (correctAnswerCount.get(id) ?? 0) / aC
+        ratios.set(id, ratio)
         if (ratio > bestRatio) {
           bestTeams = new Set([id])
           bestRatio = ratio
@@ -99,7 +110,11 @@ export default (app: App): void => {
       }
 
       // Envoyer la réponse
-      io.emit(ServerEvent.QuizzAnswers, [...correctAnswers])
+      io.emit(ServerEvent.QuizzAnswers, {
+        correctAnswers: [...correctAnswers],
+        bestTeams: [...bestTeams],
+        ratios: [...ratios.entries()],
+      })
 
       state = State.Answer
       date = Date.now()
@@ -107,19 +122,28 @@ export default (app: App): void => {
         setTimeout(resolve, config.get('quizz').answer)
       })
 
-      const rawStats = await prisma.questionStats.groupBy({
-        by: ['teamId'],
-        _sum: {
-          points: true,
-        },
-        where: {
-          createdAt: { gte: new Date(Date.now() - 1000 * 60 * 60) },
-        },
-      })
-      console.log(rawStats)
+      leaderboard = new Map(
+        (
+          await prisma.questionStats.groupBy({
+            by: ['teamId'],
+            _sum: {
+              points: true,
+            },
+            where: {
+              createdAt: { gte: new Date(Date.now() - 1000 * 60 * 60) },
+              team: { pickable: true },
+            },
+          })
+        ).map(({ teamId, _sum: { points } }) => [teamId, points ?? 0])
+      )
 
-      // Envoyer le classement
-      console.log(date, state)
+      io.emit(ServerEvent.QuizzLeaderboard, [...leaderboard])
+
+      state = State.Leaderboard
+      date = Date.now()
+      await new Promise((resolve) => {
+        setTimeout(resolve, config.get('quizz').leaderboard)
+      })
     }
   }
 
@@ -129,5 +153,47 @@ export default (app: App): void => {
     if (!user) throw new Error('Utilisateur non connecté')
     if (!answerSet.has(answer)) throw new Error("Cette réponse n'existe pas.")
     answersReceived.set(user.id, answer)
+  })
+
+  app.get(GetRequest.GameState, () => {
+    const elapsed = Date.now() - date
+    if (state === undefined) return
+
+    if (state === State.Question) {
+      return {
+        state: State.Question,
+        elapsed,
+        data: {
+          question: question.body,
+          answers: [...answerSet],
+          category: question.category,
+          points: question.points,
+        },
+      }
+    }
+
+    if (state === State.Answer) {
+      return {
+        state: State.Answer,
+        elapsed,
+        data: {
+          question: question.body,
+          answers: [...answerSet],
+          category: question.category,
+          points: question.points,
+          bestTeams: [...bestTeams],
+          correctAnswers: [...correctAnswers],
+          ratios: [...ratios],
+        },
+      }
+    }
+
+    if (state === State.Leaderboard) {
+      return {
+        state: State.Leaderboard,
+        elapsed,
+        data: [...leaderboard],
+      }
+    }
   })
 }

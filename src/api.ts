@@ -1,3 +1,4 @@
+import type { CurrentState } from './games/quizz/types'
 import type { Type } from './messenger/types'
 import type { Team, User, RichMessage, DetailedMessage } from './types'
 import type { JTDDataType } from 'ajv/dist/core'
@@ -16,7 +17,7 @@ export enum GetRequest {
   Messages = '/messages',
   ChatSettings = '/chat-settings',
   GameSettings = '/game-settings',
-  GameResults = '/game-results',
+  GameState = '/game-results',
   UsersOnline = '/users-online',
 }
 
@@ -60,7 +61,7 @@ export interface Response {
     | { type: Type.Detailed; messages: DetailedMessage[] }
   [GetRequest.ChatSettings]: { slowdown: number; moderationDelay: number }
   [GetRequest.GameSettings]: { value: string }
-  [GetRequest.GameResults]: Array<[number, number]>
+  [GetRequest.GameState]: CurrentState
   [GetRequest.UsersOnline]: {
     online: number
     connected: number

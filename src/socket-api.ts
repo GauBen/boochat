@@ -24,6 +24,7 @@ export enum ServerEvent {
   UserUpdated = 'user updated',
   QuestionStarts = 'question starts',
   QuizzAnswers = 'answers',
+  QuizzLeaderboard = 'leaderboard',
 }
 
 export interface ClientToServerEvents {
@@ -60,7 +61,12 @@ export interface ServerToClientEvents {
     points: number
     answers: string[]
   }) => void
-  [ServerEvent.QuizzAnswers]: (answers: string[]) => void
+  [ServerEvent.QuizzAnswers]: (x: {
+    correctAnswers: string[]
+    bestTeams: Array<Team['id']>
+    ratios: Array<[Team['id'], number]>
+  }) => void
+  [ServerEvent.QuizzLeaderboard]: (points: Array<[Team['id'], number]>) => void
 }
 
 export enum Room {
