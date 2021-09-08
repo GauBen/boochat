@@ -79,7 +79,7 @@ export interface Response {
 export const get = async <T extends GetRequest>(
   uri: T
 ): Promise<{ response: globalThis.Response; body: Response[T] }> => {
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
   const response = await fetch(API + uri, {
     headers: token
       ? {
@@ -95,7 +95,7 @@ export const post = async <T extends PostRequest>(
   uri: T,
   requestBody: JTDDataType<typeof schemas[T]>
 ): Promise<{ response: globalThis.Response; body: Response[T] }> => {
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
   const response = await fetch(API + uri, {
     method: 'POST',
     headers: {

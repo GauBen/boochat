@@ -20,7 +20,7 @@
       teams = new Map(body.map((team) => [team.id, team]))
     })
 
-    const token = sessionStorage.getItem('token')
+    const token = localStorage.getItem('token')
     if (token !== null) {
       void post(PostRequest.Me, { token }).then(({ body }) => {
         me = body
@@ -41,7 +41,7 @@
   })
 
   const logout = () => {
-    sessionStorage.removeItem('token')
+    localStorage.removeItem('token')
     me = false
   }
 

@@ -18,7 +18,7 @@
       return
     }
 
-    sessionStorage.setItem('token', body.token)
+    localStorage.setItem('token', body.token)
     await goto('.')
   }
 
