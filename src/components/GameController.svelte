@@ -17,6 +17,7 @@
   a {
     flex: 1;
     align-self: center;
+    color: inherit;
     text-align: center;
   }
 </style>
