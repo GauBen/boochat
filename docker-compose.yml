@@ -6,5 +6,5 @@ services:
       - '3001:3001'
     volumes:
       - './storage:/app/storage'
-    command: sh -c 'test -f storage/boochat.db || (yarn prisma db push; yarn prisma db seed --preview-feature); node build'
+    command: sh -c 'test -f storage/boochat.db || (yarn prisma db push; yarn prisma db seed --preview-feature); yarn start'
     restart: unless-stopped
