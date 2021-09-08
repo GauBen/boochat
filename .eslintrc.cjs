@@ -59,6 +59,7 @@ module.exports = {
         // Setting a variable to undefined is not the same thing as leaving the declaration empty
         'no-undef-init': 'off',
         'unicorn/no-useless-undefined': 'off',
+        'sonarjs/no-ignored-return': 'off',
         // This is not yet possible to enable some typed rules, see
         // https://github.com/sveltejs/eslint-plugin-svelte3/issues/89
         '@typescript-eslint/no-unsafe-assignment': 'off',

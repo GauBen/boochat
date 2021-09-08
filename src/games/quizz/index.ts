@@ -88,6 +88,7 @@ export default (app: App): void => {
         if (aC === 0) continue
         const ratio = (correctAnswerCount.get(id) ?? 0) / aC
         ratios.set(id, ratio)
+        if (ratio === 0) continue
         if (ratio > bestRatio) {
           bestTeams = new Set([id])
           bestRatio = ratio

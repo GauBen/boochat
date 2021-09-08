@@ -136,6 +136,7 @@
   .controller {
     width: 100%;
     padding: 1rem;
+    overflow: auto;
   }
 
   .question {

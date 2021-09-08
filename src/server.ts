@@ -53,8 +53,8 @@ const app = new App({
       },
       quizz: {
         question: 15_000,
-        answer: 5000,
-        leaderboard: 10_000,
+        answer: 15_000,
+        leaderboard: 15_000,
       },
     },
   }),
