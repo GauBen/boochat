@@ -117,7 +117,7 @@
         <tr style="--color: {team.color}">
           <td>
             <img
-              src="/static/images/badges/{team.code}.png"
+              src="/images/badges/{team.code}.png"
               alt={team.name}
               class="badge"
             />
@@ -137,7 +137,7 @@
       <tr style="--color: {team.color}">
         <td>
           <img
-            src="/static/images/badges/{team.code}.png"
+            src="/images/badges/{team.code}.png"
             alt={team.name}
             class="badge"
           />
