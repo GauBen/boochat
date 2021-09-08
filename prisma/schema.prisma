@@ -14,7 +14,7 @@ model Team {
   color         String
   pickable      Boolean         @default(true)
   users         User[]
-  QuestionStats QuestionStats[]
+  questionStats QuestionStats[]
 }
 
 model User {
@@ -64,6 +64,7 @@ model QuestionStats {
   teamId          Int
   answers         Int
   correctAnswsers Int
+  points          Int
   createdAt       DateTime @default(now())
   question        Question @relation(fields: [questionId], references: [id])
   team            Team     @relation(fields: [teamId], references: [id])

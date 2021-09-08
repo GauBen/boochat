@@ -36,7 +36,10 @@ const app = new App({
       JTDDataType<typeof schemas[k]>
     >
   },
-  config: new Conf<{ chat: { slowdown: number; moderationDelay: number } }>({
+  config: new Conf<{
+    chat: { slowdown: number; moderationDelay: number }
+    quizz: { question: number; answer: number; leaderboard: number }
+  }>({
     cwd: path.join(
       path.dirname(fileURLToPath(import.meta.url)),
       '..',
@@ -47,6 +50,11 @@ const app = new App({
       chat: {
         moderationDelay: 2000,
         slowdown: 5000,
+      },
+      quizz: {
+        question: 15_000,
+        answer: 5000,
+        leaderboard: 10_000,
       },
     },
   }),

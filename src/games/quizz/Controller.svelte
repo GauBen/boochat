@@ -2,6 +2,7 @@
   import type { Socket } from '../../socket-api'
   import { onMount } from 'svelte'
   import { writable } from 'svelte/store'
+  import { post, PostRequest } from '../../api'
   import { ServerEvent } from '../../socket-api'
   import { State } from './types'
 
@@ -15,7 +16,8 @@
   const anwserChosen = writable('')
   let disabled = false
 
-  let state: State | undefined = State.Question
+  let state: State | undefined
+  let correctAnswers: Set<string>
 
   onMount(() => {
     //
@@ -32,13 +34,22 @@
       points = data.points
       $anwserChosen = ''
       disabled = false
+      correctAnswers = new Set()
+    })
+
+    socket.on(ServerEvent.QuizzAnswers, (c) => {
+      state = State.Answer
+      disabled = true
+      correctAnswers = new Set(c)
     })
   }
 
   $: listen(socket)
 
-  anwserChosen.subscribe(() => {
+  anwserChosen.subscribe(async (answer) => {
+    if (!answer) return
     disabled = true
+    await post(PostRequest.QuizzAnswer, { answer })
   })
 </script>
 
@@ -60,6 +71,28 @@
             {disabled}
           />
           <label for="answer-{i}">{answer}</label>
+        {/each}
+      </div>
+    </div>
+  {:else if state === State.Answer}
+    <div class="question">
+      <p class="category">{category}</p>
+      <p class="points">{points} point{points > 1 ? 's' : ''}</p>
+      <h2>{question}</h2>
+      <div class="answers">
+        {#each Object.entries(answers) as [i, answer]}
+          <input
+            type="radio"
+            id="answer-{i}"
+            bind:group={$anwserChosen}
+            value={answer}
+            disabled
+          />
+          <label
+            for="answer-{i}"
+            class:correct={correctAnswers.has(answer)}
+            class:incorrect={!correctAnswers.has(answer)}>{answer}</label
+          >
         {/each}
       </div>
     </div>
@@ -116,6 +149,19 @@
     > input:checked + label {
       background: #fff;
       box-shadow: 0 0.25rem 0.25rem inset #888;
+    }
+
+    > input + label.correct {
+      background: rgb(79, 248, 108);
+    }
+
+    > input:checked + label.correct {
+      box-shadow: 0 0.25rem 0.25rem inset rgb(54, 223, 82);
+    }
+
+    > input:checked + label.incorrect {
+      background: rgb(245, 114, 104);
+      box-shadow: 0 0.25rem 0.25rem inset rgb(199, 59, 49);
     }
   }
 </style>

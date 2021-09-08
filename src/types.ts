@@ -1,5 +1,12 @@
-import type { User, Team, Message } from '@prisma/client'
-export type { User, Team, Message }
+import type {
+  User,
+  Team,
+  Message,
+  Question,
+  Answer,
+  QuestionStats,
+} from '@prisma/client'
+export type { User, Team, Message, Question, Answer, QuestionStats }
 
 export type DetailedUser = User & { team: Team }
 export type MessageUser = {

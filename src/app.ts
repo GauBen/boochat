@@ -1,3 +1,4 @@
+import type { DetailedUser } from './types'
 import type { PrismaClient, Team, User } from '@prisma/client'
 import type { ValidateFunction } from 'ajv'
 import type { JTDDataType } from 'ajv/dist/core'
@@ -24,7 +25,10 @@ export interface AppAttributes {
       JTDDataType<typeof schemas[k]>
     >
   }
-  readonly config: Conf<{ chat: { slowdown: number; moderationDelay: number } }>
+  readonly config: Conf<{
+    chat: { slowdown: number; moderationDelay: number }
+    quizz: { question: number; answer: number; leaderboard: number }
+  }>
 }
 
 export enum AppEvent {
@@ -58,13 +62,12 @@ export class App implements AppAttributes {
     })
 
     // Register middlewares
-    this.api.use(json(), cors(), (req, _res, next) => {
+    this.api.use(json(), cors(), async (req, _res, next) => {
       const { authorization: auth } = req.headers
 
       if (auth?.startsWith('Token ')) {
         const token = auth.slice(6)
-        if (this.tokens.has(token))
-          req.user = this.users.get(this.tokens.get(token) ?? -1)
+        req.user = await this.getUserFromToken(token)
       }
 
       next()
@@ -154,7 +157,8 @@ export class App implements AppAttributes {
   post<T extends PostRequest>(
     path: T,
     handler: (
-      body: JTDDataType<typeof schemas[T]>
+      body: JTDDataType<typeof schemas[T]>,
+      user: DetailedUser | undefined
     ) => Response[T] | Promise<Response[T]>
   ): void {
     this.api.post(path, async (req, res) => {
@@ -162,7 +166,9 @@ export class App implements AppAttributes {
         res.status(400).json({ error: 'Invalid data' })
       } else {
         try {
-          res.json(await handler(req.body as JTDDataType<typeof schemas[T]>))
+          res.json(
+            await handler(req.body as JTDDataType<typeof schemas[T]>, req.user)
+          )
         } catch (error: unknown) {
           console.error(error)
           res.status(400).json({
