@@ -119,6 +119,7 @@ export class App implements AppAttributes {
     // Listen for user updates
     this.emitter.on(AppEvent.UserUpdated, (user) => {
       for (const socket of this.getUserSockets(user)) {
+        socket.user = user
         void socket.join(Room.Chat)
 
         if (user.level >= Level.Moderator) void socket.join(Room.Moderator)
