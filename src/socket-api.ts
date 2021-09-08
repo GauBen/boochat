@@ -1,6 +1,8 @@
 import type { RichMessage, User, Team, DetailedMessage } from './types'
 import type { Socket as ClientSocket } from 'socket.io-client'
 
+export const SOCKET_API =
+  globalThis?.location?.hostname === 'boochat.inpt.fr' ? '/' : ':3001'
 export type Socket = ClientSocket<ServerToClientEvents, ClientToServerEvents>
 
 export enum ClientEvent {

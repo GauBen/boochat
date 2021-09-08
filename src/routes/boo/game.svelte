@@ -5,6 +5,7 @@
   import { onMount } from 'svelte'
   import { get, GetRequest } from '../../api'
   import Boo from '../../games/quizz/Boo.svelte'
+  import { SOCKET_API } from '../../socket-api'
 
   let socket: Socket | undefined
   let teams: Map<Team['id'], Team> = new Map()
@@ -14,7 +15,7 @@
       teams = new Map(body.map((team) => [team.id, team]))
     })
 
-    socket = io(':3001')
+    socket = io(SOCKET_API)
   })
 </script>
 

@@ -12,7 +12,7 @@
   import { get, GetRequest } from '../../api'
   import Messages from '../../messenger/Messages.svelte'
   import { Type } from '../../messenger/types'
-  import { ServerEvent } from '../../socket-api'
+  import { ServerEvent, SOCKET_API } from '../../socket-api'
 
   let socket: Socket | undefined
   let teams: Map<Team['id'], Team> = new Map()
@@ -71,7 +71,7 @@
       ]
     })
 
-    socket = io(':3001')
+    socket = io(SOCKET_API)
 
     socket.on(ServerEvent.Message, async (message) => {
       updateUsers(message)

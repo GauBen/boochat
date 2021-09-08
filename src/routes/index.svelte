@@ -9,7 +9,7 @@
   import Admin from '../components/Admin.svelte'
   import GameController from '../components/GameController.svelte'
   import Messenger from '../messenger/Messenger.svelte'
-  import { ServerEvent } from '../socket-api'
+  import { ServerEvent, SOCKET_API } from '../socket-api'
 
   let socket: Socket | undefined
   let teams: Map<Team['id'], Team> = new Map()
@@ -27,7 +27,7 @@
       })
     }
 
-    socket = io(':3001', {
+    socket = io(SOCKET_API, {
       auth: { token },
     })
 
