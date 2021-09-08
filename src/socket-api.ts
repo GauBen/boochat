@@ -22,6 +22,7 @@ export enum ServerEvent {
   Game = 'game',
   Stats = 'stats',
   UserUpdated = 'user updated',
+  QuestionStarts = 'question starts',
 }
 
 export interface ClientToServerEvents {
@@ -52,6 +53,12 @@ export interface ServerToClientEvents {
     }>
   }) => void
   [ServerEvent.UserUpdated]: (user: User & { team: Team }) => void
+  [ServerEvent.QuestionStarts]: (x: {
+    question: string
+    category: string
+    points: number
+    answers: string[]
+  }) => void
 }
 
 export enum Room {

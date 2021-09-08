@@ -1566,6 +1566,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"array-shuffle@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "array-shuffle@npm:3.0.0"
+  checksum: 003d813f10d6a57174d134d46d9465e0ca76a802a8c2d21c4b42513af914d4a25b3c51a3004c3d170c3a7b2caab356108c34455c327b21537978a6417cfde1d7
+  languageName: node
+  linkType: hard
+
 "array-union@npm:^1.0.2":
   version: 1.0.2
   resolution: "array-union@npm:1.0.2"
@@ -1783,6 +1790,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^4.19.0
     "@typescript-eslint/parser": ^4.19.0
     ajv: ^8.6.2
+    array-shuffle: ^3.0.0
     conf: ^10.0.2
     cors: ^2.8.5
     eslint: ^7.32.0

@@ -1,55 +1,121 @@
 <script lang="ts">
-  import type {
-    ClientToServerEvents,
-    ServerToClientEvents,
-  } from '../../socket-api'
-  import type { Socket } from 'socket.io-client'
+  import type { Socket } from '../../socket-api'
   import { onMount } from 'svelte'
-  import { get, GetRequest } from '../../api'
-  import { ClientEvent, ServerEvent } from '../../socket-api'
+  import { writable } from 'svelte/store'
+  import { ServerEvent } from '../../socket-api'
+  import { State } from './types'
 
-  export let socket:
-    | Socket<ServerToClientEvents, ClientToServerEvents>
-    | undefined = undefined
+  export let socket: Socket | undefined = undefined
 
-  let ready = true
-  let question = 'zerteyrtu'
+  let question = ''
+  let answers: string[] = []
+  let category = ''
+  let points = 1
+
+  const anwserChosen = writable('')
+  let disabled = false
+
+  let state: State | undefined = State.Question
 
   onMount(() => {
-    get(GetRequest.GameSettings)
-      .then(({ body: json }) => {
-        question = json.value
-        ready = true
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+    //
   })
 
-  const listen = (
-    socket:
-      | Socket<ServerToClientEvents, ClientToServerEvents>
-      | undefined
-      | undefined
-  ) => {
+  const listen = (socket: Socket | undefined) => {
     if (!socket) return
-    socket.on(ServerEvent.GameSettings, ({ value }) => {
-      question = value
+
+    socket.on(ServerEvent.QuestionStarts, (data) => {
+      state = State.Question
+      question = data.question
+      answers = data.answers
+      category = data.category
+      points = data.points
+      $anwserChosen = ''
+      disabled = false
     })
   }
 
   $: listen(socket)
+
+  anwserChosen.subscribe(() => {
+    disabled = true
+  })
 </script>
 
-<div>
-  {#if ready}
-    <h1>{question}</h1>
-    <button
-      on:click={() => {
-        socket?.emit(ClientEvent.Game)
-      }}
-    >
-      CLICK
-    </button>
+<div class="controller">
+  {#if state === undefined}
+    Chargement...
+  {:else if state === State.Question}
+    <div class="question">
+      <p class="category">{category}</p>
+      <p class="points">{points} point{points > 1 ? 's' : ''}</p>
+      <h2>{question}</h2>
+      <div class="answers">
+        {#each Object.entries(answers) as [i, answer]}
+          <input
+            type="radio"
+            id="answer-{i}"
+            bind:group={$anwserChosen}
+            value={answer}
+            {disabled}
+          />
+          <label for="answer-{i}">{answer}</label>
+        {/each}
+      </div>
+    </div>
   {/if}
 </div>
+
+<style lang="scss">
+  .controller {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .question {
+    > .category {
+      margin-bottom: 0;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+    }
+    > .points {
+      margin-top: 0;
+      text-align: center;
+    }
+  }
+
+  .answers {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+
+    > input {
+      position: absolute;
+      z-index: -1;
+      opacity: 0;
+    }
+
+    > label {
+      padding: 1rem;
+      color: #222;
+      font-weight: bold;
+      background: #ccc;
+      border-radius: 0.25rem;
+    }
+
+    > input:focus + label {
+      box-shadow: 0 0 0.5rem var(--color);
+    }
+
+    > input:disabled + label {
+      background: #888;
+    }
+
+    > input:checked + label {
+      background: #fff;
+      box-shadow: 0 0.25rem 0.25rem inset #888;
+    }
+  }
+</style>

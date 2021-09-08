@@ -6,6 +6,7 @@
     "@swc/core": "^1.2.83",
     "@swc/helpers": "^0.2.13",
     "ajv": "^8.6.2",
+    "array-shuffle": "^3.0.0",
     "conf": "^10.0.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
