@@ -67,6 +67,7 @@
     "*.{css,scss,svelte}": "stylelint --fix",
     "*.{js,cjs,ts,css,scss,html,svelte,json,md,yml}": "prettier --write"
   },
+  "packageManager": "yarn@3.0.2",
   "scripts": {
     "build": "svelte-kit build",
     "check": "tsc --noEmit & eslint --fix 'src/**/*.{ts,js,svelte}' & stylelint --fix 'src/**/*' & svelte-check --tsconfig ./tsconfig.json &",
