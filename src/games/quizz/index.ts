@@ -95,7 +95,7 @@ export default (app: App): void => {
       }
 
       for (const [id, team] of teams) {
-        if (!team.pickable) continue
+        if (!team.pickable || !answerCount.get(id)) continue
         await prisma.questionStats.create({
           data: {
             answers: answerCount.get(id) ?? 0,
