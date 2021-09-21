@@ -145,7 +145,7 @@ const seed = async (): Promise<void> => {
           { body: 'N7Consulting' },
           { body: 'N7 Consulting', correct: true },
           { body: 'n7consulting' },
-          { body: 'Les Raptous' },
+          { body: 'Les Raptous', correct: true },
         ],
       },
     },
@@ -390,6 +390,191 @@ const seed = async (): Promise<void> => {
       },
     },
   }) // 30
+  await prisma.question.create({
+    data: {
+      body: "Quelle est l'année de création de TVn7 ?",
+      category: 'Audiovisuel',
+      shuffleAnwsers: false,
+      points: 2,
+      answers: {
+        create: [
+          { body: '1992', correct: true },
+          { body: '2001' },
+          { body: '2004' },
+          { body: '2011' },
+        ],
+      },
+    },
+  })
+  await prisma.question.create({
+    data: {
+      body: 'Le club 7duction a-t-il reçu des subventions cette année ?',
+      category: 'Argent',
+      shuffleAnwsers: false,
+      answers: {
+        create: [{ body: 'Oui' }, { body: 'Non', correct: true }],
+      },
+    },
+  })
+  await prisma.question.create({
+    data: {
+      body: 'Combien de litres de lait faut-il pour faire une meule de comté ?',
+      shuffleAnwsers: false,
+      category: 'Fromage7',
+      points: 3,
+      answers: {
+        create: [
+          { body: '100' },
+          { body: '400', correct: true },
+          { body: '1000' },
+          { body: '4000' },
+        ],
+      },
+    },
+  })
+  await prisma.question.create({
+    data: {
+      body: 'Depuis quand ça existe, le LPJ ?',
+      category: 'Il fallait écouter',
+      shuffleAnwsers: false,
+      points: 3,
+      answers: {
+        create: [
+          { body: '2007' },
+          { body: '2008', correct: true },
+          { body: '2009' },
+          { body: 'Zone 30' },
+        ],
+      },
+    },
+  })
+  await prisma.question.create({
+    data: {
+      body: "Qui était le directeur de l'n7 avant Jean-François Rouchon ?",
+      category: 'Politique',
+      points: 2,
+      answers: {
+        create: [
+          { body: 'Alain Ayache', correct: true },
+          { body: 'Jean-François Copé' },
+          { body: 'Rémy Ralcouffe' },
+          { body: 'Philippe Hull' },
+        ],
+      },
+    },
+  }) // 35
+  await prisma.question.create({
+    data: {
+      body: 'Il est où le DJ ?',
+      category: 'Musique',
+      answers: {
+        create: [
+          { body: '⬆️', correct: true },
+          { body: '⬅️' },
+          { body: '➡️' },
+          { body: '⬇️' },
+        ],
+      },
+    },
+  })
+  await prisma.question.create({
+    data: {
+      body: 'Tu as pris ta place pour le gala ?',
+      category: 'Harcèlement',
+      points: 3,
+      shuffleAnwsers: false,
+      answers: {
+        create: [{ body: 'Non, honte à moi', correct: true }],
+      },
+    },
+  })
+  await prisma.question.create({
+    data: {
+      body: 'Les zèbres sont...',
+      category: 'Animaux',
+      answers: {
+        create: [
+          { body: 'Noirs à rayures blanches', correct: true },
+          { body: 'Blancs à rayures noires' },
+        ],
+      },
+    },
+  })
+  await prisma.question.create({
+    data: {
+      body: "Quelle est le nom de l'AE rose ?",
+      category: 'Pantone',
+      points: 3,
+      shuffleAnwsers: false,
+      answers: {
+        create: [
+          { body: 'La BarbapapAE' },
+          { body: 'La MalAEbar' },
+          { body: 'La PanthAEre Rose', correct: true },
+          { body: 'Les Cheveux de CAErole' },
+        ],
+      },
+    },
+  })
+  await prisma.question.create({
+    data: {
+      body: "Y a-t-il eu une intégration l'an dernier ?",
+      category: 'Cluster',
+      shuffleAnwsers: false,
+      answers: {
+        create: [
+          { body: 'Non' },
+          { body: '⅓', correct: true },
+          { body: '⅔' },
+          { body: 'Oui' },
+        ],
+      },
+    },
+  }) // 40
+  await prisma.question.create({
+    data: {
+      body: 'Qui a composé le Lac des Cygnes ?',
+      category: 'Élégance',
+      points: 2,
+      answers: {
+        create: [
+          { body: 'Pyotr Tchaïkovsky', correct: true },
+          { body: 'Sergei Prokofiev' },
+          { body: 'Igor Stravinksy' },
+          { body: 'Felix Mendelssohn' },
+        ],
+      },
+    },
+  })
+  await prisma.question.create({
+    data: {
+      body: 'Comment appelle-t-on les pom-poms garçons ?',
+      category: 'Orthograf',
+      answers: {
+        create: [
+          { body: 'Les pim-pims', correct: true },
+          { body: 'Les bg' },
+          { body: 'Les charos', correct: true },
+          { body: 'Les pom-boys' },
+        ],
+      },
+    },
+  })
+  await prisma.question.create({
+    data: {
+      body: 'Combien y a-t-il eu de Hall Caraïbe ?',
+      category: 'Addition',
+      shuffleAnwsers: false,
+      answers: {
+        create: [
+          { body: "0 (c'était nul le Hall C)" },
+          { body: '1' },
+          { body: '2', correct: true },
+          { body: '3' },
+        ],
+      },
+    },
+  })
 }
 
 seed().finally(async () => prisma.$disconnect())
