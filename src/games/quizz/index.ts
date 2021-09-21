@@ -19,19 +19,16 @@ export default (app: App): void => {
   let leaderboard: Map<Team['id'], number>
 
   // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
-  const play = async (numberOfQuestions: number) => {
-    const questions = await prisma.question.findMany({
-      orderBy: { timesUsed: 'asc' },
-      take: numberOfQuestions,
-      include: { answers: true },
-    })
-
-    while (questions.length > 0) {
-      const q = questions.shift()
+  const play = async (_numberOfQuestions: number) => {
+    // TODO update loop condition
+    while (true) {
+      const q = await prisma.question.findFirst({
+        orderBy: { timesUsed: 'asc' },
+        include: { answers: true },
+      })
       if (!q) break
-      question = q
 
-      questions.push(q) // TODO remove
+      question = q
 
       await prisma.question.update({
         data: { timesUsed: question.timesUsed + 1 },
