@@ -93,6 +93,9 @@ export class App implements AppAttributes {
 
       if (!team || !team.pickable) throw new Error("Cette équipe n'existe pas")
 
+      if (!/^\w{2,20}$/.test(name))
+        throw new Error('A-Z, 0-9 et _ uniquement, 2 à 20 caractères.')
+
       const found = await prisma.user.findUnique({ where: { name } })
       if (found) throw new Error('Ce compte existe déjà')
 
