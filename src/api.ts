@@ -3,7 +3,11 @@ import type { Type } from './messenger/types'
 import type { Team, User, RichMessage, DetailedMessage } from './types'
 import type { JTDDataType } from 'ajv/dist/core'
 
-const API = `//${globalThis?.location?.hostname ?? 'localhost:3001'}/api`
+const API = `//${
+  globalThis?.location?.hostname === 'localhost'
+    ? 'localhost:3001'
+    : 'boochat.inpt.fr'
+}/api`
 
 export enum Level {
   Banned = 0,
