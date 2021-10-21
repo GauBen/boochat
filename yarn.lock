@@ -1827,6 +1827,7 @@ __metadata:
     svelte: ^3.42.4
     svelte-check: ^2.2.5
     svelte-preprocess: ^4.8.0
+    svelte-tenor: "file:../svelte-tenor/package"
     ts-node: ^10.2.1
     tslib: ^2.3.1
     twemoji: ^13.1.0
@@ -8934,6 +8935,12 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
+"svelte-tenor@portal:/home/Gautier/projects/svelte-tenor::locator=boochat%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "svelte-tenor@portal:/home/Gautier/projects/svelte-tenor::locator=boochat%40workspace%3A."
+  languageName: node
+  linkType: soft
+
 "svelte@npm:^3.42.4":
   version: 3.42.4
   resolution: "svelte@npm:3.42.4"
@@ -9344,11 +9351,11 @@ fsevents@~2.3.2:
 
 "typescript@patch:typescript@*#~builtin<compat/typescript>, typescript@patch:typescript@>=4.3#~builtin<compat/typescript>, typescript@patch:typescript@^4.4.2#~builtin<compat/typescript>":
   version: 4.4.2
-  resolution: "typescript@patch:typescript@npm%3A4.4.2#~builtin<compat/typescript>::version=4.4.2&hash=d8b4e7"
+  resolution: "typescript@patch:typescript@npm%3A4.4.2#~builtin<compat/typescript>::version=4.4.2&hash=32657b"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 11d6ab6e868117908c388401e2ac06d503c5c8709115ab80ee69a1a6352c1f98471d1e595636bfe6a2d6b20b03a44df6bb2d3d198cea97c0c328968cd18d2b70
+  checksum: 3109ae25705746996007161cdd3271857db4f40356b894e34d4cabc216bf9e251f53e0bb6e48df2450b5e3fd948dcbee716a616a4ad4cf7251292025e6163cb1
   languageName: node
   linkType: hard
 
