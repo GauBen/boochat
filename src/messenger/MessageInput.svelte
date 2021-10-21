@@ -228,7 +228,7 @@
       padding: 0.5em;
       overflow: auto;
       background-color: #333;
-      border-radius: 0.5em;
+      border-radius: 0.75rem;
       box-shadow: 0 0 0 1px #444, 0 0 0.5em #111;
 
       :global(input) {
