@@ -8,7 +8,8 @@
     DetailedMessage,
   } from '../types'
   import type { Thread } from './types'
-  import { createEventDispatcher, onMount } from 'svelte'
+  import type { GifObject } from 'svelte-tenor/package/api'
+  import { createEventDispatcher, onMount, tick } from 'svelte'
   import { get, GetRequest, Level } from '../api'
   import { ClientEvent, ServerEvent } from '../socket-api'
   import MessageInput from './MessageInput.svelte'
@@ -144,14 +145,27 @@
 
   $: listen(socket)
 
-  let count = 0
   const send = async () => {
     if (!socket || disabled) return
     socket.emit(ClientEvent.Message, value)
     value = ''
+    await disableFields()
+  }
+
+  let gif = false
+  let gifSearch = ''
+  const sendGif = async ({ detail }: { detail: GifObject }) => {
+    gif = false
+    await tick()
+    gifSearch = ''
+    if (!socket || disabled) return
+    socket.emit(ClientEvent.Message, detail.id)
+    await disableFields()
+  }
+
+  const disableFields = async () => {
     if (me && me.level >= Level.Moderator) return
-    input.style.setProperty('animation-iteration-count', `${++count}`)
-    input.style.setProperty('animation-play-state', `running`)
+    input.classList.add('sending')
     disabled = true
     countdown = Math.floor(settings.slowdown / 1000)
     const interval = setInterval(() => countdown--, 1000)
@@ -206,12 +220,15 @@
     <MessageInput
       bind:value
       bind:input
+      bind:gifSearch
+      bind:gif
       {countdown}
       {disabled}
       {settings}
       {me}
       {users}
       on:submit={send}
+      on:submitGif={sendGif}
     />
   {:else}
     <p class="center"><a href="/login">Se connecter</a></p>

@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { Me } from '../api'
   import type { MessageUser } from '../types'
+  import type { GifObject } from 'svelte-tenor/package/api'
+  import { createEventDispatcher } from 'svelte'
   import Tenor from 'svelte-tenor/package/Tenor.svelte'
   import { Level } from '../api'
 
@@ -11,6 +13,10 @@
   export let input: HTMLInputElement
   export let me: Me | undefined = undefined
   export let users = new Map<MessageUser['id'], MessageUser>()
+  export let gif = false
+  export let gifSearch = ''
+
+  const dispatch = createEventDispatcher<{ submitGif: GifObject }>()
 
   $: usernames = new Set([...users.values()].map(({ name }) => name))
   $: if (me && me.level <= Level.Banned) disabled = true
@@ -19,8 +25,6 @@
   let before = ''
   let after = ''
   let ac: HTMLInputElement
-
-  let gif = false
 </script>
 
 {#if gif}
@@ -46,18 +50,26 @@
       </button>
     </div>
     <div class="keyboard">
-      <Tenor key="LIVDSRZULELA" />
+      <Tenor
+        key="LIVDSRZULELA"
+        bind:value={gifSearch}
+        on:click={({ detail }) => {
+          dispatch('submitGif', detail)
+        }}
+      />
     </div>
   </div>
 {:else}
   <form on:submit|preventDefault>
     <button
+      {disabled}
       type="button"
       on:click={() => {
         gif = true
       }}
+      style="font-family:cursive"
     >
-      GIF
+      Gif
     </button>
     <input
       bind:value
@@ -66,8 +78,9 @@
       required
       autocomplete="off"
       list="commands"
+      class:sending={false}
       on:animationend={() => {
-        input.style.setProperty('animation-play-state', 'paused')
+        input.classList.remove('sending')
       }}
       on:touchstart={() => {
         mobile = true
@@ -125,8 +138,15 @@
         <option value={`@${name}`} />
       {/each}
     </datalist>
-    <button {disabled}>
-      Envoyer
+    <button {disabled} type="submit">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+      >
+        <path d="M8.122 24l-4.122-4 8-8-8-8 4.122-4 11.878 12z" />
+      </svg>
       {#if disabled && countdown >= 0}
         <span class="countdown">{countdown} </span>
       {/if}
@@ -137,6 +157,7 @@
 <style lang="scss">
   button {
     position: relative;
+    flex-shrink: 0;
     padding: 0.5em;
     overflow: hidden;
     color: #222;
@@ -175,13 +196,16 @@
       background-size: 200% 100%;
       border: 0;
       border-radius: 0.5em;
-      animation: sending var(--delay) ease-out;
-      animation-play-state: paused;
-      animation-iteration-count: 0;
 
       &:focus {
         outline: 0;
         box-shadow: 0 0 0.5rem var(--color);
+      }
+
+      &.sending {
+        animation: sending var(--delay) ease-out;
+        animation-play-state: running;
+        animation-iteration-count: 1;
       }
     }
   }
