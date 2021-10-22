@@ -7,6 +7,7 @@ export type Socket = ClientSocket<ServerToClientEvents, ClientToServerEvents>
 
 export enum ClientEvent {
   Message = 'chat message',
+  Gif = 'gif',
   DeleteMessage = 'delete message',
   RestoreMessage = 'restore message',
   Game = 'game',
@@ -31,6 +32,7 @@ export enum ServerEvent {
 
 export interface ClientToServerEvents {
   [ClientEvent.Message]: (message: string) => void
+  [ClientEvent.Gif]: (message: string) => void
   [ClientEvent.DeleteMessage]: (id: number) => void
   [ClientEvent.RestoreMessage]: (id: number) => void
   [ClientEvent.Game]: () => void

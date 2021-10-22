@@ -2,6 +2,7 @@ import type { App } from '../app'
 import type { Message, Team, User } from '../types'
 import type { Socket } from 'socket.io'
 import { check } from 'p4ssw0rd'
+import { gifs } from 'svelte-tenor/package/api'
 import { GetRequest, Level } from '../api'
 import { AppEvent } from '../app'
 import {
@@ -171,6 +172,57 @@ export default (app: App): void => {
       const message = await prisma.message.create({
         data: {
           body: msg,
+          authorId: user.id,
+        },
+        include: { author: { include: { team: true } } },
+      })
+      io.to(Room.Moderator).emit(ServerEvent.DetailedMessage, {
+        ...message,
+        visible,
+      })
+
+      if (!visible) {
+        await new Promise((resolve) => {
+          setTimeout(resolve, config.get('chat').moderationDelay)
+        })
+      }
+
+      const deleted = (
+        await prisma.message.findUnique({
+          where: { id: message.id },
+        })
+      )?.deleted
+
+      if (deleted === undefined) return
+
+      messages = [...messages.slice(-999), message]
+      io.emit(ServerEvent.Message, {
+        ...message,
+        deleted,
+        author: {
+          id: user.id,
+          name: user.name,
+          teamId: user.teamId,
+        },
+        visible: true,
+      })
+    })
+
+    // eslint-disable-next-line complexity
+    socket.on(ClientEvent.Gif, async (msg: string) => {
+      if (!user || user.level < 1) return
+
+      const ids = msg.slice(0, 30)
+      const details = await gifs({ ids, key: '9HGV6JC47G6A' })
+      if (!details?.results?.length || details.results.length === 0) return
+      const gif = details.results[0]
+
+      const visible = user.level > Level.Chat
+
+      const message = await prisma.message.create({
+        data: {
+          body: JSON.stringify(gif),
+          gif: true,
           authorId: user.id,
         },
         include: { author: { include: { team: true } } },

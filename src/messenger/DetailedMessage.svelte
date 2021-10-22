@@ -2,6 +2,7 @@
   import type { Me } from '../api'
   import type { DetailedMessage, Team } from '../types'
   import { createEventDispatcher } from 'svelte'
+  import Gif from 'svelte-tenor/package/Gif.svelte'
   import { richText } from './Message.svelte'
 
   export let teams: Map<Team['id'], Team>
@@ -9,7 +10,7 @@
   export let message: DetailedMessage
   export let mod = false
 
-  $: ({ body, author, deleted, visible } = message)
+  $: ({ body, author, deleted, visible, gif } = message)
   $: ({
     color,
     name: teamName = '',
@@ -52,11 +53,15 @@
   {/if}
   <strong>{author.name}</strong>:
   {#if deleted}
-    {#if mod}
+    {#if mod && !gif}
       <span use:richText={{ body, me }} class:deleted />
     {:else}
-      <em>supprimé</em>
+      <em>
+        {#if gif}gif {/if}supprimé
+      </em>
     {/if}
+  {:else if gif}
+    <span class="gif"><Gif medium={JSON.parse(body).media[0]} /></span>
   {:else}
     <span use:richText={{ body, me }} />
   {/if}
@@ -127,5 +132,17 @@
 
   .deleted {
     text-decoration: line-through;
+  }
+
+  .gif {
+    display: block;
+    height: 8em;
+    margin-top: 0.25em;
+    overflow: hidden;
+
+    :global(video) {
+      width: auto;
+      height: 100%;
+    }
   }
 </style>

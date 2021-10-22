@@ -159,7 +159,7 @@
     await tick()
     gifSearch = ''
     if (!socket || disabled) return
-    socket.emit(ClientEvent.Message, detail.id)
+    socket.emit(ClientEvent.Gif, detail.id)
     await disableFields()
   }
 
@@ -240,6 +240,7 @@
     display: flex;
     flex: 1;
     flex-direction: column;
+    max-width: 100vw;
   }
 
   a {

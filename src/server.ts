@@ -10,12 +10,16 @@ import Prisma from '@prisma/client'
 import Ajv from 'ajv/dist/jtd'
 import Conf from 'conf'
 import express from 'express'
+import fetch from 'node-fetch'
 import sirv from 'sirv'
 import { Server } from 'socket.io'
 import { schemas } from './api'
 import { App } from './app'
 import createQuizz from './games/quizz/index'
 import createMessenger from './messenger/index'
+
+// @ts-expect-error Add fetch to Node.js
+globalThis.fetch = fetch
 
 const ajv = new Ajv()
 

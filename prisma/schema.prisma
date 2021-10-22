@@ -34,6 +34,7 @@ model Message {
   id        Int      @id @default(autoincrement())
   authorId  Int
   body      String
+  gif       Boolean  @default(false)
   deleted   Boolean  @default(false)
   createdAt DateTime @default(now())
   author    User     @relation(fields: [authorId], references: [id])

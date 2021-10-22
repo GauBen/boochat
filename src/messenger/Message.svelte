@@ -1,6 +1,7 @@
 <script context="module" lang="ts">
   import type { Me } from '../api'
   import type { RichMessage, Team } from '../types'
+  import Gif from 'svelte-tenor/package/Gif.svelte'
   import twemoji from 'twemoji'
 
   export const richText = (
@@ -47,7 +48,7 @@
   export let me: Me | undefined
   export let message: RichMessage
 
-  $: ({ body, author, deleted, visible } = message)
+  $: ({ body, author, deleted, visible, gif } = message)
   $: ({
     color,
     name: teamName = '',
@@ -64,6 +65,8 @@
   <strong>{author.name}</strong>:
   {#if deleted}
     <em>supprimé</em>
+  {:else if gif}
+    <span class="gif"><Gif medium={JSON.parse(body).media[0]} /></span>
   {:else}
     <span use:richText={{ body, me }} />
   {/if}
@@ -110,7 +113,15 @@
     border-radius: 0.25rem;
   }
 
-  .invisible {
-    opacity: 0.5;
+  .gif {
+    display: block;
+    height: 8em;
+    margin-top: 0.25em;
+    overflow: hidden;
+
+    :global(video) {
+      width: auto;
+      height: 100%;
+    }
   }
 </style>
