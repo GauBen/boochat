@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { Me } from '../api'
   import type { MessageUser } from '../types'
-  import type { GifObject } from 'svelte-tenor/package/api'
+  import type { GifObject } from 'svelte-tenor/api'
   import { createEventDispatcher } from 'svelte'
-  import Tenor from 'svelte-tenor/package/Tenor.svelte'
+  import Tenor from 'svelte-tenor/Tenor.svelte'
   import { Level } from '../api'
 
   export let value = ''

@@ -1787,7 +1787,7 @@ __metadata:
     svelte: ^3.44.0
     svelte-check: ^2.2.7
     svelte-preprocess: ^4.9.8
-    svelte-tenor: "file:../svelte-tenor/package"
+    svelte-tenor: 0.0.5
     ts-node: ^10.4.0
     tslib: ^2.3.1
     twemoji: ^13.1.0
@@ -9108,11 +9108,12 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"svelte-tenor@portal:/home/Gautier/projects/svelte-tenor::locator=boochat%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "svelte-tenor@portal:/home/Gautier/projects/svelte-tenor::locator=boochat%40workspace%3A."
+"svelte-tenor@npm:0.0.5":
+  version: 0.0.5
+  resolution: "svelte-tenor@npm:0.0.5"
+  checksum: c7d12cee45a7f0344dd0061696d79a29d4a8a30f4666c4fe87177398b69c92d94540b41ccf14fe2643e3ad9a68458dc80c4e590d643b4a0bf8aeff669c41352c
   languageName: node
-  linkType: soft
+  linkType: hard
 
 "svelte@npm:^3.44.0":
   version: 3.44.0

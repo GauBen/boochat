@@ -2,7 +2,7 @@ import type { App } from '../app'
 import type { Message, Team, User } from '../types'
 import type { Socket } from 'socket.io'
 import { check } from 'p4ssw0rd'
-import { gifs } from 'svelte-tenor/package/api'
+import { gifs } from 'svelte-tenor/api'
 import { GetRequest, Level } from '../api'
 import { AppEvent } from '../app'
 import {

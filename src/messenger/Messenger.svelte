@@ -8,7 +8,7 @@
     DetailedMessage,
   } from '../types'
   import type { Thread } from './types'
-  import type { GifObject } from 'svelte-tenor/package/api'
+  import type { GifObject } from 'svelte-tenor/api'
   import { createEventDispatcher, onMount, tick } from 'svelte'
   import { get, GetRequest, Level } from '../api'
   import { ClientEvent, ServerEvent } from '../socket-api'

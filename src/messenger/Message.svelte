@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
   import type { Me } from '../api'
   import type { RichMessage, Team } from '../types'
-  import Gif from 'svelte-tenor/package/Gif.svelte'
+  import Gif from 'svelte-tenor/Gif.svelte'
   import twemoji from 'twemoji'
 
   export const richText = (
