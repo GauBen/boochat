@@ -267,7 +267,8 @@ export default (app: App): void => {
 
   // Get the latest messages
   app.get(GetRequest.Messages, () =>
-    // Check user level
+    // TODO Check user level
+    // eslint-disable-next-line no-constant-condition
     true
       ? {
           type: Type.Detailed,

@@ -28,7 +28,6 @@
       .map(({ message }) => [message.id, message])
   )
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
   const updateUsers = (message: { author: Omit<MessageUser, 'inpId'> }) => {
     const { author } = message
     if (!users.has(author.id)) users.set(author.id, author)

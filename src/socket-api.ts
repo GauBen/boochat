@@ -1,6 +1,7 @@
 import type { RichMessage, User, Team, DetailedMessage } from './types'
 import type { Socket as ClientSocket } from 'socket.io-client'
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const SOCKET_API =
   globalThis?.location?.hostname === 'boochat.inpt.fr' ? '/' : ':3001'
 export type Socket = ClientSocket<ServerToClientEvents, ClientToServerEvents>

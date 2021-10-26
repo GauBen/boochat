@@ -51,7 +51,7 @@
     </div>
     <div class="keyboard">
       <Tenor
-        key="LIVDSRZULELA"
+        key="9HGV6JC47G6A"
         bind:value={gifSearch}
         on:click={({ detail }) => {
           dispatch('submitGif', detail)

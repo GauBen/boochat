@@ -23,6 +23,7 @@ globalThis.fetch = fetch
 
 const ajv = new Ajv()
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const PORT = 3001
 const expressApp = express()
 const server = createServer(expressApp)

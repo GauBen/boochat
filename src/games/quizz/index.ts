@@ -21,6 +21,7 @@ export default (app: App): void => {
   // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
   const play = async (_numberOfQuestions: number) => {
     // TODO update loop condition
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       const q = await prisma.question.findFirst({
         orderBy: { timesUsed: 'asc' },

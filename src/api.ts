@@ -3,6 +3,7 @@ import type { Type } from './messenger/types'
 import type { Team, User, RichMessage, DetailedMessage } from './types'
 import type { JTDDataType } from 'ajv/dist/core'
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const API = `//${
   globalThis?.location?.hostname === 'localhost'
     ? 'localhost:3001'
@@ -87,6 +88,7 @@ export const get = async <T extends GetRequest>(
   const response = await fetch(API + uri, {
     headers: token
       ? {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           Authorization: `Token ${token}`,
         }
       : {},
@@ -106,6 +108,7 @@ export const post = async <T extends PostRequest>(
       'Content-Type': 'application/json',
       ...(token
         ? {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             Authorization: `Token ${token}`,
           }
         : {}),
