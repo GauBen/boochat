@@ -637,32 +637,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sveltejs/adapter-static@npm:next":
-  version: 1.0.0-next.16
-  resolution: "@sveltejs/adapter-static@npm:1.0.0-next.16"
-  checksum: 03ac00e885d1c82fc996d942b403d433fad6a79cfd4066d775199fdfddb8e4f6b5bb2cd1c9961374de129b52f596b15ceaaa0a6f1a30ef26f65dad7f27d73583
+"@sveltejs/adapter-static@npm:^1.0.0-next.0":
+  version: 1.0.0-next.21
+  resolution: "@sveltejs/adapter-static@npm:1.0.0-next.21"
+  checksum: 453c05ed00977b7e37749e503b5b566576478d07103f14a751036389572f8dc02ea1783e3166beaee88c597279441be1d2b5627f932000d8555a451ee98c5a46
   languageName: node
   linkType: hard
 
-"@sveltejs/kit@npm:next":
-  version: 1.0.0-next.154
-  resolution: "@sveltejs/kit@npm:1.0.0-next.154"
+"@sveltejs/kit@npm:^1.0.0-next.1":
+  version: 1.0.0-next.190
+  resolution: "@sveltejs/kit@npm:1.0.0-next.190"
   dependencies:
-    "@sveltejs/vite-plugin-svelte": ^1.0.0-next.16
-    cheap-watch: ^1.0.3
+    "@sveltejs/vite-plugin-svelte": ^1.0.0-next.30
+    cheap-watch: ^1.0.4
     sade: ^1.7.4
-    vite: ^2.5.0
+    vite: ^2.6.11
   peerDependencies:
-    svelte: ^3.39.0
+    svelte: ^3.44.0
   bin:
     svelte-kit: svelte-kit.js
-  checksum: 32e8ec0b9cd7f461038f47c806c1be79f1e4617c5c10e5ee027e90469e217f750aae09472bc641ba06064c168a2d45bf4ba8112fa86b3114ab7a01c745d2a25b
+  checksum: aa5a68664d7c27b1e89306996ad57df50c6a9a173503b8d7468afbe83e551cc461a591b5e829c0eb6c18f860a676348b6a0a1616e1341450ec777a2e323e36e6
   languageName: node
   linkType: hard
 
-"@sveltejs/vite-plugin-svelte@npm:^1.0.0-next.16":
-  version: 1.0.0-next.19
-  resolution: "@sveltejs/vite-plugin-svelte@npm:1.0.0-next.19"
+"@sveltejs/vite-plugin-svelte@npm:^1.0.0-next.30":
+  version: 1.0.0-next.30
+  resolution: "@sveltejs/vite-plugin-svelte@npm:1.0.0-next.30"
   dependencies:
     "@rollup/pluginutils": ^4.1.1
     debug: ^4.3.2
@@ -672,12 +672,12 @@ __metadata:
     svelte-hmr: ^0.14.7
   peerDependencies:
     diff-match-patch: ^1.0.5
-    svelte: ^3.34.0
-    vite: ^2.3.7
+    svelte: ^3.44.0
+    vite: ^2.6.0
   peerDependenciesMeta:
     diff-match-patch:
       optional: true
-  checksum: 8e61bb6d2b9db2c58bef82b9c9c3788e047b86b86af235e8daf3b6d254603ba718800a4f5ef649626943cdce11754d47f48da98c8b1f9b68684aed95486f3e07
+  checksum: 1db89bd8c350c2884a9d1d2305b04e5479abf7a9918fb3c826fdbb5bc7d2ae62eda69c291cff8bf34ce253cfe39609d47979eae258849c4a3cc9bde071ca2cfc
   languageName: node
   linkType: hard
 
@@ -1736,8 +1736,8 @@ __metadata:
     "@commitlint/cli": ^13.1.0
     "@commitlint/config-conventional": ^13.1.0
     "@prisma/client": ^3.3.0
-    "@sveltejs/adapter-static": next
-    "@sveltejs/kit": next
+    "@sveltejs/adapter-static": ^1.0.0-next.0
+    "@sveltejs/kit": ^1.0.0-next.1
     "@swc/core": ^1.2.83
     "@swc/helpers": ^0.2.13
     "@types/cors": ^2
@@ -2105,7 +2105,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cheap-watch@npm:^1.0.3":
+"cheap-watch@npm:^1.0.4":
   version: 1.0.4
   resolution: "cheap-watch@npm:1.0.4"
   checksum: 31273b2fb90ce0afcc8a5d22189b97f7403514d4fcaece0b4ad3e9856b02ffd6f41fb6921f36a5adf62e751a8864cca1cb391486d6230bbc0768abe8bde99a98
@@ -9822,9 +9822,9 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"vite@npm:^2.5.0":
-  version: 2.6.11
-  resolution: "vite@npm:2.6.11"
+"vite@npm:^2.6.11":
+  version: 2.6.13
+  resolution: "vite@npm:2.6.13"
   dependencies:
     esbuild: ^0.13.2
     fsevents: ~2.3.2
@@ -9847,7 +9847,7 @@ fsevents@~2.3.2:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 44bc347685cadb6ae3265736c74480f0de76ab5cc381f3816c35fe59eb0231d54c593a5dcd2681c99f5ba9f66a0ff5403224c47917c10e052ab481c1cec801bf
+  checksum: 59e09d8650328eac44990de9aaa9f49011113e3c1d8c3b54d9b8550496c8d290ec14149048bbbd49b39f78a80f23c4019130bd55924bfd139f63423be8d4754a
   languageName: node
   linkType: hard
 
