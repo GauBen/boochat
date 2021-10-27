@@ -1,30 +1,31 @@
 # Boochat
 
-## Developing
-
-Once you've installed the dependencies with `yarn install`, start a development server:
+## Try it!
 
 ```bash
+# Clone and run
+git clone https://github.com/GauBen/boochat.git
+cd boochat
+docker-compose up
+```
+
+## Development
+
+```bash
+# Install the dependencies
+yarn install
+
+# Prepare the environment (create and populate an sqlite database)
+cp .env.example .env
+yarn prisma db push
+yarn prisma db seed
+
+# Start the development server
 yarn dev
 ```
 
-## Building
+## Production
 
-Run:
+Customize the `.env` file, create and populate the database (`yarn prisma db push && yarn prisma db seed`) and run `docker-compose up`.
 
-```bash
-yarn build
-
-# To start the production server:
-yarn nodemon
-```
-
-## Create the database
-
-```bash
-# Create an empty database:
-yarn prisma db push
-
-# Populate it with data:
-yarn prisma db seed --preview-feature
-```
+If you want to run Boochat on bare metal instead of docker, run `yarn build && yarn start`.
