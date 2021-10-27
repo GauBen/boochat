@@ -4,7 +4,7 @@
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
   import { get, GetRequest } from '../../api'
-  import Boo from '../../games/quizz/Boo.svelte'
+  import Boo from '../../games/connect3/Boo.svelte'
   import { SOCKET_API } from '../../socket-api'
 
   let socket: Socket | undefined
