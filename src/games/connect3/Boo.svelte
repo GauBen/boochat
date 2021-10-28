@@ -101,28 +101,30 @@
   <div class="game">
     <h1>Puissance 3</h1>
     <table>
-      {#each state.grid as cells, row (row)}
-        <tr>
-          {#each cells as cell, column (column)}
-            <td>
-              <span class="mask" />
-              {#if cell !== undefined}
-                <!-- TIL key forces reactivity when the expression changes \o/ -->
-                {#key state.grid[row][column]}
-                  <span
-                    class="disc"
-                    class:blink={blinkingCells.has(
-                      Number(row) + Number(column) * state.grid.length
-                    )}
-                    style="--color: {teams.get(cell)?.color}"
-                    in:bounce
-                  />
-                {/key}
-              {/if}
-            </td>
-          {/each}
-        </tr>
-      {/each}
+      <tbody>
+        {#each state.grid as cells, row (row)}
+          <tr>
+            {#each cells as cell, column (column)}
+              <td>
+                <span class="mask" />
+                {#if cell !== undefined}
+                  <!-- TIL key forces reactivity when the expression changes \o/ -->
+                  {#key state.grid[row][column]}
+                    <span
+                      class="disc"
+                      class:blink={blinkingCells.has(
+                        Number(row) + Number(column) * state.grid.length
+                      )}
+                      style="--color: {teams.get(cell)?.color}"
+                      in:bounce
+                    />
+                  {/key}
+                {/if}
+              </td>
+            {/each}
+          </tr>
+        {/each}
+      </tbody>
       <tr>
         {#each state.grid[0] as _, column}
           <th>{Number(column) + 1}</th>
@@ -143,6 +145,10 @@
   h1 {
     margin: 1rem 0;
     font-size: 4em;
+  }
+
+  tbody {
+    outline: 0.5em solid #333;
   }
 
   td {
