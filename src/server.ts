@@ -72,10 +72,10 @@ expressApp.use('/api', app.api)
 try {
   if (statSync('build').isDirectory()) {
     expressApp.use(sirv('build'))
-    console.log('Starting in production mode')
+    console.log('> Starting in production mode')
   }
 } catch {
-  console.log('Starting in development mode')
+  console.log('> Starting in development mode')
 }
 
 server.listen(PORT, () => {

@@ -22,7 +22,7 @@
   const findWinner = async () => {
     for (let row = 0; row < state.grid.length; row++) {
       for (let column = 0; column < state.grid[row].length; column++) {
-        if (state.grid[row][column] === undefined) continue
+        if (typeof state.grid[row][column] !== 'number') continue
 
         if (
           row <= state.grid.length - 3 &&
@@ -77,7 +77,6 @@
 
     socket.on(ServerEvent.Connect3NextTurn, (state_) => {
       state = state_
-      blinkingCells = new Set<number>()
       void findWinner()
     })
   }
@@ -85,7 +84,6 @@
   onMount(() => {
     void get(GetRequest.Connect3State).then(({ body }) => {
       state = body
-      blinkingCells = new Set<number>()
       void findWinner()
     })
   })
@@ -95,33 +93,38 @@
   let playingTeam: Team
   $: if (state !== undefined)
     playingTeam = state.turns[state.turn % state.turns.length]
+
+  $: if (state?.turn === 0) blinkingCells = new Set<number>()
 </script>
 
 {#if state !== undefined}
   <div class="game">
     <h1>Puissance 3</h1>
     <table>
-      {#each Object.entries(state.grid) as [row, cells]}
+      {#each state.grid as cells, row (row)}
         <tr>
-          {#each Object.entries(cells) as [column, cell]}
+          {#each cells as cell, column (column)}
             <td>
               <span class="mask" />
               {#if cell !== undefined}
-                <span
-                  class="disc"
-                  class:blink={blinkingCells.has(
-                    Number(row) + Number(column) * state.grid.length
-                  )}
-                  style="--color: {teams.get(cell)?.color}"
-                  in:bounce
-                />
+                <!-- TIL key forces reactivity when the expression changes \o/ -->
+                {#key state.grid[row][column]}
+                  <span
+                    class="disc"
+                    class:blink={blinkingCells.has(
+                      Number(row) + Number(column) * state.grid.length
+                    )}
+                    style="--color: {teams.get(cell)?.color}"
+                    in:bounce
+                  />
+                {/key}
               {/if}
             </td>
           {/each}
         </tr>
       {/each}
       <tr>
-        {#each Object.keys(state.grid[0]) as column}
+        {#each state.grid[0] as _, column}
           <th>{Number(column) + 1}</th>
         {/each}
       </tr>

@@ -17,6 +17,7 @@ export default async (app: App): Promise<void> => {
     ),
     turns: arrayShuffle([...teams.values()].filter((team) => team.pickable)),
     turn: 0,
+    over: false,
   })
 
   await loaded
@@ -44,7 +45,7 @@ export default async (app: App): Promise<void> => {
       state = initState()
       await startGame()
       await new Promise((resolve) => {
-        setTimeout(resolve, 20_000)
+        setTimeout(resolve, 10_000)
       })
     }
   }
@@ -131,10 +132,17 @@ export default async (app: App): Promise<void> => {
       ]
       while (!insert(movesToDo[0])) movesToDo.shift()
 
-      if (gameOver()) return
+      if (gameOver()) {
+        state.over = true
+        io.emit(ServerEvent.Connect3NextTurn, state)
+        return
+      }
 
       state.turn++
     }
+
+    state.over = true
+    io.emit(ServerEvent.Connect3NextTurn, state)
   }
 
   void play()
