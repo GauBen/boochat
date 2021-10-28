@@ -14,7 +14,7 @@
   onMount(() => {
     void get(GetRequest.Connect3State).then(({ body }) => {
       state = body
-      disabled = !state.over
+      disabled = state.over
     })
   })
 
@@ -25,7 +25,7 @@
 
     socket.on(ServerEvent.Connect3NextTurn, (data) => {
       state = data
-      disabled = !state.over
+      disabled = state.over
     })
   }
 
