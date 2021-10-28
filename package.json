@@ -70,7 +70,7 @@
     "*.{css,scss,svelte}": "stylelint --fix",
     "*.{js,cjs,ts,css,scss,html,svelte,json,md,yml}": "prettier --write"
   },
-  "packageManager": "yarn@3.0.2",
+  "packageManager": "yarn@3.1.0",
   "prisma": {
     "seed": "yarn ts-node prisma/seed.ts"
   },
@@ -88,7 +88,7 @@
   },
   "type": "module",
   "volta": {
-    "node": "16.8.0",
-    "yarn": "1.22.11"
+    "node": "17.0.1",
+    "yarn": "1.22.17"
   }
 }
