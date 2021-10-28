@@ -1,3 +1,4 @@
+import type { CurrentState as Connect3State } from './games/connect3/types'
 import type { CurrentState } from './games/quizz/types'
 import type { Type } from './messenger/types'
 import type { Team, User, RichMessage, DetailedMessage } from './types'
@@ -23,6 +24,7 @@ export enum GetRequest {
   ChatSettings = '/chat-settings',
   GameSettings = '/game-settings',
   GameState = '/game-results',
+  Connect3State = '/connect3',
   UsersOnline = '/users-online',
 }
 
@@ -31,6 +33,7 @@ export enum PostRequest {
   Me = '/me',
   SetupGame = '/setup-game',
   QuizzAnswer = '/quizz-answer',
+  Connect3Play = '/connect3-play',
 }
 
 export const schemas = {
@@ -55,6 +58,11 @@ export const schemas = {
       answer: { type: 'string' },
     },
   },
+  [PostRequest.Connect3Play]: {
+    properties: {
+      move: { type: 'int32' },
+    },
+  },
 } as const
 
 export type Me = (User & { team: Team }) | false
@@ -67,6 +75,7 @@ export interface Response {
   [GetRequest.ChatSettings]: { slowdown: number; moderationDelay: number }
   [GetRequest.GameSettings]: { value: string }
   [GetRequest.GameState]: CurrentState
+  [GetRequest.Connect3State]: Connect3State
   [GetRequest.UsersOnline]: {
     online: number
     connected: number
@@ -79,6 +88,7 @@ export interface Response {
   [PostRequest.Me]: (User & { team: Team }) | false
   [PostRequest.SetupGame]: void
   [PostRequest.QuizzAnswer]: void
+  [PostRequest.Connect3Play]: void
 }
 
 export const get = async <T extends GetRequest>(

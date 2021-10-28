@@ -1,11 +1,16 @@
 <script lang="ts">
-  import type { Socket } from '../../socket-api'
   import type { Team } from '../../types'
-  import { tick } from 'svelte'
+  import type { CurrentState } from './types'
+  import { onMount, tick } from 'svelte'
   import { bounceOut } from 'svelte/easing'
+  import { get, GetRequest } from '../../api'
+  import { ServerEvent, Socket } from '../../socket-api'
 
   export let teams: Map<Team['id'], Team>
   export let socket: Socket | undefined
+
+  let state: CurrentState
+  let blinkingCells = new Set<number>()
 
   const bounce = (_node: Element, _options: unknown) => ({
     duration: 1000,
@@ -13,79 +18,52 @@
     css: (_t: number, u: number) => `transform: translateY(-${u * 600}px)`,
   })
 
-  let turn = 2
-  const u = undefined
-  const grid: Array<Array<undefined | Team['id']>> = [
-    [u, u, u, u, u, u, u],
-    [u, u, u, u, u, u, u],
-    [u, u, u, u, u, u, u],
-    [u, u, u, u, u, u, u],
-    [u, u, u, u, u, u, u],
-    [u, u, u, u, u, u, u],
-  ]
-  let blinkingCells = new Set<number>()
-
-  const insert = async (column: number) => {
-    let found = false
-    for (let row = grid.length - 1; row >= 0; row--) {
-      if (grid[row][column] === undefined) {
-        grid[row][column] = turn
-        found = true
-        break
-      }
-    }
-
-    if (found) turn = (turn % 3) + 2
-
-    await findWinner()
-  }
-
   // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
   const findWinner = async () => {
-    for (let row = 0; row < grid.length; row++) {
-      for (let column = 0; column < grid[row].length; column++) {
-        if (grid[row][column] === undefined) continue
+    for (let row = 0; row < state.grid.length; row++) {
+      for (let column = 0; column < state.grid[row].length; column++) {
+        if (state.grid[row][column] === undefined) continue
 
         if (
-          row <= grid.length - 3 &&
-          grid[row][column] === grid[row + 1][column] &&
-          grid[row][column] === grid[row + 2][column]
+          row <= state.grid.length - 3 &&
+          state.grid[row][column] === state.grid[row + 1][column] &&
+          state.grid[row][column] === state.grid[row + 2][column]
         ) {
-          blinkingCells.add(column * grid.length + row)
-          blinkingCells.add(column * grid.length + row + 1)
-          blinkingCells.add(column * grid.length + row + 2)
+          blinkingCells.add(column * state.grid.length + row)
+          blinkingCells.add(column * state.grid.length + row + 1)
+          blinkingCells.add(column * state.grid.length + row + 2)
         }
 
         if (
-          column <= grid[0].length - 3 &&
-          grid[row][column] === grid[row][column + 1] &&
-          grid[row][column] === grid[row][column + 2]
+          column <= state.grid[0].length - 3 &&
+          state.grid[row][column] === state.grid[row][column + 1] &&
+          state.grid[row][column] === state.grid[row][column + 2]
         ) {
-          blinkingCells.add(column * grid.length + row)
-          blinkingCells.add((column + 1) * grid.length + row)
-          blinkingCells.add((column + 2) * grid.length + row)
+          blinkingCells.add(column * state.grid.length + row)
+          blinkingCells.add((column + 1) * state.grid.length + row)
+          blinkingCells.add((column + 2) * state.grid.length + row)
         }
 
         if (
-          row <= grid.length - 3 &&
-          column <= grid[0].length - 3 &&
-          grid[row][column] === grid[row + 1][column + 1] &&
-          grid[row][column] === grid[row + 2][column + 2]
+          row <= state.grid.length - 3 &&
+          column <= state.grid[0].length - 3 &&
+          state.grid[row][column] === state.grid[row + 1][column + 1] &&
+          state.grid[row][column] === state.grid[row + 2][column + 2]
         ) {
-          blinkingCells.add(column * grid.length + row)
-          blinkingCells.add((column + 1) * grid.length + row + 1)
-          blinkingCells.add((column + 2) * grid.length + row + 2)
+          blinkingCells.add(column * state.grid.length + row)
+          blinkingCells.add((column + 1) * state.grid.length + row + 1)
+          blinkingCells.add((column + 2) * state.grid.length + row + 2)
         }
 
         if (
           row >= 2 &&
-          column <= grid[0].length - 3 &&
-          grid[row][column] === grid[row - 1][column + 1] &&
-          grid[row][column] === grid[row - 2][column + 2]
+          column <= state.grid[0].length - 3 &&
+          state.grid[row][column] === state.grid[row - 1][column + 1] &&
+          state.grid[row][column] === state.grid[row - 2][column + 2]
         ) {
-          blinkingCells.add(column * grid.length + row)
-          blinkingCells.add((column + 1) * grid.length + row - 1)
-          blinkingCells.add((column + 2) * grid.length + row - 2)
+          blinkingCells.add(column * state.grid.length + row)
+          blinkingCells.add((column + 1) * state.grid.length + row - 1)
+          blinkingCells.add((column + 2) * state.grid.length + row - 2)
         }
       }
     }
@@ -93,42 +71,90 @@
     await tick()
     blinkingCells = blinkingCells
   }
+
+  const listen = (socket: Socket | undefined) => {
+    if (!socket) return
+
+    socket.on(ServerEvent.Connect3NextTurn, (state_) => {
+      state = state_
+      blinkingCells = new Set<number>()
+      void findWinner()
+    })
+  }
+
+  onMount(() => {
+    void get(GetRequest.Connect3State).then(({ body }) => {
+      state = body
+      blinkingCells = new Set<number>()
+      void findWinner()
+    })
+  })
+
+  $: listen(socket)
+
+  let playingTeam: Team
+  $: if (state !== undefined)
+    playingTeam = state.turns[state.turn % state.turns.length]
 </script>
 
-<div class="game">
-  <h1>Puissance 3</h1>
-  <table>
-    {#each Object.entries(grid) as [row, cells]}
+{#if state !== undefined}
+  <div class="game">
+    <h1>Puissance 3</h1>
+    <table>
+      {#each Object.entries(state.grid) as [row, cells]}
+        <tr>
+          {#each Object.entries(cells) as [column, cell]}
+            <td>
+              <span class="mask" />
+              {#if cell !== undefined}
+                <span
+                  class="disc"
+                  class:blink={blinkingCells.has(
+                    Number(row) + Number(column) * state.grid.length
+                  )}
+                  style="--color: {teams.get(cell)?.color}"
+                  in:bounce
+                />
+              {/if}
+            </td>
+          {/each}
+        </tr>
+      {/each}
       <tr>
-        {#each Object.entries(cells) as [column, cell]}
-          <td
-            on:click={() => {
-              void insert(Number(column))
-            }}
-          >
-            <span class="mask" />
-            {#if cell !== undefined}
-              <span
-                class="disc"
-                class:blink={blinkingCells.has(
-                  Number(row) + Number(column) * grid.length
-                )}
-                style="--color: {teams.get(cell)?.color}"
-                in:bounce
-              />
-            {/if}
-          </td>
+        {#each Object.keys(state.grid[0]) as column}
+          <th>{Number(column) + 1}</th>
         {/each}
       </tr>
-    {/each}
-  </table>
-</div>
+    </table>
+    {#if playingTeam !== undefined}
+      <div class="turn">
+        Tour de l'équipe <strong style="color: {playingTeam.color}">
+          {playingTeam.name}
+        </strong>
+      </div>
+    {/if}
+  </div>
+{/if}
 
 <style lang="scss">
+  h1 {
+    margin: 1rem 0;
+    font-size: 4em;
+  }
+
   td {
     position: relative;
     width: 4em;
     height: 4em;
+  }
+
+  th {
+    padding: 0.5em 0;
+    font-size: 2em;
+  }
+
+  .turn {
+    font-size: 2em;
   }
 
   .mask {
@@ -165,11 +191,24 @@
     height: 100%;
     background-color: var(--color);
     border-radius: 50%;
+    // animation: 1s bounce 1 cubic-bezier(0.31, 0.02, 0.69, 0.71);
   }
 
   .blink {
     animation: 1s blink infinite;
   }
+
+  // @keyframes bounce {
+  //   0% {
+  //     transform: translateY(-100vh);
+  //   }
+  //   80% {
+  //     transform: translateY(0vh);
+  //   }
+  //   90% {
+  //     transform: translateY(-5vh);
+  //   }
+  // }
 
   @keyframes blink {
     0%,

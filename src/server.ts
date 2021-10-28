@@ -15,7 +15,7 @@ import sirv from 'sirv'
 import { Server } from 'socket.io'
 import { schemas } from './api'
 import { App } from './app'
-import createQuizz from './games/quizz/index'
+import createGame from './games/connect3/index'
 import createMessenger from './messenger/index'
 
 // @ts-expect-error Add fetch to Node.js
@@ -65,7 +65,7 @@ const app = new App({
   }),
 })
 
-app.use(createMessenger, createQuizz)
+app.use(createMessenger, createGame)
 
 expressApp.use('/api', app.api)
 

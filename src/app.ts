@@ -40,6 +40,7 @@ export class App implements AppAttributes {
   readonly validate
   readonly prisma
   readonly config
+  readonly loaded
 
   readonly api = express()
   readonly emitter: TypedEventEmitter<{
@@ -56,9 +57,15 @@ export class App implements AppAttributes {
     this.prisma = prisma
     this.config = config
 
+    let markAsLoaded: (_: void | PromiseLike<void>) => void
+    this.loaded = new Promise<void>((resolve) => {
+      markAsLoaded = resolve
+    })
+
     // Fetch data
     void prisma.team.findMany().then((teams) => {
       for (const team of teams) this.teams.set(team.id, team)
+      markAsLoaded()
     })
 
     // Register middlewares
@@ -164,13 +171,17 @@ export class App implements AppAttributes {
       user: DetailedUser | undefined
     ) => Response[T] | Promise<Response[T]>
   ): void {
+    // eslint-disable-next-line sonarjs/cognitive-complexity
     this.api.post(path, async (req, res) => {
       if (!('body' in req) || !this.validate[path](req.body)) {
         res.status(400).json({ error: 'Invalid data' })
       } else {
         try {
           res.json(
-            await handler(req.body as JTDDataType<typeof schemas[T]>, req.user)
+            (await handler(
+              req.body as JTDDataType<typeof schemas[T]>,
+              req.user
+            )) ?? {}
           )
         } catch (error: unknown) {
           console.error(error)
