@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
   import type { Me } from '../api'
   import type { RichMessage, Team } from '../types'
-  import Gif from 'svelte-tenor/Gif.svelte'
+  import { Gif } from 'svelte-tenor'
   import twemoji from 'twemoji'
 
   export const richText = (
@@ -66,7 +66,7 @@
   {#if deleted}
     <em>supprimé</em>
   {:else if gif}
-    <span class="gif"><Gif medium={JSON.parse(body).media[0]} /></span>
+    <span class="gif"><Gif gif={JSON.parse(body)} /></span>
   {:else}
     <span use:richText={{ body, me }} />
   {/if}

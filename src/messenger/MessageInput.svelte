@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Me } from '../api'
   import type { MessageUser } from '../types'
-  import type { GifObject } from 'svelte-tenor/api'
+  import type { Gif } from 'svelte-tenor/api'
   import { createEventDispatcher } from 'svelte'
   import Tenor from 'svelte-tenor/Tenor.svelte'
   import { Level } from '../api'
@@ -16,7 +16,7 @@
   export let gif = false
   export let gifSearch = ''
 
-  const dispatch = createEventDispatcher<{ submitGif: GifObject }>()
+  const dispatch = createEventDispatcher<{ submitGif: Gif }>()
 
   $: usernames = new Set([...users.values()].map(({ name }) => name))
   $: if (me && me.level <= Level.Banned) disabled = true
@@ -52,7 +52,7 @@
     <div class="keyboard">
       <Tenor
         key="9HGV6JC47G6A"
-        bind:value={gifSearch}
+        bind:q={gifSearch}
         on:click={({ detail }) => {
           dispatch('submitGif', detail)
         }}

@@ -2,7 +2,7 @@ import type { App } from '../app'
 import type { Message, Team, User } from '../types'
 import type { Socket } from 'socket.io'
 import { check } from 'p4ssw0rd'
-import { gifs } from 'svelte-tenor/api'
+import { gifDetails } from 'svelte-tenor/api'
 import { GetRequest, Level } from '../api'
 import { AppEvent } from '../app'
 import {
@@ -212,8 +212,10 @@ export default (app: App): void => {
     socket.on(ClientEvent.Gif, async (msg: string) => {
       if (!user || user.level < 1) return
 
-      const ids = msg.slice(0, 30)
-      const details = await gifs({ ids, key: '9HGV6JC47G6A' })
+      const details = await gifDetails({
+        ids: [msg.slice(0, 30)],
+        key: '9HGV6JC47G6A',
+      })
       if (!details?.results?.length || details.results.length === 0) return
       const gif = details.results[0]
 
