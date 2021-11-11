@@ -274,7 +274,14 @@ export default (app: App): void => {
     true
       ? {
           type: Type.Detailed,
-          messages: messages.map((message) => ({ ...message, visible: true })),
+          messages: messages.map((message) => ({
+            ...message,
+            author: {
+              ...message.author,
+              token: '',
+            },
+            visible: true,
+          })),
         }
       : {
           type: Type.Basic,
