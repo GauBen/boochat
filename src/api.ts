@@ -5,11 +5,15 @@ import type { Team, User, RichMessage, DetailedMessage } from './types'
 import type { JTDDataType } from 'ajv/dist/core'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const API = `//${
-  globalThis?.location?.hostname === 'localhost'
-    ? 'localhost:3001'
-    : 'boochat.inpt.fr'
-}/api`
+const API = `${(() => {
+  // TODO improve this dev/prod switch
+  const href = globalThis?.location?.href
+  if (!href || globalThis?.location?.origin === 'boochat.inpt.fr')
+    return 'boochat.inpt.fr'
+  const host = new URL(href)
+  host.port = '3001'
+  return host.origin
+})()}/api`
 
 export enum Level {
   Banned = 0,
