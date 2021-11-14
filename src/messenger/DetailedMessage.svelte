@@ -2,7 +2,7 @@
   import type { Me } from '../api'
   import type { DetailedMessage, Team } from '../types'
   import { createEventDispatcher } from 'svelte'
-  import Gif from 'svelte-tenor/Gif.svelte'
+  import { Gif } from 'svelte-tenor'
   import { richText } from './Message.svelte'
 
   export let teams: Map<Team['id'], Team>

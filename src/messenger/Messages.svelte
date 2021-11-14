@@ -55,8 +55,9 @@
 <style lang="scss">
   .messages {
     display: flex;
-    flex: 1;
+    flex-basis: 0%;
     flex-direction: column;
+    flex-grow: 1;
     padding: 0 1em;
     overflow: auto;
 

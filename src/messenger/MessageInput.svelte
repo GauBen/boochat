@@ -3,7 +3,7 @@
   import type { MessageUser } from '../types'
   import type { Gif } from 'svelte-tenor/api'
   import { createEventDispatcher } from 'svelte'
-  import Tenor from 'svelte-tenor/Tenor.svelte'
+  import { MobileKeyboard } from 'svelte-tenor'
   import { Level } from '../api'
 
   export let value = ''
@@ -28,36 +28,17 @@
 </script>
 
 {#if gif}
-  <div class="gif">
-    <div class="controls">
-      <button
-        type="button"
-        on:click={() => {
-          gif = false
-        }}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-        >
-          <title>Fermer</title>
-          <path
-            d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"
-          />
-        </svg>
-      </button>
-    </div>
-    <div class="keyboard">
-      <Tenor
-        key="9HGV6JC47G6A"
-        bind:q={gifSearch}
-        on:click={({ detail }) => {
-          dispatch('submitGif', detail)
-        }}
-      />
-    </div>
+  <div class="keyboard">
+    <MobileKeyboard
+      key="9HGV6JC47G6A"
+      bind:q={gifSearch}
+      on:click={({ detail }) => {
+        dispatch('submitGif', detail)
+      }}
+      on:close={() => {
+        gif = false
+      }}
+    />
   </div>
 {:else}
   <form on:submit|preventDefault>
@@ -229,43 +210,25 @@
     background-color: #ccc;
   }
 
-  .gif {
-    .controls {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 0.5rem;
+  .keyboard {
+    margin-top: 0.5rem;
+    padding: 1em;
+    overflow: auto;
+    background-color: #333;
+    border-radius: 0.75rem 0.75em 0 0;
+    box-shadow: 0 0 0 1px #444, 0 0 0.5em #111;
 
-      button {
-        padding: 4px;
-        > svg {
-          width: 1.5rem;
-          height: 1.5rem;
-          vertical-align: bottom;
-        }
-      }
-    }
+    :global(.row > button),
+    :global(.row > input) {
+      padding: 0.25em;
+      color: #222;
+      background-color: #fff;
+      border: 0;
+      border-radius: 0.5em;
 
-    .keyboard {
-      min-height: 500px;
-      max-height: 50vh;
-      padding: 0.5em;
-      overflow: auto;
-      background-color: #333;
-      border-radius: 0.75rem 0.75em 0 0;
-      box-shadow: 0 0 0 1px #444, 0 0 0.5em #111;
-
-      :global(input) {
-        padding: 0.25em;
-        color: #222;
-        background-color: #fff;
-        border: 0;
-        border-radius: 0.5em;
-
-        &:focus {
-          outline: 0;
-          box-shadow: 0 0 0.5rem var(--color);
-        }
+      &:focus {
+        outline: 0;
+        box-shadow: 0 0 0.5rem var(--color);
       }
     }
   }
