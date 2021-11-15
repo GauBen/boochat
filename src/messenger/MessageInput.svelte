@@ -31,6 +31,13 @@
   <div class="keyboard">
     <MobileKeyboard
       key="9HGV6JC47G6A"
+      messages={{
+        placeholder: 'Chercher sur Tenor',
+        close: 'Aa',
+        error: 'Tenor est indisponible',
+        retry: 'Réessayer',
+      }}
+      gap={8}
       bind:q={gifSearch}
       on:click={({ detail }) => {
         dispatch('submitGif', detail)
@@ -218,17 +225,25 @@
     border-radius: 0.75rem 0.75em 0 0;
     box-shadow: 0 0 0 1px #444, 0 0 0.5em #111;
 
-    :global(.row > button),
-    :global(.row > input) {
-      padding: 0.25em;
-      color: #222;
-      background-color: #fff;
-      border: 0;
-      border-radius: 0.5em;
+    :global {
+      .row > button {
+        padding: 0.25em 0.5em;
+      }
+      .row > input {
+        padding: 0.25em;
+      }
 
-      &:focus {
-        outline: 0;
-        box-shadow: 0 0 0.5rem var(--color);
+      .row > button,
+      .row > input {
+        color: #222;
+        background-color: #fff;
+        border: 0;
+        border-radius: 0.5em;
+
+        &:focus {
+          outline: 0;
+          box-shadow: 0 0 0.5rem var(--color);
+        }
       }
     }
   }

@@ -1787,7 +1787,7 @@ __metadata:
     svelte: ^3.44.0
     svelte-check: ^2.2.7
     svelte-preprocess: ^4.9.8
-    svelte-tenor: ^0.0.10
+    svelte-tenor: ^0.0.12
     ts-node: ^10.4.0
     tslib: ^2.3.1
     twemoji: ^13.1.0
@@ -9109,10 +9109,10 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"svelte-tenor@npm:^0.0.10":
-  version: 0.0.10
-  resolution: "svelte-tenor@npm:0.0.10"
-  checksum: bea37ebadacb4c2ef62cf0ab0b7ab785ca51d21a60560389abcc1e445ccd84ee80171da1f7716751a618748634421056492b48c56b61b8a70ba33e93241aedfd
+"svelte-tenor@npm:^0.0.12":
+  version: 0.0.12
+  resolution: "svelte-tenor@npm:0.0.12"
+  checksum: 6a6ef1d1d5c838c1863f2bc2a32f12f4467bd322edfbe610b4477e8d29fdc145cde0fab79941559a6410801fd20732ad8d60bd5e8ab8e8564f18d7af2a772330
   languageName: node
   linkType: hard
 
