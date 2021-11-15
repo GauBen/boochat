@@ -8,8 +8,8 @@ import type { JTDDataType } from 'ajv/dist/core'
 const API = `${(() => {
   // TODO improve this dev/prod switch
   const href = globalThis?.location?.href
-  if (!href || globalThis?.location?.origin === 'boochat.inpt.fr')
-    return 'boochat.inpt.fr'
+  if (!href || globalThis?.location?.origin === 'https://boochat.inpt.fr')
+    return 'https://boochat.inpt.fr'
   const host = new URL(href)
   host.port = '3001'
   return host.origin
