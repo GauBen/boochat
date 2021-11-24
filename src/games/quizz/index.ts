@@ -121,19 +121,18 @@ export default (app: App): void => {
         setTimeout(resolve, config.get('quizz').answer)
       })
 
+      const stats = await prisma.questionStats.groupBy({
+        by: ['teamId'],
+        _sum: {
+          points: true,
+        },
+        where: {
+          createdAt: { gte: new Date(Date.now() - 1000 * 60 * 60) },
+          team: { pickable: true },
+        },
+      })
       leaderboard = new Map(
-        (
-          await prisma.questionStats.groupBy({
-            by: ['teamId'],
-            _sum: {
-              points: true,
-            },
-            where: {
-              createdAt: { gte: new Date(Date.now() - 1000 * 60 * 60) },
-              team: { pickable: true },
-            },
-          })
-        ).map(({ teamId, _sum: { points } }) => [teamId, points ?? 0])
+        stats.map(({ teamId, _sum: { points } }) => [teamId, points ?? 0])
       )
 
       io.emit(ServerEvent.QuizzLeaderboard, [...leaderboard])

@@ -187,11 +187,10 @@ export default (app: App): void => {
         })
       }
 
-      const deleted = (
-        await prisma.message.findUnique({
-          where: { id: message.id },
-        })
-      )?.deleted
+      const dbMessage = await prisma.message.findUnique({
+        where: { id: message.id },
+      })
+      const deleted = dbMessage?.deleted
 
       if (deleted === undefined) return
 
@@ -240,11 +239,11 @@ export default (app: App): void => {
         })
       }
 
-      const deleted = (
-        await prisma.message.findUnique({
-          where: { id: message.id },
-        })
-      )?.deleted
+      // TODO dedupe
+      const dbMessage = await prisma.message.findUnique({
+        where: { id: message.id },
+      })
+      const deleted = dbMessage?.deleted
 
       if (deleted === undefined) return
 

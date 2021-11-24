@@ -17,7 +17,7 @@
       "$lib/*": ["src/lib/*"]
     },
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "types": ["@sveltejs/kit", "node", "svelte"]
+    "types": ["node", "svelte"]
   },
   "include": [
     "src/**/*.d.ts",

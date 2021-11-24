@@ -23,7 +23,8 @@
   }
 
   onMount(async () => {
-    teams = (await get(GetRequest.Teams)).body
+    const { body } = await get(GetRequest.Teams)
+    teams = body
   })
 </script>
 
