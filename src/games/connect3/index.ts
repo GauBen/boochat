@@ -1,9 +1,9 @@
-import type { App } from '../../app'
 // Import type { User, Team, Answer } from '../../types'
-import type { CurrentState } from './types'
 import arrayShuffle from 'array-shuffle'
 import { GetRequest, PostRequest } from '../../api'
+import type { App } from '../../app'
 import { ServerEvent } from '../../socket-api'
+import type { CurrentState } from './types'
 
 const rows = 6
 const columns = 7
@@ -62,7 +62,7 @@ export default async (app: App): Promise<void> => {
     return false
   }
 
-  // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
+  // eslint-disable-next-line complexity
   const gameOver = (): boolean => {
     const { grid } = state
     for (let row = 0; row < grid.length; row++) {
@@ -104,7 +104,7 @@ export default async (app: App): Promise<void> => {
     return false
   }
 
-  // eslint-disable-next-line sonarjs/cognitive-complexity, complexity
+  // eslint-disable-next-line complexity
   const startGame = async () => {
     while (state.turn < rows * columns) {
       movesReceived = new Map<number, number>()

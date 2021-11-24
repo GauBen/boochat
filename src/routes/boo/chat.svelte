@@ -1,18 +1,17 @@
 <script lang="ts">
-  import type { Thread } from '../../messenger/types'
+  import { io } from 'socket.io-client'
+  import { onMount } from 'svelte'
+  import { get, GetRequest } from '../../api'
+  import Messages from '../../messenger/Messages.svelte'
+  import { Thread, Type } from '../../messenger/types'
   import type { Socket } from '../../socket-api'
+  import { ServerEvent, SOCKET_API } from '../../socket-api'
   import type {
     DetailedMessage,
     MessageUser,
     RichMessage,
     Team,
   } from '../../types'
-  import { io } from 'socket.io-client'
-  import { onMount } from 'svelte'
-  import { get, GetRequest } from '../../api'
-  import Messages from '../../messenger/Messages.svelte'
-  import { Type } from '../../messenger/types'
-  import { ServerEvent, SOCKET_API } from '../../socket-api'
 
   let socket: Socket | undefined
   let teams: Map<Team['id'], Team> = new Map()

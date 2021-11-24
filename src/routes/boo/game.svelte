@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { Socket } from '../../socket-api'
-  import type { Team } from '../../types'
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
   import { get, GetRequest } from '../../api'
   import Boo from '../../games/connect3/Boo.svelte'
+  import type { Socket } from '../../socket-api'
   import { SOCKET_API } from '../../socket-api'
+  import type { Team } from '../../types'
 
   let socket: Socket | undefined
   let teams: Map<Team['id'], Team> = new Map()

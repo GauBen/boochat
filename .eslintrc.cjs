@@ -8,10 +8,6 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:unicorn/recommended',
-    'plugin:sonarjs/recommended',
-    'plugin:import/recommended',
-    'plugin:import/typescript',
-    'plugin:no-unsanitized/DOM',
     'xo',
     'xo-typescript',
     'prettier',
@@ -33,23 +29,6 @@ module.exports = {
     'unicorn/prevent-abbreviations': 'off',
     'unicorn/prefer-node-protocol': 'off',
     'unicorn/require-post-message-target-origin': 'off',
-    'sonarjs/cognitive-complexity': ['error', 8],
-    'import/order': [
-      'error',
-      {
-        groups: [
-          'type',
-          'builtin',
-          'external',
-          'internal',
-          'unknown',
-          'parent',
-          'sibling',
-        ],
-        'newlines-between': 'never',
-        alphabetize: { order: 'asc' },
-      },
-    ],
   },
   overrides: [
     {
@@ -59,14 +38,11 @@ module.exports = {
         // Setting a variable to undefined is not the same thing as leaving the declaration empty
         'no-undef-init': 'off',
         'unicorn/no-useless-undefined': 'off',
-        'sonarjs/no-ignored-return': 'off',
         // This is not yet possible to enable some typed rules, see
         // https://github.com/sveltejs/eslint-plugin-svelte3/issues/89
         '@typescript-eslint/no-unsafe-assignment': 'off',
         '@typescript-eslint/no-unsafe-call': 'off',
         '@typescript-eslint/no-unsafe-member-access': 'off',
-        // SvelteKit magic imports
-        'import/no-unresolved': ['error', { ignore: ['\\$app'] }],
       },
     },
     {
@@ -78,14 +54,6 @@ module.exports = {
     'svelte3/typescript': true,
     // ESLint cannot process SCSS and Stylelint is setup, no need for these checks
     'svelte3/ignore-styles': () => true,
-    'import/parsers': {
-      '@typescript-eslint/parser': ['.ts'],
-    },
-    'import/resolver': {
-      typescript: {
-        alwaysTryTypes: true,
-      },
-    },
   },
   // Ignore config files
   ignorePatterns: ['*.config.js', '*.cjs'],

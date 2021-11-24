@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { Team } from '../../types'
-  import type { CurrentState } from './types'
   import { onMount, tick } from 'svelte'
   import { bounceOut } from 'svelte/easing'
   import { get, GetRequest } from '../../api'
   import { ServerEvent, Socket } from '../../socket-api'
+  import type { Team } from '../../types'
+  import type { CurrentState } from './types'
 
   export let teams: Map<Team['id'], Team>
   export let socket: Socket | undefined
@@ -18,7 +18,7 @@
     css: (_t: number, u: number) => `transform: translateY(-${u * 600}px)`,
   })
 
-  // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
+  // eslint-disable-next-line complexity
   const findWinner = async () => {
     for (let row = 0; row < state.grid.length; row++) {
       for (let column = 0; column < state.grid[row].length; column++) {

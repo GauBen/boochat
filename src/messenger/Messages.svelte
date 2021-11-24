@@ -1,10 +1,10 @@
 <script lang="ts">
+  import { afterUpdate, beforeUpdate, createEventDispatcher } from 'svelte'
   import type { Me } from '../api'
   import type { Team } from '../types'
-  import type { Thread } from './types'
-  import { afterUpdate, beforeUpdate, createEventDispatcher } from 'svelte'
   import DetailedMessage from './DetailedMessage.svelte'
   import Message from './Message.svelte'
+  import type { Thread } from './types'
   import { Type } from './types'
 
   export let thread: Thread = []

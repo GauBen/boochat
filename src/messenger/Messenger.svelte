@@ -1,19 +1,18 @@
 <script lang="ts">
-  import type { Me } from '../api'
-  import type { Socket } from '../socket-api'
-  import type {
-    Team,
-    RichMessage,
-    MessageUser,
-    DetailedMessage,
-  } from '../types'
-  import type { Thread } from './types'
-  import type { Gif } from 'svelte-tenor/api'
   import { createEventDispatcher, onMount, tick } from 'svelte'
+  import type { Gif } from 'svelte-tenor/api'
+  import type { Me } from '../api'
   import { get, GetRequest, Level } from '../api'
-  import { ClientEvent, ServerEvent } from '../socket-api'
+  import { ClientEvent, ServerEvent, Socket } from '../socket-api'
+  import type {
+    DetailedMessage,
+    MessageUser,
+    RichMessage,
+    Team,
+  } from '../types'
   import MessageInput from './MessageInput.svelte'
   import Messages from './Messages.svelte'
+  import type { Thread } from './types'
   import { Type } from './types'
 
   export let me: Me | undefined = undefined

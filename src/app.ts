@@ -1,14 +1,13 @@
-import type { DetailedUser } from './types'
+import EventEmitter from 'events'
 import type { PrismaClient, Team, User } from '@prisma/client'
 import type { ValidateFunction } from 'ajv'
 import type { JTDDataType } from 'ajv/dist/core'
 import type Conf from 'conf'
-import type { Server, Socket } from 'socket.io'
-import type TypedEventEmitter from 'typed-emitter'
-import EventEmitter from 'events'
 import cors from 'cors'
 import express, { json } from 'express'
 import { nanoid } from 'nanoid'
+import type { Server, Socket } from 'socket.io'
+import type TypedEventEmitter from 'typed-emitter'
 import { GetRequest, Level, PostRequest, Response, schemas } from './api'
 import {
   ClientToServerEvents,
@@ -16,6 +15,7 @@ import {
   ServerEvent,
   ServerToClientEvents,
 } from './socket-api'
+import type { DetailedUser } from './types'
 
 export interface AppAttributes {
   readonly io: Server<ClientToServerEvents, ServerToClientEvents>
@@ -171,7 +171,6 @@ export class App implements AppAttributes {
       user: DetailedUser | undefined
     ) => Response[T] | Promise<Response[T]>
   ): void {
-    // eslint-disable-next-line sonarjs/cognitive-complexity
     this.api.post(path, async (req, res) => {
       if (!('body' in req) || !this.validate[path](req.body)) {
         res.status(400).json({ error: 'Invalid data' })

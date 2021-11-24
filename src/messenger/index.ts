@@ -1,9 +1,8 @@
-import type { App } from '../app'
-import type { Message, Team, User } from '../types'
-import type { Socket } from 'socket.io'
 import { check } from 'p4ssw0rd'
+import type { Socket } from 'socket.io'
 import { gifDetails } from 'svelte-tenor/api'
 import { GetRequest, Level } from '../api'
+import type { App } from '../app'
 import { AppEvent } from '../app'
 import {
   ClientEvent,
@@ -12,6 +11,7 @@ import {
   ServerEvent,
   ServerToClientEvents,
 } from '../socket-api'
+import type { Message, Team, User } from '../types'
 import { Type } from './types'
 
 export default (app: App): void => {
@@ -65,7 +65,6 @@ export default (app: App): void => {
     socket: Socket<ClientToServerEvents, ServerToClientEvents>,
     user: User,
     msg: string
-    // eslint-disable-next-line sonarjs/cognitive-complexity
   ) => {
     try {
       if (msg.startsWith('/ban ')) {
@@ -118,7 +117,6 @@ export default (app: App): void => {
   }
 
   // Register a middleware to handle incoming socket events
-  // eslint-disable-next-line sonarjs/cognitive-complexity
   io.use((socket: Socket, next) => {
     const { user } = socket
 

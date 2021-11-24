@@ -1,8 +1,8 @@
+import type { JTDDataType } from 'ajv/dist/core'
 import type { CurrentState as Connect3State } from './games/connect3/types'
 import type { CurrentState } from './games/quizz/types'
 import type { Type } from './messenger/types'
-import type { Team, User, RichMessage, DetailedMessage } from './types'
-import type { JTDDataType } from 'ajv/dist/core'
+import type { DetailedMessage, RichMessage, Team, User } from './types'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const API = `${(() => {

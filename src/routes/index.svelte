@@ -1,15 +1,14 @@
 <script lang="ts">
-  import type { Me } from '../api'
-  import type { Socket } from '../socket-api'
-  import type { Team } from '../types'
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
   import { writable } from 'svelte/store'
-  import { Level, get, post, GetRequest, PostRequest } from '../api'
+  import { get, GetRequest, Level, Me, post, PostRequest } from '../api'
   import Admin from '../components/Admin.svelte'
   import GameController from '../components/GameController.svelte'
   import Messenger from '../messenger/Messenger.svelte'
+  import type { Socket } from '../socket-api'
   import { ServerEvent, SOCKET_API } from '../socket-api'
+  import type { Team } from '../types'
 
   let socket: Socket | undefined
   let teams: Map<Team['id'], Team> = new Map()

@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { Me } from '../api'
-  import type { MessageUser } from '../types'
-  import type { Gif } from 'svelte-tenor/api'
   import { createEventDispatcher } from 'svelte'
   import { MobileKeyboard } from 'svelte-tenor'
+  import type { Gif } from 'svelte-tenor/api'
+  import type { Me } from '../api'
   import { Level } from '../api'
+  import type { MessageUser } from '../types'
 
   export let value = ''
   export let disabled = false

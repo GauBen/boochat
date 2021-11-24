@@ -1,8 +1,8 @@
-import type { App } from '../../app'
-import type { User, Question, Team, Answer } from '../../types'
 import arrayShuffle from 'array-shuffle'
 import { GetRequest, PostRequest } from '../../api'
+import type { App } from '../../app'
 import { ServerEvent } from '../../socket-api'
+import type { Answer, Question, Team, User } from '../../types'
 import { State } from './types'
 
 export default (app: App): void => {
@@ -18,7 +18,7 @@ export default (app: App): void => {
   let ratios: Map<Team['id'], number>
   let leaderboard: Map<Team['id'], number>
 
-  // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
+  // eslint-disable-next-line complexity
   const play = async (_numberOfQuestions: number) => {
     // TODO update loop condition
     // eslint-disable-next-line no-constant-condition
