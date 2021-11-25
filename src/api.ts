@@ -5,15 +5,15 @@ import type { Type } from './messenger/types'
 import type { DetailedMessage, RichMessage, Team, User } from './types'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const API = `${(() => {
-  // TODO improve this dev/prod switch
-  const href = globalThis?.location?.href
-  if (!href || globalThis?.location?.origin === 'https://boochat.inpt.fr')
-    return 'https://boochat.inpt.fr'
-  const host = new URL(href)
-  host.port = '3001'
-  return host.origin
-})()}/api`
+const API =
+  process.env.NODE_ENV === 'production'
+    ? new URL(location.href, '/api').href
+    : (() => {
+        if (!globalThis?.location) return ''
+        const host = new URL(location.href, '/api')
+        host.port = '3001'
+        return host.href
+      })()
 
 export enum Level {
   Banned = 0,
