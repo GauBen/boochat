@@ -1,5 +1,3 @@
-/* eslint-disable sonarjs/no-duplicate-string */
-// eslint-disable-next-line import/default
 import Prisma from '@prisma/client'
 
 const prisma = new Prisma.PrismaClient()
