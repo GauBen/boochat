@@ -3,8 +3,7 @@ import type { CurrentState } from './games/connect3/types'
 import type { RichMessage, User, Team, DetailedMessage } from './types'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SOCKET_API =
-  globalThis?.location?.hostname === 'boochat.inpt.fr' ? '/' : ':3001'
+export const SOCKET_API = process.env.NODE_ENV === 'production' ? '/' : ':3001'
 export type Socket = ClientSocket<ServerToClientEvents, ClientToServerEvents>
 
 export enum ClientEvent {
