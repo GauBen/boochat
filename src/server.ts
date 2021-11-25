@@ -3,12 +3,11 @@ import type { JTDDataType } from 'ajv/dist/jtd'
 import Ajv from 'ajv/dist/jtd'
 import type { ValidateFunction } from 'ajv/dist/types'
 import Conf from 'conf'
-import express from 'express'
+import express, { RequestHandler } from 'express'
 import { statSync } from 'fs'
 import { createServer } from 'http'
 import fetch from 'node-fetch'
 import path from 'path'
-import sirv from 'sirv'
 import { Server } from 'socket.io'
 import { fileURLToPath } from 'url'
 import { schemas } from './api'
@@ -70,8 +69,21 @@ expressApp.use('/api', app.api)
 
 try {
   if (statSync('build').isDirectory()) {
-    expressApp.use(sirv('build'))
     console.log('> Starting in production mode')
+    // @ts-expect-error Import from a JS file cannot be typed
+    import('../build/middlewares.js')
+      .then(
+        ({
+          assetsMiddleware,
+          prerenderedMiddleware,
+          kitMiddleware,
+        }: Record<string, RequestHandler>) => {
+          expressApp.use(assetsMiddleware, prerenderedMiddleware, kitMiddleware)
+        }
+      )
+      .catch((error) => {
+        console.error(error)
+      })
   }
 } catch {
   console.log('> Starting in development mode')
