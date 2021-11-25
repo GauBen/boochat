@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import { writable } from 'svelte/store'
-  import { get, GetRequest, post, PostRequest } from '../../api'
+  import { GetRequest, PostRequest } from '../../api'
+  import { get, post } from '../../fetch'
   import type { Socket } from '../../socket-api'
   import { ServerEvent } from '../../socket-api'
   import { State } from './types'

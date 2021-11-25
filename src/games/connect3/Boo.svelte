@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte'
   import { bounceOut } from 'svelte/easing'
-  import { get, GetRequest } from '../../api'
+  import { GetRequest } from '../../api'
+  import { get } from '../../fetch'
   import { ServerEvent, Socket } from '../../socket-api'
   import type { Team } from '../../types'
   import type { CurrentState } from './types'

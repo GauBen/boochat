@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
-  import { get, GetRequest, post, PostRequest } from '../api'
-  import type { Team } from '../types'
   import { goto } from '$app/navigation'
+  import { onMount } from 'svelte'
+  import { GetRequest, PostRequest } from '../api'
+  import { get, post } from '../fetch'
+  import type { Team } from '../types'
 
   let name = ''
   let teamId = 0

@@ -1,19 +1,7 @@
-import type { JTDDataType } from 'ajv/dist/core'
 import type { CurrentState as Connect3State } from './games/connect3/types'
 import type { CurrentState } from './games/quizz/types'
 import type { Type } from './messenger/types'
 import type { DetailedMessage, RichMessage, Team, User } from './types'
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const API =
-  process.env.NODE_ENV === 'production'
-    ? new URL(location.href, '/api').href
-    : (() => {
-        if (!globalThis?.location) return ''
-        const host = new URL(location.href, '/api')
-        host.port = '3001'
-        return host.href
-      })()
 
 export enum Level {
   Banned = 0,
@@ -93,42 +81,4 @@ export interface Response {
   [PostRequest.SetupGame]: void
   [PostRequest.QuizzAnswer]: void
   [PostRequest.Connect3Play]: void
-}
-
-export const get = async <T extends GetRequest>(
-  uri: T
-): Promise<{ response: globalThis.Response; body: Response[T] }> => {
-  const token = localStorage.getItem('token')
-  const response = await fetch(API + uri, {
-    headers: token
-      ? {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          Authorization: `Token ${token}`,
-        }
-      : {},
-  })
-  const body = (await response.json()) as Response[T]
-  return { response, body }
-}
-
-export const post = async <T extends PostRequest>(
-  uri: T,
-  requestBody: JTDDataType<typeof schemas[T]>
-): Promise<{ response: globalThis.Response; body: Response[T] }> => {
-  const token = localStorage.getItem('token')
-  const response = await fetch(API + uri, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token
-        ? {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            Authorization: `Token ${token}`,
-          }
-        : {}),
-    },
-    body: JSON.stringify(requestBody),
-  })
-  const responseBody = (await response.json()) as Response[T]
-  return { response, body: responseBody }
 }

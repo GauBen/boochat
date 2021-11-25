@@ -1,7 +1,8 @@
 <script lang="ts">
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
-  import { get, GetRequest } from '../../api'
+  import { GetRequest } from '../../api'
+  import { get } from '../../fetch'
   import Boo from '../../games/connect3/Boo.svelte'
   import type { Socket } from '../../socket-api'
   import { SOCKET_API } from '../../socket-api'

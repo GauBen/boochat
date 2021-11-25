@@ -1,7 +1,8 @@
 <script lang="ts">
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
-  import { get, GetRequest } from '../../api'
+  import { GetRequest } from '../../api'
+  import { get } from '../../fetch'
   import Messages from '../../messenger/Messages.svelte'
   import { Thread, Type } from '../../messenger/types'
   import type { Socket } from '../../socket-api'

@@ -2,7 +2,8 @@
   import { createEventDispatcher, onMount, tick } from 'svelte'
   import type { Gif } from 'svelte-tenor/api'
   import type { Me } from '../api'
-  import { get, GetRequest, Level } from '../api'
+  import { GetRequest, Level } from '../api'
+  import { get } from '../fetch'
   import { ClientEvent, ServerEvent, Socket } from '../socket-api'
   import type {
     DetailedMessage,

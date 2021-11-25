@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import { get, GetRequest } from '../../api'
+  import { GetRequest } from '../../api'
+  import { get } from '../../fetch'
   import type { Socket } from '../../socket-api'
   import { ServerEvent } from '../../socket-api'
   import type { Team } from '../../types'
