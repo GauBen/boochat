@@ -1,4 +1,4 @@
-# <img src="./static/boochat.svg" alt="Boochat icon" height="40" valign="bottom"> Boochat
+# <img src="./static/icons/boochat.svg" alt="Boochat icon" height="40" valign="bottom"> Boochat
 
 ## Try it!
 
