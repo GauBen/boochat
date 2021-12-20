@@ -21,8 +21,7 @@ globalThis.fetch = fetch
 
 const ajv = new Ajv()
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const PORT = 3001
+const port = Number(process.env.VITE_API_PORT ?? 3001)
 const expressApp = express()
 const server = createServer(expressApp)
 
@@ -89,6 +88,6 @@ try {
   console.log('> Starting in development mode')
 }
 
-server.listen(PORT, () => {
-  console.log(`> Running on localhost:${PORT}`)
+server.listen(port, () => {
+  console.log(`> Running on localhost:${port}`)
 })

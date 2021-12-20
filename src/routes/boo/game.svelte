@@ -4,8 +4,8 @@
   import { GetRequest } from '../../api'
   import { get } from '../../fetch'
   import Boo from '../../games/connect3/Boo.svelte'
+  import { SOCKET_API } from '../../href'
   import type { Socket } from '../../socket-api'
-  import { SOCKET_API } from '../../socket-api'
   import type { Team } from '../../types'
 
   let socket: Socket | undefined

@@ -3,10 +3,11 @@
   import { onMount } from 'svelte'
   import { GetRequest } from '../../api'
   import { get } from '../../fetch'
+  import { SOCKET_API } from '../../href'
   import Messages from '../../messenger/Messages.svelte'
   import { Thread, Type } from '../../messenger/types'
   import type { Socket } from '../../socket-api'
-  import { ServerEvent, SOCKET_API } from '../../socket-api'
+  import { ServerEvent } from '../../socket-api'
   import type {
     DetailedMessage,
     MessageUser,

@@ -6,6 +6,12 @@ declare global {
       user: (User & { team: Team }) | undefined
     }
   }
+
+  interface ImportMeta {
+    env: {
+      VITE_API_PORT: string
+    }
+  }
 }
 
 declare module 'socket.io' {

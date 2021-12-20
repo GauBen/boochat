@@ -1,15 +1,6 @@
 import type { JTDDataType } from 'ajv/dist/core'
 import type { GetRequest, PostRequest, Response, schemas } from './api'
-
-const api = (method: string) =>
-  process.env.NODE_ENV === 'production'
-    ? new URL(`/api/${method}`, location.href).href
-    : (() => {
-        if (!globalThis?.location) return ''
-        const host = new URL(`/api/${method}`, location.href)
-        host.port = '3001'
-        return host.href
-      })()
+import { api } from './href'
 
 export const get = async <T extends GetRequest>(
   uri: T
