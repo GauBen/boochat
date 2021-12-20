@@ -2,7 +2,7 @@
   import { onMount } from 'svelte'
 
   let websocket: WebSocket | undefined
-  let last_time: number = new Date().getTime()
+  let lastTime: number = Date.now()
 
   onMount(() => {
     websocket = new WebSocket('wss://gba.inpt.fr/')
@@ -10,16 +10,14 @@
 
   const sendAction = (key: string) => () => {
     if (websocket) {
-      let current_time: number = new Date().getTime()
-      if (current_time - last_time > 500) {
+      const currentTime: number = Date.now()
+      if (currentTime - lastTime > 500) {
         websocket.send(JSON.stringify({ action: key }))
-        last_time = current_time
+        lastTime = currentTime
       }
     }
   }
 </script>
-
-<title>Télécommande</title>
 
 <table class="buttons">
   <tr>
