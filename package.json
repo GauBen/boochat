@@ -23,6 +23,7 @@
     "svelte-preprocess": "^4.10.1",
     "svelte-tenor": "^0.0.14",
     "ts-node": "^10.4.0",
+    "tsconfig-paths": "^3.12.0",
     "tslib": "^2.3.1",
     "twemoji": "^13.1.0",
     "typed-emitter": "^1.4.0",
@@ -78,7 +79,7 @@
     "format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. src",
     "postinstall": "husky install",
     "start": "yarn ts-node src/server.ts",
-    "ts-node": "node --experimental-specifier-resolution=node --loader ts-node/esm"
+    "ts-node": "node --experimental-specifier-resolution=node --loader ./loader.js"
   },
   "type": "module",
   "volta": {
