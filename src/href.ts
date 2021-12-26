@@ -4,7 +4,7 @@ export const api = (method: string): string =>
   new URL(
     `/api${method}`,
     ((root) => {
-      root.port = port
+      if (process.env.NODE_ENV !== 'production') root.port = port
       return root
     })(new URL(location.origin))
   ).href
