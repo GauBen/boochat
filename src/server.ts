@@ -15,7 +15,24 @@ import { App } from './app'
 import createGame from './games/connect3/index'
 import createMessenger from './messenger/index'
 import type { ClientToServerEvents, ServerToClientEvents } from './socket-api'
+import chalk from 'chalk'
 
+const production = (() => {
+  try {
+    return statSync('build').isDirectory()
+  } catch {
+    return false
+  }
+})()
+
+console.log(
+  chalk.hex('#ff0')(`
+ ___               _         _
+| _ ) ___  ___  __| |_  __ _| |_
+| _ \\/ _ \\/ _ \\/ _| ' \\/ _\` |  _|
+|___/\\___/\\___/\\__|_||_\\__,_|\\__|
+`) + `${(process.env.npm_package_version ?? 'unknown version').padStart(33)}\n`
+)
 // @ts-expect-error Add fetch to Node.js
 globalThis.fetch = fetch
 
@@ -66,25 +83,23 @@ app.use(createMessenger, createGame)
 
 expressApp.use('/api', app.api)
 
-try {
-  if (statSync('build').isDirectory()) {
-    console.log('> Starting in production mode')
-    // @ts-expect-error Import from a JS file cannot be typed
-    import('../build/middlewares.js')
-      .then(
-        ({
-          assetsMiddleware,
-          prerenderedMiddleware,
-          kitMiddleware,
-        }: Record<string, RequestHandler>) => {
-          expressApp.use(assetsMiddleware, prerenderedMiddleware, kitMiddleware)
-        }
-      )
-      .catch((error) => {
-        console.error(error)
-      })
-  }
-} catch {
+if (production) {
+  console.log('> Starting in production mode')
+  // @ts-expect-error Import from a JS file cannot be typed
+  import('../build/middlewares.js')
+    .then(
+      ({
+        assetsMiddleware,
+        prerenderedMiddleware,
+        kitMiddleware,
+      }: Record<string, RequestHandler>) => {
+        expressApp.use(assetsMiddleware, prerenderedMiddleware, kitMiddleware)
+      }
+    )
+    .catch((error) => {
+      console.error(error)
+    })
+} else {
   console.log('> Starting in development mode')
 }
 
