@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
-  import type { Me } from '../api'
-  import type { RichMessage, Team } from '../types'
+  import type { Me } from '$/api'
+  import type { RichMessage, Team } from '$/types'
   import { Gif } from 'svelte-tenor'
   import twemoji from 'twemoji'
 

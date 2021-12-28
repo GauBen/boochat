@@ -1,4 +1,4 @@
-import type { Team } from '../../types'
+import type { Team } from '$/types'
 
 export type CurrentState = {
   grid: Array<Array<undefined | Team['id']>>

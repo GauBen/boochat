@@ -1,8 +1,8 @@
+import { GetRequest, PostRequest } from '$/api'
+import type { App } from '$/app'
+import { ServerEvent } from '$/socket-api'
+import type { Answer, Question, Team, User } from '$/types'
 import arrayShuffle from 'array-shuffle'
-import { GetRequest, PostRequest } from '../../api'
-import type { App } from '../../app'
-import { ServerEvent } from '../../socket-api'
-import type { Answer, Question, Team, User } from '../../types'
 import { State } from './types'
 
 export default (app: App): void => {

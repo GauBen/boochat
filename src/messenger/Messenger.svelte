@@ -1,16 +1,11 @@
 <script lang="ts">
+  import type { Me } from '$/api'
+  import { GetRequest, Level } from '$/api'
+  import { get } from '$/fetch'
+  import { ClientEvent, ServerEvent, Socket } from '$/socket-api'
+  import type { DetailedMessage, MessageUser, RichMessage, Team } from '$/types'
   import { createEventDispatcher, onMount, tick } from 'svelte'
   import type { Gif } from 'svelte-tenor/api'
-  import type { Me } from '../api'
-  import { GetRequest, Level } from '../api'
-  import { get } from '../fetch'
-  import { ClientEvent, ServerEvent, Socket } from '../socket-api'
-  import type {
-    DetailedMessage,
-    MessageUser,
-    RichMessage,
-    Team,
-  } from '../types'
   import MessageInput from './MessageInput.svelte'
   import Messages from './Messages.svelte'
   import type { Thread } from './types'

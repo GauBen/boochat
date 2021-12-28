@@ -1,14 +1,11 @@
 <script lang="ts">
+  import { GetRequest, Response } from '$/api'
+  import { get } from '$/fetch'
+  import type { ClientToServerEvents, ServerToClientEvents } from '$/socket-api'
+  import { ServerEvent } from '$/socket-api'
+  import GameAdmin from '$games/connect3/Admin.svelte'
   import type { Socket } from 'socket.io-client'
   import { onMount } from 'svelte'
-  import { GetRequest, Response } from '../api'
-  import { get } from '../fetch'
-  import GameAdmin from '../games/connect3/Admin.svelte'
-  import type {
-    ClientToServerEvents,
-    ServerToClientEvents,
-  } from '../socket-api'
-  import { ServerEvent } from '../socket-api'
 
   export let socket:
     | Socket<ClientToServerEvents, ServerToClientEvents>

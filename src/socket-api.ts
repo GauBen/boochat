@@ -1,6 +1,6 @@
+import type { CurrentState } from '$/games/connect3/types'
+import type { DetailedMessage, RichMessage, Team, User } from '$/types'
 import type { Socket as ClientSocket } from 'socket.io-client'
-import type { CurrentState } from './games/connect3/types'
-import type { RichMessage, User, Team, DetailedMessage } from './types'
 
 export type Socket = ClientSocket<ServerToClientEvents, ClientToServerEvents>
 

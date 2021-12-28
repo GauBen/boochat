@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { Me } from '../api'
-  import Controller from '../games/gba/Controller.svelte'
-  import type { Socket } from '../socket-api'
+  import type { Me } from '$/api'
+  import type { Socket } from '$/socket-api'
+  import Controller from '$games/gba/Controller.svelte'
 
   export let socket: Socket | undefined = undefined
   export let me: Me | undefined = undefined

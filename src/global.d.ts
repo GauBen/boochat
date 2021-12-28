@@ -1,4 +1,4 @@
-import type { User, Team } from './types'
+import type { Team, User } from '$/types'
 
 declare global {
   namespace Express {

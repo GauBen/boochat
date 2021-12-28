@@ -1,10 +1,10 @@
 <script lang="ts">
+  import { GetRequest, PostRequest } from '$/api'
+  import { get, post } from '$/fetch'
+  import type { Socket } from '$/socket-api'
+  import { ServerEvent } from '$/socket-api'
   import { onMount } from 'svelte'
   import { writable } from 'svelte/store'
-  import { GetRequest, PostRequest } from '../../api'
-  import { get, post } from '../../fetch'
-  import type { Socket } from '../../socket-api'
-  import { ServerEvent } from '../../socket-api'
   import { State } from './types'
 
   export let socket: Socket | undefined = undefined

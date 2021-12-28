@@ -1,6 +1,6 @@
 <script lang="ts">
+  import Boo from '$games/quizz/Boo.svelte'
   import type { Socket } from 'socket.io-client'
-  import Boo from '../games/quizz/Boo.svelte'
 
   export let socket: Socket | undefined
 </script>

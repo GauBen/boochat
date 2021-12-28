@@ -1,10 +1,10 @@
 <script lang="ts">
+  import { GetRequest } from '$/api'
+  import { get } from '$/fetch'
+  import type { Socket } from '$/socket-api'
+  import { ServerEvent } from '$/socket-api'
+  import type { Team } from '$/types'
   import { onMount } from 'svelte'
-  import { GetRequest } from '../../api'
-  import { get } from '../../fetch'
-  import type { Socket } from '../../socket-api'
-  import { ServerEvent } from '../../socket-api'
-  import type { Team } from '../../types'
   import { State } from './types'
 
   export let teams: Map<Team['id'], Team>

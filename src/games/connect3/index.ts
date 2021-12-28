@@ -1,8 +1,7 @@
-// Import type { User, Team, Answer } from '../../types'
+import { GetRequest, PostRequest } from '$/api'
+import type { App } from '$/app'
+import { ServerEvent } from '$/socket-api'
 import arrayShuffle from 'array-shuffle'
-import { GetRequest, PostRequest } from '../../api'
-import type { App } from '../../app'
-import { ServerEvent } from '../../socket-api'
 import type { CurrentState } from './types'
 
 const rows = 6

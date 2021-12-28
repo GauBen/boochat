@@ -1,7 +1,7 @@
 <script lang="ts">
+  import type { Me } from '$/api'
+  import type { Team } from '$/types'
   import { afterUpdate, beforeUpdate, createEventDispatcher } from 'svelte'
-  import type { Me } from '../api'
-  import type { Team } from '../types'
   import DetailedMessage from './DetailedMessage.svelte'
   import Message from './Message.svelte'
   import type { Thread } from './types'

@@ -1,4 +1,4 @@
-import type { DetailedMessage, RichMessage } from '../types'
+import type { DetailedMessage, RichMessage } from '$/types'
 
 export enum Type {
   Basic = 'basic',

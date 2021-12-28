@@ -1,14 +1,14 @@
-import EventEmitter from 'events'
+import { GetRequest, Level, PostRequest, Response, schemas } from '$/api'
 import type { PrismaClient, Team, User } from '@prisma/client'
 import type { ValidateFunction } from 'ajv'
 import type { JTDDataType } from 'ajv/dist/core'
 import type Conf from 'conf'
 import cors from 'cors'
+import EventEmitter from 'events'
 import express, { json } from 'express'
 import { nanoid } from 'nanoid'
 import type { Server, Socket } from 'socket.io'
 import type TypedEventEmitter from 'typed-emitter'
-import { GetRequest, Level, PostRequest, Response, schemas } from './api'
 import {
   ClientToServerEvents,
   Room,

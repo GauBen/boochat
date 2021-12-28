@@ -1,9 +1,9 @@
+import { GetRequest, Level } from '$/api'
+import type { App } from '$/app'
+import { AppEvent } from '$/app'
 import { check } from 'p4ssw0rd'
 import type { Socket } from 'socket.io'
 import { gifDetails } from 'svelte-tenor/api'
-import { GetRequest, Level } from '../api'
-import type { App } from '../app'
-import { AppEvent } from '../app'
 import {
   ClientEvent,
   ClientToServerEvents,

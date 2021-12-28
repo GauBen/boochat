@@ -13,8 +13,7 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "$lib": ["src/lib"],
-      "$lib/*": ["src/lib/*"]
+      "$*": ["src/*"]
     },
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "types": ["node", "svelte"]

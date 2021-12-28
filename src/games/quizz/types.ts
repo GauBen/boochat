@@ -1,4 +1,4 @@
-import type { Team } from '../../types'
+import type { Team } from '$/types'
 
 export enum State {
   Question,

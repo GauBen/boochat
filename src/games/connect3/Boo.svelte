@@ -1,10 +1,10 @@
 <script lang="ts">
+  import { GetRequest } from '$/api'
+  import { get } from '$/fetch'
+  import { ServerEvent, Socket } from '$/socket-api'
+  import type { Team } from '$/types'
   import { onMount, tick } from 'svelte'
   import { bounceOut } from 'svelte/easing'
-  import { GetRequest } from '../../api'
-  import { get } from '../../fetch'
-  import { ServerEvent, Socket } from '../../socket-api'
-  import type { Team } from '../../types'
   import type { CurrentState } from './types'
 
   export let teams: Map<Team['id'], Team>

@@ -1,6 +1,6 @@
+import type { GetRequest, PostRequest, Response, schemas } from '$/api'
+import { api } from '$/href'
 import type { JTDDataType } from 'ajv/dist/core'
-import type { GetRequest, PostRequest, Response, schemas } from './api'
-import { api } from './href'
 
 export const get = async <T extends GetRequest>(
   uri: T
