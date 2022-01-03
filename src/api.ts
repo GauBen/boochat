@@ -1,7 +1,7 @@
-import type { CurrentState as Connect3State } from '$/games/connect3/types'
-import type { CurrentState } from '$/games/quizz/types'
-import type { Type } from '$/messenger/types'
 import type { DetailedMessage, RichMessage, Team, User } from '$/types'
+import type { CurrentState as Connect3State } from '$games/connect3/types'
+import type { CurrentState } from '$games/quizz/types'
+import type { Type } from '$messenger/types'
 
 export enum Level {
   Banned = 0,
