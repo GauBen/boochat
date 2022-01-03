@@ -1,4 +1,5 @@
 import adapter from '@sveltejs/adapter-node'
+import path from 'path'
 import preprocess from 'svelte-preprocess'
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -13,7 +14,13 @@ const config = {
     adapter: adapter({}),
     vite: {
       resolve: {
-        alias: [{ find: /\$([\w-]+)\//, replacement: './src/$1/' }],
+        alias: [
+          { find: '$', replacement: path.resolve('src') },
+          {
+            find: /\$(components|games|lib|messenger|routes)\//,
+            replacement: path.resolve('src') + '/$1/',
+          },
+        ],
       },
     },
   },
