@@ -2,8 +2,8 @@ import { schemas } from '$/api'
 import { App } from '$/app'
 import type { ClientToServerEvents, ServerToClientEvents } from '$/socket-api'
 import createGame from '$games/connect3/index'
+import { client } from '$lib/prisma'
 import createMessenger from '$messenger/index'
-import Prisma from '@prisma/client'
 import type { JTDDataType } from 'ajv/dist/jtd'
 import Ajv from 'ajv/dist/jtd'
 import type { ValidateFunction } from 'ajv/dist/types'
@@ -47,7 +47,7 @@ const app = new App({
     cors: { origin: '*' },
     serveClient: false,
   }),
-  prisma: new Prisma.PrismaClient(),
+  prisma: client,
   validate: Object.fromEntries(
     Object.entries(schemas).map(([key, schema]) => [key, ajv.compile(schema)])
   ) as {
@@ -86,16 +86,10 @@ expressApp.use('/api', app.api)
 if (production) {
   console.log('> Starting in production mode')
   // @ts-expect-error Import from a JS file cannot be typed
-  import('../build/middlewares.js')
-    .then(
-      ({
-        assetsMiddleware,
-        prerenderedMiddleware,
-        kitMiddleware,
-      }: Record<string, RequestHandler>) => {
-        expressApp.use(assetsMiddleware, prerenderedMiddleware, kitMiddleware)
-      }
-    )
+  import('../build/handler.js')
+    .then(({ handler }: Record<string, RequestHandler>) => {
+      expressApp.use(handler)
+    })
     .catch((error) => {
       console.error(error)
     })
