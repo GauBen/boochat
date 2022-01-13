@@ -1809,7 +1809,7 @@ __metadata:
     svelte: ^3.45.0
     svelte-check: ^2.2.11
     svelte-preprocess: ^4.10.1
-    svelte-tenor: ^0.0.14
+    svelte-tenor: ^0.0.15
     ts-node: ^10.4.0
     tsconfig-paths: ^3.12.0
     tslib: ^2.3.1
@@ -8738,10 +8738,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svelte-tenor@npm:^0.0.14":
-  version: 0.0.14
-  resolution: "svelte-tenor@npm:0.0.14"
-  checksum: 0dfa80ab3d0caea85fed97ac3758d0e12bd0fe9cd27e58112e5a33baeb75773763a7b1fe4fa5855cd0a4c53fffc36fbaa75074cef656623284216b50f04e8e2b
+"svelte-tenor@npm:^0.0.15":
+  version: 0.0.15
+  resolution: "svelte-tenor@npm:0.0.15"
+  checksum: 3255945112d5a9617743539d63978d714649df385349434a6e74b94b16783d45948c25c8649dddd769e72ea79ed9bee8a5d851da8048d7dc9b430a525cb9c617
   languageName: node
   linkType: hard
 
