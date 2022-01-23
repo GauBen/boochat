@@ -1,7 +1,6 @@
-import type { DetailedMessage, RichMessage, Team, User } from '$/types'
+import type { Team, User } from '$/types'
 import type { CurrentState as Connect3State } from '$games/connect3/types'
 import type { CurrentState } from '$games/quizz/types'
-import type { Type } from '$messenger/types'
 
 export enum Level {
   Banned = 0,
@@ -11,8 +10,6 @@ export enum Level {
 }
 
 export enum GetRequest {
-  Teams = '/teams',
-  Messages = '/messages',
   ChatSettings = '/chat-settings',
   GameSettings = '/game-settings',
   GameState = '/game-results',
@@ -60,10 +57,6 @@ export const schemas = {
 export type Me = (User & { team: Team }) | false
 
 export interface Response {
-  [GetRequest.Teams]: Team[]
-  [GetRequest.Messages]:
-    | { type: Type.Basic; messages: RichMessage[] }
-    | { type: Type.Detailed; messages: DetailedMessage[] }
   [GetRequest.ChatSettings]: { slowdown: number; moderationDelay: number }
   [GetRequest.GameSettings]: { value: string }
   [GetRequest.GameState]: CurrentState

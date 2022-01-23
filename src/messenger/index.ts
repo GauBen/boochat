@@ -12,7 +12,6 @@ import {
   ServerToClientEvents,
 } from '../socket-api'
 import type { Message, Team, User } from '../types'
-import { Type } from './types'
 
 export default (app: App): void => {
   const { io, prisma, config, emitter, users } = app
@@ -263,34 +262,4 @@ export default (app: App): void => {
 
   // Get settings
   app.get(GetRequest.ChatSettings, () => config.get('chat'))
-
-  // Get the latest messages
-  app.get(GetRequest.Messages, () =>
-    // TODO Check user level
-    // eslint-disable-next-line no-constant-condition
-    true
-      ? {
-          type: Type.Detailed,
-          messages: messages.map((message) => ({
-            ...message,
-            author: {
-              ...message.author,
-              token: '',
-            },
-            visible: true,
-          })),
-        }
-      : {
-          type: Type.Basic,
-          messages: messages.map((message) => ({
-            ...message,
-            author: {
-              id: message.author.id,
-              name: message.author.name,
-              teamId: message.author.teamId,
-            },
-            visible: true,
-          })),
-        }
-  )
 }

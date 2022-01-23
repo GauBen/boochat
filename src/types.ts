@@ -12,7 +12,9 @@ export type MessageUser = {
 export type RichMessage = Message & { author: MessageUser } & {
   visible: boolean
 }
-export type DetailedMessage = Message & { author: User } & {
+export type DetailedMessage = Message & {
+  author: { id: number; teamId: number; name: string }
+} & {
   visible: boolean
 }
 

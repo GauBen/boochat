@@ -1,5 +1,7 @@
-<script lang="ts">
-  import { get as newGet } from '$lib/api'
+<script lang="ts" context="module">
+  import { get } from '$lib/api'
+  import { Thread, Type } from '$messenger/types'
+  import type { Load } from '@sveltejs/kit'
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
   import { writable } from 'svelte/store'
@@ -13,15 +15,36 @@
   import { ServerEvent } from '../socket-api'
   import type { Team } from '../types'
 
+  export const load: Load = async ({ fetch }) => {
+    const [teams, thread] = await Promise.all([
+      get('/api/teams.json', { fetch }).then(
+        (response) => new Map(response.map((team) => [team.id, team]))
+      ),
+      get('/api/messages.json', { fetch }).then((response) =>
+        response.messages.map((message) => ({
+          type: Type.Detailed,
+          message,
+        }))
+      ),
+    ])
+
+    return {
+      props: {
+        teams,
+        thread,
+      },
+    }
+  }
+</script>
+
+<script lang="ts">
+  export let thread: Thread
+  export let teams: Map<Team['id'], Team> = new Map()
+
   let socket: Socket | undefined
-  let teams: Map<Team['id'], Team> = new Map()
   let me: Me | undefined
 
   onMount(async () => {
-    void newGet('/api/teams.json').then((response) => {
-      teams = new Map(response.map((team) => [team.id, team]))
-    })
-
     const token = localStorage.getItem('token')
     if (token !== null) {
       void post(PostRequest.Me, { token }).then(({ body }) => {
@@ -89,7 +112,7 @@
   </nav>
   <div bind:this={app} class="app">
     <section>
-      <Messenger {teams} {socket} {me} on:logout={logout} />
+      <Messenger {thread} {teams} {socket} {me} on:logout={logout} />
     </section>
     <section>
       <GameController {socket} {me} />

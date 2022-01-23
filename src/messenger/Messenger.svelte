@@ -15,8 +15,8 @@
   export let mod = false
   export let socket: Socket | undefined
   export let teams: Map<Team['id'], Team>
+  export let thread: Thread = []
 
-  let thread: Thread = []
   let settings = { moderationDelay: 0, slowdown: 0 }
   let disabled = false
   let countdown = 0
@@ -60,22 +60,6 @@
   const dispatch = createEventDispatcher<{ logout: void; send: string }>()
 
   onMount(async () => {
-    void get(GetRequest.Messages).then(({ body }) => {
-      // Load messages above notices
-      thread = [
-        ...body.messages.map((message) => {
-          updateUsers(message)
-          // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-          return {
-            type: body.type,
-            message,
-          } as
-            | { type: Type.Basic; message: RichMessage }
-            | { type: Type.Detailed; message: DetailedMessage }
-        }),
-        ...thread,
-      ]
-    })
     void get(GetRequest.ChatSettings).then(({ body }) => {
       // Load messages above notices
       settings = body

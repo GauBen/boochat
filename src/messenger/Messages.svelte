@@ -1,7 +1,12 @@
 <script lang="ts">
   import type { Me } from '$/api'
   import type { Team } from '$/types'
-  import { afterUpdate, beforeUpdate, createEventDispatcher } from 'svelte'
+  import {
+    afterUpdate,
+    beforeUpdate,
+    createEventDispatcher,
+    onMount,
+  } from 'svelte'
   import DetailedMessage from './DetailedMessage.svelte'
   import Message from './Message.svelte'
   import type { Thread } from './types'
@@ -26,6 +31,10 @@
 
   afterUpdate(() => {
     if (div && scroll < 10) div.scrollTo({ top: div.scrollHeight })
+  })
+
+  onMount(() => {
+    if (div) div.scrollTo({ top: div.scrollHeight })
   })
 </script>
 
