@@ -1,11 +1,12 @@
 <script lang="ts">
+  import { get as newGet } from '$lib/api'
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
   import { writable } from 'svelte/store'
-  import { GetRequest, Level, Me, PostRequest } from '../api'
+  import { Level, Me, PostRequest } from '../api'
   import Admin from '../components/Admin.svelte'
   import GameController from '../components/GameController.svelte'
-  import { get, post } from '../fetch'
+  import { post } from '../fetch'
   import { SOCKET_API } from '../href'
   import Messenger from '../messenger/Messenger.svelte'
   import type { Socket } from '../socket-api'
@@ -17,8 +18,8 @@
   let me: Me | undefined
 
   onMount(async () => {
-    void get(GetRequest.Teams).then(({ body }) => {
-      teams = new Map(body.map((team) => [team.id, team]))
+    void newGet('/api/teams.json').then((response) => {
+      teams = new Map(response.map((team) => [team.id, team]))
     })
 
     const token = localStorage.getItem('token')

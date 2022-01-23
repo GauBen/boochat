@@ -1,8 +1,7 @@
 <script lang="ts">
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
-  import { GetRequest } from '../../api'
-  import { get } from '../../fetch'
+  import { get } from '$lib/api'
   import Boo from '../../games/connect3/Boo.svelte'
   import { SOCKET_API } from '../../href'
   import type { Socket } from '../../socket-api'
@@ -12,8 +11,8 @@
   let teams: Map<Team['id'], Team> = new Map()
 
   onMount(async () => {
-    void get(GetRequest.Teams).then(({ body }) => {
-      teams = new Map(body.map((team) => [team.id, team]))
+    void get('/api/teams.json').then((response) => {
+      teams = new Map(response.map((team) => [team.id, team]))
     })
 
     socket = io(SOCKET_API)

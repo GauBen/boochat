@@ -14,6 +14,7 @@
     RichMessage,
     Team,
   } from '../../types'
+  import { get as newGet } from '$lib/api'
 
   let socket: Socket | undefined
   let teams: Map<Team['id'], Team> = new Map()
@@ -50,8 +51,8 @@
   }
 
   onMount(async () => {
-    void get(GetRequest.Teams).then(({ body }) => {
-      teams = new Map(body.map((team) => [team.id, team]))
+    void newGet('/api/teams.json').then((response) => {
+      teams = new Map(response.map((team) => [team.id, team]))
     })
 
     void get(GetRequest.Messages).then(({ body }) => {

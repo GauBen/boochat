@@ -1,8 +1,9 @@
 <script lang="ts">
   import { goto } from '$app/navigation'
+  import { get } from '$lib/api'
   import { onMount } from 'svelte'
-  import { GetRequest, PostRequest } from '../api'
-  import { get, post } from '../fetch'
+  import { PostRequest } from '../api'
+  import { post } from '../fetch'
   import type { Team } from '../types'
 
   let name = ''
@@ -24,8 +25,7 @@
   }
 
   onMount(async () => {
-    const { body } = await get(GetRequest.Teams)
-    teams = body
+    teams = await get('/api/teams.json')
   })
 </script>
 

@@ -86,7 +86,6 @@ export class App implements AppAttributes {
     })
 
     // Get requests
-    this.get(GetRequest.Teams, () => [...this.teams.values()])
     this.get(GetRequest.UsersOnline, () => this.computeStats())
 
     // Post requests
