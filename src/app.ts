@@ -43,9 +43,9 @@ export class App implements AppAttributes {
   readonly loaded
 
   readonly api = express()
-  readonly emitter: TypedEventEmitter<{
+  readonly emitter = new EventEmitter() as TypedEventEmitter<{
     [AppEvent.UserUpdated]: (user: User & { team: Team }) => void
-  }> = new EventEmitter()
+  }>
 
   readonly teams: Map<Team['id'], Team> = new Map()
   readonly users: Map<number, User & { team: Team }> = new Map()
