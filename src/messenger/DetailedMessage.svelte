@@ -54,7 +54,7 @@
   <strong>{author.name}</strong>:
   {#if deleted}
     {#if mod && !gif}
-      <span use:richText={{ body, me }} class:deleted />
+      <span use:richText={{ body, me }} class:deleted>{body}</span>
     {:else}
       <em>
         {#if gif}gif {/if}supprimé
@@ -63,7 +63,7 @@
   {:else if gif}
     <span class="gif"><Gif gif={JSON.parse(body)} /></span>
   {:else}
-    <span use:richText={{ body, me }} />
+    <span use:richText={{ body, me }}>{body}</span>
   {/if}
 </p>
 

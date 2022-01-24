@@ -11,28 +11,10 @@ import {
   ServerEvent,
   ServerToClientEvents,
 } from '../socket-api'
-import type { Message, Team, User } from '../types'
+import type { Team, User } from '../types'
 
 export default (app: App): void => {
   const { io, prisma, config, emitter, users } = app
-
-  let messages: Array<
-    Message & {
-      author: User & {
-        team: Team
-      }
-    }
-  > = []
-
-  void prisma.message
-    .findMany({
-      take: -1000,
-      include: { author: { include: { team: true } } },
-      where: { createdAt: { gte: new Date(Date.now() - 1000 * 60 * 60 * 24) } },
-    })
-    .then((res) => {
-      messages = res
-    })
 
   const changeLevel = async (
     moderator: User,
@@ -137,9 +119,6 @@ export default (app: App): void => {
         deleted ? ServerEvent.DeleteMessage : ServerEvent.RestoreMessage,
         id
       )
-      messages = messages.map((msg) =>
-        msg.id === id ? { ...msg, deleted } : msg
-      )
       await prisma.message.update({
         data: { deleted },
         where: { id },
@@ -191,7 +170,6 @@ export default (app: App): void => {
 
       if (deleted === undefined) return
 
-      messages = [...messages.slice(-999), message]
       io.emit(ServerEvent.Message, {
         ...message,
         deleted,
@@ -244,7 +222,6 @@ export default (app: App): void => {
 
       if (deleted === undefined) return
 
-      messages = [...messages.slice(-999), message]
       io.emit(ServerEvent.Message, {
         ...message,
         deleted,

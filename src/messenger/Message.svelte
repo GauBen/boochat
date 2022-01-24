@@ -68,7 +68,7 @@
   {:else if gif}
     <span class="gif"><Gif gif={JSON.parse(body)} /></span>
   {:else}
-    <span use:richText={{ body, me }} />
+    <span use:richText={{ body, me }}>{body}</span>
   {/if}
 </p>
 
