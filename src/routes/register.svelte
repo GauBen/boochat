@@ -1,14 +1,23 @@
-<script lang="ts">
+<script lang="ts" context="module">
   import { goto } from '$app/navigation'
   import { get } from '$lib/api'
-  import { onMount } from 'svelte'
+  import type { Load } from '@sveltejs/kit'
   import { PostRequest } from '../api'
   import { post } from '../fetch'
   import type { Team } from '../types'
 
+  export const load: Load = async ({ fetch }) => ({
+    props: {
+      teams: await get('/api/teams.json', { fetch }),
+    },
+  })
+</script>
+
+<script lang="ts">
+  export let teams: Team[] | undefined
+
   let name = ''
   let teamId = 0
-  let teams: Team[] | undefined
   let error: string | undefined
 
   $: color = teams?.find((team) => team.id === teamId)?.color ?? '#fff'
@@ -23,10 +32,6 @@
     localStorage.setItem('token', body.token)
     await goto('.')
   }
-
-  onMount(async () => {
-    teams = await get('/api/teams.json')
-  })
 </script>
 
 <main style="--color: {color}">
