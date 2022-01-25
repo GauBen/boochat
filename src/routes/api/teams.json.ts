@@ -1,11 +1,8 @@
-import { client } from '$lib/prisma'
-import type { Team } from '@prisma/client'
+import { getTeams } from '$lib/users-and-teams/teams'
 import type { RequestHandler } from '@sveltejs/kit'
 
-export type GetResponse = Team[]
+export type GetType = typeof getTeams
 
-export const get: RequestHandler = async (): Promise<{
-  body: GetResponse
-}> => ({
-  body: await client.team.findMany(),
+export const get: RequestHandler = async () => ({
+  body: await getTeams(),
 })

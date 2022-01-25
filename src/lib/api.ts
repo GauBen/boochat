@@ -1,12 +1,12 @@
-import type { GetResponse as GetResponseMessages } from '$routes/api/messages.json'
-import type { GetResponse as GetResponseTeams } from '$routes/api/teams.json'
+import type { GetType as GetTypeMessages } from '$routes/api/messages.json'
+import type { GetType as GetTypeTeams } from '$routes/api/teams.json'
 
-export interface Response {
-  '/api/messages.json': GetResponseMessages
-  '/api/teams.json': GetResponseTeams
+export interface ApiTypes {
+  '/api/messages.json': GetTypeMessages
+  '/api/teams.json': GetTypeTeams
 }
 
-export const get = async <T extends keyof Response>(
+export const get = <T extends keyof ApiTypes>(
   uri: T,
   {
     fetch,
@@ -16,5 +16,7 @@ export const get = async <T extends keyof Response>(
       init?: RequestInit | undefined
     ) => Promise<globalThis.Response>
   } = globalThis
-) =>
-  fetch(uri).then(async (response) => response.json()) as Promise<Response[T]>
+): ReturnType<ApiTypes[T]> =>
+  fetch(uri).then(async (response) => response.json()) as ReturnType<
+    ApiTypes[T]
+  >
