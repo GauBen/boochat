@@ -14,13 +14,13 @@
 </script>
 
 <script lang="ts">
-  export let teams: Team[] | undefined
+  export let teams: Team[] = []
 
   let name = ''
   let teamId = 0
   let error: string | undefined
 
-  $: color = teams?.find((team) => team.id === teamId)?.color ?? '#fff'
+  $: color = teams.find((team) => team.id === teamId)?.color ?? '#fff'
 
   const submit = async () => {
     const { body } = await post(PostRequest.Login, { name, teamId })
@@ -30,12 +30,12 @@
     }
 
     localStorage.setItem('token', body.token)
-    await goto('.')
+    await goto('/')
   }
 </script>
 
-<main style="--color: {color}">
-  <form on:submit|preventDefault={async () => submit()}>
+<main style:--color={color}>
+  <form on:submit|preventDefault={submit}>
     <h1>Créer un compte</h1>
     <p class="input-group">
       <label for="login">Nom d'utilisateur :</label>
@@ -43,30 +43,22 @@
     </p>
     {#if error !== undefined}<p>❌ {error}</p>{/if}
     <h2>Équipe</h2>
-    {#if teams}
-      <div class="teams">
-        {#each teams.filter(({ pickable }) => pickable) as { id, name, color, code } (id)}
-          <input
-            type="radio"
-            bind:group={teamId}
-            value={id}
-            id="team-{id}"
-            name="team"
-            required
-          />
-          <label for="team-{id}" style="--color: {color}">
-            <strong>{name}</strong>
-            <img src="/images/teams/{code}.png" alt="" />
-          </label>
-        {/each}
-      </div>
-    {:else}
-      <div class="teams">
-        <div class="placeholder" />
-        <div class="placeholder" />
-        <div class="placeholder" />
-      </div>
-    {/if}
+    <div class="teams">
+      {#each teams.filter(({ pickable }) => pickable) as { id, name, color, code } (id)}
+        <input
+          type="radio"
+          bind:group={teamId}
+          value={id}
+          id="team-{id}"
+          name="team"
+          required
+        />
+        <label for="team-{id}" style:--color={color}>
+          <strong>{name}</strong>
+          <img src="/images/teams/{code}.png" alt="" />
+        </label>
+      {/each}
+    </div>
     <footer>
       <button>Créer</button>
     </footer>
@@ -201,19 +193,6 @@
       &:hover > img {
         box-shadow: 0 0 0.5rem var(--color);
       }
-    }
-
-    > .placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      height: 8rem;
-      margin-top: 1.5rem;
-      background: linear-gradient(to right, purple, tomato);
-      border-radius: 0.25rem;
-      opacity: 0.5;
-      transition: transform 0.2s;
     }
   }
 </style>
