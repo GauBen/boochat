@@ -188,7 +188,7 @@ export default (app: App): void => {
 
       const details = await gifDetails({
         ids: [msg.slice(0, 30)],
-        key: '9HGV6JC47G6A',
+        key: process.env.VITE_TENOR_API_KEY,
       })
       if (!details?.results?.length || details.results.length === 0) return
       const gif = details.results[0]

@@ -30,7 +30,7 @@
 {#if gif}
   <div class="keyboard">
     <MobileKeyboard
-      key="9HGV6JC47G6A"
+      key={import.meta.env.VITE_TENOR_API_KEY}
       messages={{
         placeholder: 'Chercher sur Tenor',
         close: 'Aa',

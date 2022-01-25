@@ -1,20 +1,26 @@
 import type { Team, User } from '$/types'
 
-declare global {
+// Environment variables
+interface Env {
+  VITE_API_PORT: string
+  VITE_TENOR_API_KEY: string
+}
+
+global {
   namespace Express {
     interface Request {
       user: (User & { team: Team }) | undefined
     }
   }
 
-  interface ImportMeta {
-    env: {
-      VITE_API_PORT: string
-    }
+  namespace NodeJS {
+    interface ProcessEnv extends Env {}
   }
+
+  interface ImportMetaEnv extends Env {}
 }
 
-declare module 'socket.io' {
+module 'socket.io' {
   export class Socket {
     user: (User & { team: Team }) | undefined
   }
