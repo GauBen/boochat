@@ -1,14 +1,15 @@
 import { schemas } from '$/api'
 import { App } from '$/app'
 import type { ClientToServerEvents, ServerToClientEvents } from '$/socket-api'
-import createGame from '$games/connect3/index'
-import { client } from '$lib/prisma'
-import createMessenger from '$messenger/index'
+import createGame from '$games/connect3'
+import { client as prisma } from '$lib/prisma'
+import createMessenger from '$messenger'
 import type { JTDDataType } from 'ajv/dist/jtd'
 import Ajv from 'ajv/dist/jtd'
 import type { ValidateFunction } from 'ajv/dist/types'
 import chalk from 'chalk'
 import Conf from 'conf'
+import debug from 'debug'
 import express, { RequestHandler } from 'express'
 import { statSync } from 'fs'
 import { createServer } from 'http'
@@ -17,7 +18,15 @@ import path from 'path'
 import { Server } from 'socket.io'
 import { fileURLToPath } from 'url'
 
-const production = (() => {
+const log = debug('boochat')
+
+// @ts-expect-error Monkey patch to add fetch to Node.js
+globalThis.fetch = fetch
+
+// Server settings
+const port = Number(process.env.VITE_API_PORT ?? 3001)
+const version = String(process.env.npm_package_version ?? 'unknown version')
+const isProduction = (() => {
   try {
     return statSync('build').isDirectory()
   } catch {
@@ -30,73 +39,69 @@ console.log(
  ___               _         _
 | _ ) ___  ___  __| |_  __ _| |_
 | _ \\/ _ \\/ _ \\/ _| ' \\/ _\` |  _|
-|___/\\___/\\___/\\__|_||_\\__,_|\\__|
-`) + `${(process.env.npm_package_version ?? 'unknown version').padStart(33)}\n`
+|___/\\___/\\___/\\__|_||_\\__,_|\\__|`)
 )
-// @ts-expect-error Add fetch to Node.js
-globalThis.fetch = fetch
+console.log(version.padStart(33))
+console.log()
+console.log(`Set ${chalk.blue('DEBUG=boochat*')} to see log messages`)
+console.log(
+  `Starting in ${
+    isProduction
+      ? chalk.redBright('production')
+      : chalk.greenBright('development')
+  } mode`
+)
 
-const ajv = new Ajv()
+log('Logs enabled!')
 
-const port = Number(process.env.VITE_API_PORT ?? 3001)
-const expressApp = express()
-const server = createServer(expressApp)
-
-const app = new App({
-  io: new Server<ClientToServerEvents, ServerToClientEvents>(server, {
-    cors: { origin: '*' },
-    serveClient: false,
-  }),
-  prisma: client,
-  validate: Object.fromEntries(
-    Object.entries(schemas).map(([key, schema]) => [key, ajv.compile(schema)])
-  ) as {
-    [k in keyof typeof schemas]: ValidateFunction<
-      JTDDataType<typeof schemas[k]>
-    >
-  },
-  config: new Conf<{
-    chat: { slowdown: number; moderationDelay: number }
-    quizz: { question: number; answer: number; leaderboard: number }
-  }>({
-    cwd: path.join(
-      path.dirname(fileURLToPath(import.meta.url)),
-      '..',
-      'storage'
-    ),
-    configName: 'app-config',
-    defaults: {
-      chat: {
-        moderationDelay: 2000,
-        slowdown: 5000,
-      },
-      quizz: {
-        question: 15_000,
-        answer: 15_000,
-        leaderboard: 15_000,
-      },
+const config = new Conf<{
+  chat: { slowdown: number; moderationDelay: number }
+  quizz: { question: number; answer: number; leaderboard: number }
+}>({
+  cwd: path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'storage'),
+  configName: 'app-config',
+  defaults: {
+    chat: {
+      moderationDelay: 2000,
+      slowdown: 5000,
     },
-  }),
+    quizz: {
+      question: 15_000,
+      answer: 15_000,
+      leaderboard: 15_000,
+    },
+  },
+})
+const ajv = new Ajv()
+const validate = Object.fromEntries(
+  Object.entries(schemas).map(([key, schema]) => [key, ajv.compile(schema)])
+) as {
+  [k in keyof typeof schemas]: ValidateFunction<JTDDataType<typeof schemas[k]>>
+}
+const app = express()
+const server = createServer(app)
+const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
+  cors: { origin: '*' },
+  serveClient: false,
 })
 
-app.use(createMessenger, createGame)
+const app2 = new App({ io, prisma, validate, config })
 
-expressApp.use('/api', app.api)
+app2.use(createMessenger, createGame)
+app.use('/api', app2.api)
 
-if (production) {
-  console.log('> Starting in production mode')
+if (isProduction) {
   // @ts-expect-error Import from a JS file cannot be typed
   import('../build/handler.js')
     .then(({ handler }: Record<string, RequestHandler>) => {
-      expressApp.use(handler)
+      app.use(handler)
     })
     .catch((error) => {
       console.error(error)
     })
-} else {
-  console.log('> Starting in development mode')
 }
 
 server.listen(port, () => {
-  console.log(`> Running on localhost:${port}`)
+  console.log(`Running on ${chalk.blue(`*:${port}`)}`)
+  console.log()
 })
