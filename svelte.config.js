@@ -13,6 +13,11 @@ const config = {
     target: '#svelte',
     adapter: adapter({}),
     vite: {
+      server: {
+        proxy: {
+          '/socket.io/': 'http://localhost:3001',
+        },
+      },
       resolve: {
         alias: [
           { find: '$', replacement: path.resolve('src') },

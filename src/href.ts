@@ -8,7 +8,3 @@ export const api = (method: string): string =>
       return root
     })(new URL(location.origin))
   ).href
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const SOCKET_API =
-  process.env.NODE_ENV === 'production' ? '/' : `:${port}`

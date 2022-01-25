@@ -3,7 +3,6 @@
   import { onMount } from 'svelte'
   import { get } from '$lib/api'
   import Boo from '../../games/connect3/Boo.svelte'
-  import { SOCKET_API } from '../../href'
   import type { Socket } from '../../socket-api'
   import type { Team } from '../../types'
 
@@ -15,7 +14,7 @@
       teams = new Map(response.map((team) => [team.id, team]))
     })
 
-    socket = io(SOCKET_API)
+    socket = io()
   })
 </script>
 

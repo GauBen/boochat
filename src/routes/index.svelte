@@ -9,7 +9,6 @@
   import Admin from '../components/Admin.svelte'
   import GameController from '../components/GameController.svelte'
   import { post } from '../fetch'
-  import { SOCKET_API } from '../href'
   import Messenger from '../messenger/Messenger.svelte'
   import type { Socket } from '../socket-api'
   import { ServerEvent } from '../socket-api'
@@ -52,7 +51,7 @@
       })
     }
 
-    socket = io(SOCKET_API, {
+    socket = io({
       auth: { token },
     })
 

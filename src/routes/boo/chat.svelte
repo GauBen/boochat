@@ -1,24 +1,41 @@
-<script lang="ts">
+<script lang="ts" context="module">
+  import { get } from '$lib/api'
+  import type { Load } from '@sveltejs/kit'
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
-  import { GetRequest } from '../../api'
-  import { get } from '../../fetch'
-  import { SOCKET_API } from '../../href'
   import Messages from '../../messenger/Messages.svelte'
   import { Thread, Type } from '../../messenger/types'
   import type { Socket } from '../../socket-api'
   import { ServerEvent } from '../../socket-api'
-  import type {
-    DetailedMessage,
-    MessageUser,
-    RichMessage,
-    Team,
-  } from '../../types'
-  import { get as newGet } from '$lib/api'
+  import type { MessageUser, RichMessage, Team } from '../../types'
+
+  export const load: Load = async ({ fetch }) => {
+    const [teams, thread] = await Promise.all([
+      get('/api/teams.json', { fetch }).then(
+        (response) => new Map(response.map((team) => [team.id, team]))
+      ),
+      get('/api/messages.json', { fetch }).then((response) =>
+        response.messages.map((message) => ({
+          type: Type.Detailed,
+          message,
+        }))
+      ),
+    ])
+
+    return {
+      props: {
+        teams,
+        thread,
+      },
+    }
+  }
+</script>
+
+<script lang="ts">
+  export let teams: Map<Team['id'], Team> = new Map()
+  export let thread: Thread = []
 
   let socket: Socket | undefined
-  let teams: Map<Team['id'], Team> = new Map()
-  let thread: Thread = []
   const users = new Map<MessageUser['id'], MessageUser>()
 
   $: messages = new Map(
@@ -51,28 +68,7 @@
   }
 
   onMount(async () => {
-    void newGet('/api/teams.json').then((response) => {
-      teams = new Map(response.map((team) => [team.id, team]))
-    })
-
-    void get(GetRequest.Messages).then(({ body }) => {
-      // Load messages above notices
-      thread = [
-        ...body.messages.map((message) => {
-          updateUsers(message)
-          // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-          return {
-            type: body.type,
-            message,
-          } as
-            | { type: Type.Basic; message: RichMessage }
-            | { type: Type.Detailed; message: DetailedMessage }
-        }),
-        ...thread,
-      ]
-    })
-
-    socket = io(SOCKET_API)
+    socket = io()
 
     socket.on(ServerEvent.Message, async (message) => {
       updateUsers(message)
