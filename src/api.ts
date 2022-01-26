@@ -18,7 +18,6 @@ export enum GetRequest {
 }
 
 export enum PostRequest {
-  Login = '/login',
   Me = '/me',
   SetupGame = '/setup-game',
   QuizzAnswer = '/quizz-answer',
@@ -26,12 +25,6 @@ export enum PostRequest {
 }
 
 export const schemas = {
-  [PostRequest.Login]: {
-    properties: {
-      name: { type: 'string' },
-      teamId: { type: 'int32' },
-    },
-  },
   [PostRequest.Me]: {
     properties: {
       token: { type: 'string' },
@@ -69,7 +62,6 @@ export interface Response {
       online: number
     }>
   }
-  [PostRequest.Login]: { token: string } | { error: string }
   [PostRequest.Me]: (User & { team: Team }) | false
   [PostRequest.SetupGame]: void
   [PostRequest.QuizzAnswer]: void

@@ -6,7 +6,6 @@ import type Conf from 'conf'
 import cors from 'cors'
 import EventEmitter from 'events'
 import express, { json } from 'express'
-import { nanoid } from 'nanoid'
 import type { Server, Socket } from 'socket.io'
 import type TypedEventEmitter from 'typed-emitter'
 import {
@@ -93,29 +92,6 @@ export class App implements AppAttributes {
       PostRequest.Me,
       async ({ token }) => (await this.getUserFromToken(token)) ?? false
     )
-
-    this.post(PostRequest.Login, async ({ name, teamId }) => {
-      const team = this.teams.get(teamId)
-
-      if (!team || !team.pickable) throw new Error("Cette équipe n'existe pas")
-
-      if (!/^\w{2,20}$/.test(name))
-        throw new Error('A-Z, 0-9 et _ uniquement, 2 à 20 caractères.')
-
-      const found = await prisma.user.findUnique({ where: { name } })
-      if (found) throw new Error('Ce compte existe déjà')
-
-      const token = nanoid()
-      const user = await prisma.user.create({
-        data: { name, teamId, token },
-        include: { team: true },
-      })
-
-      this.users.set(user.id, user)
-      this.tokens.set(token, user.id)
-
-      return { token }
-    })
 
     // Socket events
     this.io.on('connect', (socket) => {
