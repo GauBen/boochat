@@ -6,7 +6,7 @@ export interface ApiTypes {
   '/api/teams.json': GetTypeTeams
 }
 
-export const get = <T extends keyof ApiTypes>(
+export const get = async <T extends keyof ApiTypes>(
   uri: T,
   {
     fetch,
@@ -16,7 +16,8 @@ export const get = <T extends keyof ApiTypes>(
       init?: RequestInit | undefined
     ) => Promise<globalThis.Response>
   } = globalThis
-): ReturnType<ApiTypes[T]> =>
-  fetch(uri).then(async (response) => response.json()) as ReturnType<
-    ApiTypes[T]
-  >
+): Promise<Awaited<ReturnType<ApiTypes[T]>>> => {
+  const response = await fetch(uri)
+  if (response.status >= 400) throw new Error(response.statusText)
+  return (await response.json()) as Awaited<ReturnType<ApiTypes[T]>>
+}
