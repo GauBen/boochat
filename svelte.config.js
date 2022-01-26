@@ -15,7 +15,10 @@ const config = {
     vite: {
       server: {
         proxy: {
-          '/socket.io/': 'http://localhost:3001',
+          '/socket.io': {
+            target: 'ws://localhost:3001',
+            ws: true,
+          },
         },
       },
       resolve: {
