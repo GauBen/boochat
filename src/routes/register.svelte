@@ -1,9 +1,7 @@
 <script lang="ts" context="module">
   import { goto } from '$app/navigation'
-  import { get } from '$lib/api'
+  import { get, post } from '$lib/api'
   import type { Load } from '@sveltejs/kit'
-  import { PostRequest } from '../api'
-  import { post } from '../fetch'
   import type { Team } from '../types'
 
   export const load: Load = async ({ fetch }) => ({
@@ -23,14 +21,16 @@
   $: color = teams.find((team) => team.id === teamId)?.color ?? '#fff'
 
   const submit = async () => {
-    const { body } = await post(PostRequest.Login, { name, teamId })
-    if ('error' in body) {
-      error = body.error ?? 'Le serveur a rencontré une erreur...'
-      return
+    try {
+      const { token } = await post('/api/register.json', { name, teamId })
+      localStorage.setItem('token', token)
+      await goto('/')
+    } catch (httpError: unknown) {
+      error =
+        httpError instanceof Error
+          ? httpError.message
+          : 'Le serveur a rencontré une erreur...'
     }
-
-    localStorage.setItem('token', body.token)
-    await goto('/')
   }
 </script>
 
