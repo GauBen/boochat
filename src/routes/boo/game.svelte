@@ -1,19 +1,27 @@
-<script lang="ts">
+<script lang="ts" context="module">
+  import { get } from '$lib/api'
+  import type { GetTeams } from '$routes/api/teams.json'
+  import type { Load } from '@sveltejs/kit'
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
-  import { get } from '$lib/api'
   import Boo from '../../games/connect3/Boo.svelte'
   import type { Socket } from '../../socket-api'
   import type { Team } from '../../types'
 
+  export const load: Load = async ({ fetch }) => ({
+    props: {
+      team: await get<GetTeams>('/api/teams.json', { fetch }).then(
+        (response) => new Map(response.map((team) => [team.id, team]))
+      ),
+    },
+  })
+</script>
+
+<script lang="ts">
+  export let teams: Map<Team['id'], Team> = new Map()
   let socket: Socket | undefined
-  let teams: Map<Team['id'], Team> = new Map()
 
   onMount(async () => {
-    void get('/api/teams.json').then((response) => {
-      teams = new Map(response.map((team) => [team.id, team]))
-    })
-
     socket = io()
   })
 </script>

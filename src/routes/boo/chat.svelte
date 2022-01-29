@@ -1,5 +1,7 @@
 <script lang="ts" context="module">
   import { get } from '$lib/api'
+  import type { GetMessages } from '$routes/api/messages.json'
+  import type { GetTeams } from '$routes/api/teams.json'
   import type { Load } from '@sveltejs/kit'
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
@@ -11,10 +13,10 @@
 
   export const load: Load = async ({ fetch }) => {
     const [teams, thread] = await Promise.all([
-      get('/api/teams.json', { fetch }).then(
+      get<GetTeams>('/api/teams.json', { fetch }).then(
         (response) => new Map(response.map((team) => [team.id, team]))
       ),
-      get('/api/messages.json', { fetch }).then((response) =>
+      get<GetMessages>('/api/messages.json', { fetch }).then((response) =>
         response.messages.map((message) => ({
           type: Type.Detailed,
           message,

@@ -1,40 +1,27 @@
-import type { GetType as GetTypeMessages } from '$routes/api/messages.json'
-import type { PostType as PostTypeRegister } from '$routes/api/register.json'
-import type { GetType as GetTypeTeams } from '$routes/api/teams.json'
-
-export interface GetApiTypes {
-  '/api/messages.json': GetTypeMessages
-  '/api/teams.json': GetTypeTeams
-}
-
-export interface PostApiTypes {
-  '/api/register.json': PostTypeRegister
-}
-
 /** Sends a typed GET request. */
-export const get = async <T extends keyof GetApiTypes>(
-  uri: T,
+export const get = async <T extends () => unknown>(
+  uri: string,
   {
     fetch,
   }: {
     fetch: typeof globalThis.fetch
   } = globalThis
-): Promise<Awaited<ReturnType<GetApiTypes[T]>>> => {
+): Promise<Awaited<ReturnType<T>>> => {
   const response = await fetch(uri)
   if (response.status >= 400) throw new Error(response.statusText)
-  return (await response.json()) as Awaited<ReturnType<GetApiTypes[T]>>
+  return (await response.json()) as Awaited<ReturnType<T>>
 }
 
 /** Sends a typed POST request. */
-export const post = async <T extends keyof PostApiTypes>(
+export const post = async <T extends (body: never) => unknown>(
   uri: string,
-  body: unknown = {},
+  body: T extends (body: infer U) => unknown ? U : never,
   {
     fetch,
   }: {
     fetch: typeof globalThis.fetch
   } = globalThis
-): Promise<Awaited<ReturnType<PostApiTypes[T]>>> => {
+): Promise<ReturnType<T>> => {
   const response = await fetch(uri, {
     method: 'POST',
     headers: {
@@ -43,5 +30,6 @@ export const post = async <T extends keyof PostApiTypes>(
     body: JSON.stringify(body),
   })
   if (response.status >= 400) throw new Error(await response.text())
-  return (await response.json()) as Awaited<ReturnType<PostApiTypes[T]>>
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return response.json()
 }

@@ -1,7 +1,7 @@
 import { postFactory } from '$lib/handler-factory'
 import { register } from '$lib/users-and-teams/users'
 
-export type PostType = typeof register
+export type PostRegister = typeof register
 
 export const post = postFactory(
   {

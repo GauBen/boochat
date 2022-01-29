@@ -3,10 +3,12 @@
   import { get, post } from '$lib/api'
   import type { Load } from '@sveltejs/kit'
   import type { Team } from '../types'
+  import type { PostRegister } from './api/register.json'
+  import type { GetTeams } from './api/teams.json'
 
   export const load: Load = async ({ fetch }) => ({
     props: {
-      teams: await get('/api/teams.json', { fetch }),
+      teams: await get<GetTeams>('/api/teams.json', { fetch }),
     },
   })
 </script>
@@ -22,7 +24,10 @@
 
   const submit = async () => {
     try {
-      const { token } = await post('/api/register.json', { name, teamId })
+      const { token } = await post<PostRegister>('/api/register.json', {
+        name,
+        teamId,
+      })
       localStorage.setItem('token', token)
       await goto('/')
     } catch (httpError: unknown) {
