@@ -128,12 +128,15 @@
 </main>
 
 <style lang="scss">
+  :global(html) {
+    color: #fff;
+    background: #222;
+  }
+
   main {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    color: #fff;
-    background: #222;
   }
 
   nav {
