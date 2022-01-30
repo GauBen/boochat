@@ -1,9 +1,7 @@
 import { Level } from '$/api'
 import type { PrismaClient, Team, User } from '@prisma/client'
 import type Conf from 'conf'
-import cors from 'cors'
 import EventEmitter from 'events'
-import express, { json } from 'express'
 import type { Server, Socket } from 'socket.io'
 import type TypedEventEmitter from 'typed-emitter'
 import {
@@ -32,7 +30,6 @@ export class App implements AppAttributes {
   readonly config
   readonly loaded
 
-  readonly api = express()
   readonly emitter = new EventEmitter() as TypedEventEmitter<{
     [AppEvent.UserUpdated]: (user: User & { team: Team }) => void
   }>
@@ -58,16 +55,6 @@ export class App implements AppAttributes {
     })
 
     // Register middlewares
-    this.api.use(json(), cors(), async (req, _res, next) => {
-      const { authorization: auth } = req.headers
-
-      if (auth?.startsWith('Token ')) {
-        const token = auth.slice(6)
-        req.user = await this.getUserFromToken(token)
-      }
-
-      next()
-    })
     this.io.use(async (socket, next) => {
       const { token } = socket.handshake.auth
       socket.user = await this.getUserFromToken(token)

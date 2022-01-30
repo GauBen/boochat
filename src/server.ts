@@ -57,7 +57,6 @@ const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
 const app2 = new App({ io, prisma, config })
 
 app2.use(createMessenger)
-app.use('/api', app2.api)
 
 if (isProduction) {
   // @ts-expect-error Import from a JS file cannot be typed
