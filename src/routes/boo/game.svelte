@@ -33,10 +33,10 @@
 <style lang="scss">
   main {
     display: flex;
+    overflow: hidden;
+    height: 100vh;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    overflow: hidden;
     color: #fff;
     font-weight: bold;
     text-shadow: 0 0 0.25rem #000;

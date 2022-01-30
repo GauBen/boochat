@@ -46,7 +46,7 @@
 >
   {#if state === undefined}Chargement...{:else}
     <p class="turn">
-      Tour de l'équipe <strong style="color: {playingTeam?.color}">
+      Tour de l'équipe <strong style:color={playingTeam?.color}>
         {playingTeam?.name}
       </strong>
     </p>
@@ -95,12 +95,12 @@
 <style lang="scss">
   .controller {
     display: flex;
+    overflow: auto;
+    width: 100%;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
     padding: 1rem;
-    overflow: auto;
   }
 
   .turn {
@@ -109,17 +109,17 @@
 
   .row {
     display: flex;
-    gap: 1em;
     align-items: center;
     justify-content: center;
+    gap: 1em;
 
     > button {
       border: 0;
     }
 
     > span {
-      font-weight: bold;
       font-size: 5em;
+      font-weight: bold;
       line-height: 1;
     }
   }
@@ -131,13 +131,13 @@
 
   [type='submit'] {
     padding: 0.5rem 2rem;
-    color: #222;
-    font-weight: bold;
+    border: 0;
     background: linear-gradient(110deg, var(--color) 50%, #ccc 50.1%);
     background-position: 100% 100%;
     background-size: 250% 100%;
-    border: 0;
     border-radius: 0.25rem;
+    color: #222;
+    font-weight: bold;
     transition: background-position 0.5s, box-shadow 0.5s;
 
     &:hover,

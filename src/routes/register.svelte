@@ -73,29 +73,29 @@
 <style lang="scss">
   main {
     display: flex;
+    min-height: 100vh;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
     background-color: var(--color, white);
     transition: background-color 0.5s;
   }
 
   form {
-    flex: 1;
     max-width: 3 * 8rem + 6rem;
-    margin: 1rem;
+    flex: 1;
     padding: 1rem 2rem;
-    color: white;
+    margin: 1rem;
     background: #222;
     border-radius: 0.25rem;
-    box-shadow: 0 0 3rem rgba(0, 0, 0, 0.5), 0 0 1rem rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 3rem rgb(0 0 0 / 50%), 0 0 1rem rgb(0 0 0 / 20%);
+    color: white;
   }
 
   h1 {
     margin: 1rem 0 2rem;
+    border-block-end: 1px solid #bbb;
     padding-block-end: 2rem;
     text-align: center;
-    border-block-end: 1px solid #bbb;
   }
 
   h2 {
@@ -104,19 +104,19 @@
 
   footer {
     margin: 3rem 0 1rem;
-    padding-block-start: 2rem;
     border-block-start: 1px solid #bbb;
+    padding-block-start: 2rem;
     text-align: center;
 
     > button {
       padding: 0.5rem 2rem;
-      color: #222;
-      font-weight: bold;
+      border: 0;
       background: linear-gradient(110deg, var(--color) 50%, #ccc 50.1%);
       background-position: 100% 100%;
       background-size: 250% 100%;
-      border: 0;
       border-radius: 0.25rem;
+      color: #222;
+      font-weight: bold;
       transition: background-position 0.5s, box-shadow 0.5s;
 
       &:hover,
@@ -133,15 +133,15 @@
     gap: 0.25rem;
 
     > label {
-      font-weight: bold;
       font-size: 0.75rem;
+      font-weight: bold;
       text-transform: uppercase;
     }
 
     > input {
-      justify-self: stretch;
       border: 1px solid #bbb;
       border-radius: 0.25rem;
+      justify-self: stretch;
 
       &:focus {
         background-color: #333;
@@ -158,15 +158,15 @@
 
   .teams {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
-    gap: 1rem;
     align-items: center;
     justify-content: space-evenly;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
 
     > input {
       position: absolute;
-      height: 0;
       overflow: hidden;
+      height: 0;
       opacity: 0;
 
       &:focus + label > img {
@@ -189,9 +189,9 @@
         width: 100%;
         height: 8rem;
         padding: 0.5rem;
-        object-fit: contain;
         background-color: var(--color);
         border-radius: 0.25rem;
+        object-fit: contain;
         transition: box-shadow 0.5s;
       }
 

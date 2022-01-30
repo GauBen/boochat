@@ -115,7 +115,7 @@
   {:else if state === State.Answer}
     <table>
       {#each questionScores as { team, ratio, best }}
-        <tr style="--color: {team.color}">
+        <tr style:--color={team.color}>
           <td>
             <img
               src="/images/badges/{team.code}.png"
@@ -124,7 +124,7 @@
             />
             <strong>{team.name}</strong>
           </td>
-          <td style="text-align:right">{(ratio * 100).toFixed(1)}%</td>
+          <td style="text-align: right;">{(ratio * 100).toFixed(1)}%</td>
           <td>
             {#if best}
               <strong>+ {points} point{points > 1 ? 's' : ''}</strong>
@@ -135,7 +135,7 @@
     </table>
   {:else if state === State.Leaderboard}
     {#each totalScores as { team, points }}
-      <tr style="--color: {team.color}">
+      <tr style:--color={team.color}>
         <td>
           <img
             src="/images/badges/{team.code}.png"
@@ -144,7 +144,7 @@
           />
           <strong>{team.name}</strong>
         </td>
-        <td style="text-align:right">{points}</td>
+        <td style="text-align: right;">{points}</td>
         <td>point{points > 1 ? 's' : ''}</td>
       </tr>
     {/each}
@@ -174,9 +174,9 @@
   .badge {
     width: 1.5em;
     height: 1.5em;
-    vertical-align: bottom;
     background-color: var(--color);
     border-radius: 0.25rem;
+    vertical-align: bottom;
   }
 
   .boo {

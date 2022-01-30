@@ -95,7 +95,7 @@
   <title>Boochat</title>
 </svelte:head>
 
-<main style="--color: {me ? me.team.color : '#fff'}">
+<main style:--color={me ? me.team.color : '#fff'}>
   <nav>
     <div class="tab">
       <input type="radio" bind:group={$nav} value="0" id="chat" />
@@ -129,23 +129,23 @@
 
 <style lang="scss">
   :global(html) {
-    color: #fff;
     background: #222;
+    color: #fff;
   }
 
   main {
     display: flex;
-    flex-direction: column;
     height: 100vh;
+    flex-direction: column;
   }
 
   nav {
     display: flex;
-    flex-wrap: nowrap;
-    gap: 1em;
-    padding: 1em;
     overflow: auto;
+    flex-wrap: nowrap;
+    padding: 1em;
     box-shadow: 0 0 0.5em #111;
+    gap: 1em;
   }
 
   .tab {
@@ -160,22 +160,22 @@
     label {
       display: block;
       padding: 0.5em;
-      color: #222;
-      font-weight: bold;
-      text-align: center;
+      border: 0;
       background: linear-gradient(110deg, var(--color) 50%, #ccc 50.1%);
       background-position: 100% 100%;
       background-size: 250% 100%;
-      border: 0;
       border-radius: 0.25rem;
+      color: #222;
+      font-weight: bold;
+      text-align: center;
       transition: background-position 0.5s, box-shadow 0.5s;
     }
 
     input:checked + label {
-      color: #222;
-      font-weight: bold;
       background-position: 0% 100%;
       box-shadow: 0 0 0.5rem var(--color);
+      color: #222;
+      font-weight: bold;
     }
 
     input:focus + label {
@@ -185,15 +185,15 @@
 
   .app {
     display: flex;
-    flex: 1;
     overflow: hidden;
+    flex: 1;
     scroll-snap-type: y mandatory;
 
     > section {
       display: flex;
-      flex-shrink: 0;
       width: 100vw;
       height: 100%;
+      flex-shrink: 0;
       scroll-snap-align: start;
     }
   }
@@ -208,8 +208,8 @@
     }
 
     .app > section {
-      flex: 1;
       width: auto;
+      flex: 1;
     }
   }
 </style>

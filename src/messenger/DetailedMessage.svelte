@@ -20,7 +20,7 @@
   const dispatch = createEventDispatcher<{ delete: void; restore: void }>()
 </script>
 
-<p class:invisible={!visible} style="--color:{color}">
+<p class:invisible={!visible} style:--color={color}>
   {#if mod}
     <button
       on:click={() => {
@@ -90,17 +90,17 @@
   img {
     width: 1.5em;
     height: 1.5em;
-    vertical-align: bottom;
     background-color: var(--color);
     border-radius: 0.25rem;
+    vertical-align: bottom;
   }
 
   button {
     width: 1.5rem;
     height: 1.5rem;
     padding: 0;
-    vertical-align: bottom;
     border: 0;
+    vertical-align: bottom;
 
     > svg {
       width: 1rem;
@@ -121,9 +121,9 @@
     display: inline-block;
     width: 1.5em;
     height: 1.5em;
-    vertical-align: bottom;
     background-color: var(--color);
     border-radius: 0.25rem;
+    vertical-align: bottom;
   }
 
   .invisible {
@@ -136,9 +136,9 @@
 
   .gif {
     display: block;
+    overflow: hidden;
     height: 8em;
     margin-top: 0.25em;
-    overflow: hidden;
 
     :global(video) {
       width: auto;

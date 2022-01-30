@@ -145,17 +145,17 @@
 <style lang="scss">
   button {
     position: relative;
+    overflow: hidden;
     flex-shrink: 0;
     padding: 0.5em;
-    overflow: hidden;
-    color: #222;
-    background: #fff;
     border: 0;
+    background: #fff;
     border-radius: 0.5em;
+    color: #222;
 
     &:focus {
-      outline: 0;
       box-shadow: 0 0 0.5rem var(--color);
+      outline: 0;
     }
 
     &:active {
@@ -163,37 +163,37 @@
     }
 
     &:disabled {
-      color: #666;
       background-color: #ccc;
+      color: #666;
     }
   }
 
   form {
     position: relative;
     display: flex;
-    gap: 0.5em;
     padding: 1em;
+    gap: 0.5em;
 
     input {
       flex: 1;
       padding: 0.5em;
-      color: #222;
+      border: 0;
       background: linear-gradient(to right, #fff 50%, transparent 50.1%);
       background-color: #fff;
       background-position: 100% 100%;
       background-size: 200% 100%;
-      border: 0;
       border-radius: 0.5em;
+      color: #222;
 
       &:focus {
-        outline: 0;
         box-shadow: 0 0 0.5rem var(--color);
+        outline: 0;
       }
 
       &.sending {
         animation: sending var(--delay) ease-out;
-        animation-play-state: running;
         animation-iteration-count: 1;
+        animation-play-state: running;
       }
     }
   }
@@ -213,14 +213,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #666;
     background-color: #ccc;
+    color: #666;
   }
 
   .keyboard {
-    margin-top: 0.5rem;
-    padding: 1em;
     overflow: auto;
+    padding: 1em;
+    margin-top: 0.5rem;
     background-color: #333;
     border-radius: 0.75rem 0.75em 0 0;
     box-shadow: 0 0 0 1px #444, 0 0 0.5em #111;
@@ -229,20 +229,21 @@
       .row > button {
         padding: 0.25em 0.5em;
       }
+
       .row > input {
         padding: 0.25em;
       }
 
       .row > button,
       .row > input {
-        color: #222;
-        background-color: #fff;
         border: 0;
+        background-color: #fff;
         border-radius: 0.5em;
+        color: #222;
 
         &:focus {
-          outline: 0;
           box-shadow: 0 0 0.5rem var(--color);
+          outline: 0;
         }
       }
     }
@@ -252,9 +253,11 @@
     0% {
       background-position: 100% 100%;
     }
+
     5% {
       background-color: var(--color);
     }
+
     100% {
       background-color: var(--color);
       background-position: 0% 100%;

@@ -73,14 +73,15 @@
 
 <style lang="scss">
   * {
-    margin: 0;
     padding: 0;
+    margin: 0;
   }
 
   table {
     margin: auto;
     margin-top: 30vh;
   }
+
   @media (orientation: landscape) {
     button {
       width: 10vh;
@@ -133,9 +134,11 @@
 
   td {
     text-align: center;
+
     &#r {
       text-align: right;
     }
+
     &#start,
     &#select,
     &#l,

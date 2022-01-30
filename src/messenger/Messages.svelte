@@ -64,11 +64,11 @@
 <style lang="scss">
   .messages {
     display: flex;
+    overflow: auto;
     flex-basis: 0%;
     flex-direction: column;
     flex-grow: 1;
     padding: 0 1em;
-    overflow: auto;
 
     // `gap` is not supported by OBS webviews yet
     // gap: 0.5rem;

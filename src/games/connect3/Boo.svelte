@@ -116,7 +116,7 @@
                       class:blink={blinkingCells.has(
                         Number(row) + Number(column) * state.grid.length
                       )}
-                      style="--color: {teams.get(cell)?.color}"
+                      style:--color={teams.get(cell)?.color}
                       in:bounce
                     />
                   {/key}
@@ -134,7 +134,7 @@
     </table>
     {#if playingTeam !== undefined}
       <div class="turn">
-        Tour de l'équipe <strong style="color: {playingTeam.color}">
+        Tour de l'équipe <strong style="color: {playingTeam.color};">
           {playingTeam.name}
         </strong>
       </div>
@@ -177,11 +177,11 @@
 
     &::before {
       position: absolute;
+      z-index: 1;
       top: -1em;
       right: -1em;
       bottom: -1em;
       left: -1em;
-      z-index: 1;
       border: 1.25em solid #333;
       border-radius: 50%;
       content: '';
@@ -201,6 +201,7 @@
     height: 100%;
     background-color: var(--color);
     border-radius: 50%;
+
     // animation: 1s bounce 1 cubic-bezier(0.31, 0.02, 0.69, 0.71);
   }
 
@@ -208,23 +209,12 @@
     animation: 1s blink infinite;
   }
 
-  // @keyframes bounce {
-  //   0% {
-  //     transform: translateY(-100vh);
-  //   }
-  //   80% {
-  //     transform: translateY(0vh);
-  //   }
-  //   90% {
-  //     transform: translateY(-5vh);
-  //   }
-  // }
-
   @keyframes blink {
     0%,
     50% {
       opacity: 0;
     }
+
     50.1%,
     100% {
       opacity: 1;

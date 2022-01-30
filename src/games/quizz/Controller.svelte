@@ -135,9 +135,9 @@
 
 <style lang="scss">
   .controller {
+    overflow: auto;
     width: 100%;
     padding: 1rem;
-    overflow: auto;
   }
 
   .question {
@@ -147,6 +147,7 @@
       text-align: center;
       text-transform: uppercase;
     }
+
     > .points {
       margin-top: 0;
       text-align: center;
@@ -156,8 +157,8 @@
   .answers {
     position: relative;
     display: grid;
-    grid-template-columns: 1fr;
     gap: 1rem;
+    grid-template-columns: 1fr;
 
     > input {
       position: absolute;
@@ -167,10 +168,10 @@
 
     > label {
       padding: 1rem;
-      color: #222;
-      font-weight: bold;
       background: #ccc;
       border-radius: 0.25rem;
+      color: #222;
+      font-weight: bold;
     }
 
     > input:focus + label {
@@ -187,16 +188,16 @@
     }
 
     > input + label.correct {
-      background: rgb(79, 248, 108);
+      background: rgb(79 248 108);
     }
 
     > input:checked + label.correct {
-      box-shadow: 0 0.25rem 0.25rem inset rgb(54, 223, 82);
+      box-shadow: 0 0.25rem 0.25rem inset rgb(54 223 82);
     }
 
     > input:checked + label.incorrect {
-      background: rgb(245, 114, 104);
-      box-shadow: 0 0.25rem 0.25rem inset rgb(199, 59, 49);
+      background: rgb(245 114 104);
+      box-shadow: 0 0.25rem 0.25rem inset rgb(199 59 49);
     }
   }
 </style>

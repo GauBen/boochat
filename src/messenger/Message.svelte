@@ -56,7 +56,7 @@
   } = teams.get(author.teamId) ?? { color: '#fff', name: '', code: '' })
 </script>
 
-<p class:invisible={!visible} style="--color:{color}">
+<p class:invisible={!visible} style:--color={color}>
   {#if teamCode}
     <img src="/images/badges/{teamCode}.png" alt={teamName} />
   {:else}
@@ -95,9 +95,9 @@
   img {
     width: 1.5em;
     height: 1.5em;
-    vertical-align: bottom;
     background-color: var(--color);
     border-radius: 0.25rem;
+    vertical-align: bottom;
   }
 
   strong {
@@ -108,16 +108,16 @@
     display: inline-block;
     width: 1.5em;
     height: 1.5em;
-    vertical-align: bottom;
     background-color: var(--color);
     border-radius: 0.25rem;
+    vertical-align: bottom;
   }
 
   .gif {
     display: block;
+    overflow: hidden;
     height: 8em;
     margin-top: 0.25em;
-    overflow: hidden;
 
     :global(video) {
       width: auto;

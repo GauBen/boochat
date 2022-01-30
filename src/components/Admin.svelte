@@ -38,7 +38,7 @@
     <p>{stats.online} personne(s) en ligne / {stats.connected} connectée(s)</p>
     <div class="scrollable">
       {#each stats.users as { user, online } (user.id)}
-        <strong style="color: {user.team.color}">
+        <strong style:color={user.team.color}>
           {user.name} (lvl {user.level})
         </strong>
         {online} session(s)<br />
@@ -53,7 +53,7 @@
 
 <style lang="scss">
   .scrollable {
-    max-height: 50vh;
     overflow: auto;
+    max-height: 50vh;
   }
 </style>

@@ -1,12 +1,13 @@
 {
   "extends": [
-    "stylelint-config-recommended",
-    "stylelint-config-rational-order"
+    "stylelint-config-standard-scss",
+    "stylelint-config-idiomatic-order"
   ],
   "rules": {
     "selector-pseudo-class-no-unknown": null,
     "no-invalid-position-at-import-rule": null,
-    "at-rule-no-unknown": null
+    "at-rule-no-unknown": null,
+    "string-quotes": "single"
   },
   "overrides": [
     {

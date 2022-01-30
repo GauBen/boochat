@@ -97,9 +97,9 @@
 <style lang="scss">
   main {
     display: flex;
-    flex-direction: column;
-    height: 100vh;
     overflow: hidden;
+    height: 100vh;
+    flex-direction: column;
     color: #fff;
     font-weight: bold;
     text-shadow: 0 0 0.25rem #000;

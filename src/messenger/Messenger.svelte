@@ -216,9 +216,9 @@
 <style lang="scss">
   .messenger {
     display: flex;
+    max-width: 100vw;
     flex: 1;
     flex-direction: column;
-    max-width: 100vw;
   }
 
   a {
@@ -231,16 +231,16 @@
 
   .me {
     display: flex;
-    gap: 1em;
     align-items: center;
     justify-content: center;
+    gap: 1em;
 
     img {
       width: 1.5em;
       height: 1.5em;
-      vertical-align: bottom;
       background-color: var(--color);
       border-radius: 0.25rem;
+      vertical-align: bottom;
     }
 
     strong {
