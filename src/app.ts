@@ -1,6 +1,6 @@
 import { Level } from '$/api'
-import type { PrismaClient, Team, User } from '@prisma/client'
-import type Conf from 'conf'
+import { prisma } from '$lib/prisma'
+import type { Team, User } from '@prisma/client'
 import EventEmitter from 'events'
 import type { Server, Socket } from 'socket.io'
 import type TypedEventEmitter from 'typed-emitter'
@@ -13,11 +13,6 @@ import {
 
 export interface AppAttributes {
   readonly io: Server<ClientToServerEvents, ServerToClientEvents>
-  readonly prisma: PrismaClient
-  readonly config: Conf<{
-    chat: { slowdown: number; moderationDelay: number }
-    quizz: { question: number; answer: number; leaderboard: number }
-  }>
 }
 
 export enum AppEvent {
@@ -26,8 +21,6 @@ export enum AppEvent {
 
 export class App implements AppAttributes {
   readonly io
-  readonly prisma
-  readonly config
   readonly loaded
 
   readonly emitter = new EventEmitter() as TypedEventEmitter<{
@@ -38,10 +31,8 @@ export class App implements AppAttributes {
   readonly users: Map<number, User & { team: Team }> = new Map()
   readonly tokens: Map<string, number> = new Map()
 
-  constructor({ io, prisma, config }: AppAttributes) {
+  constructor({ io }: AppAttributes) {
     this.io = io
-    this.prisma = prisma
-    this.config = config
 
     let markAsLoaded: (_: void | PromiseLike<void>) => void
     this.loaded = new Promise<void>((resolve) => {
@@ -142,7 +133,7 @@ export class App implements AppAttributes {
   ): Promise<(User & { team: Team }) | undefined> {
     const cache = this.users.get(this.tokens.get(token) ?? -1)
     if (cache) return cache
-    const user = await this.prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { token: `${token}` },
       include: { team: true },
     })

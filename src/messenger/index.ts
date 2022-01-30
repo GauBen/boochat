@@ -1,6 +1,8 @@
 import { Level } from '$/api'
 import type { App } from '$/app'
 import { AppEvent } from '$/app'
+import { config } from '$lib/config'
+import { prisma } from '$lib/prisma'
 import { check } from 'p4ssw0rd'
 import type { Socket } from 'socket.io'
 import { gifDetails } from 'svelte-tenor/api'
@@ -14,7 +16,7 @@ import {
 import type { Team, User } from '../types'
 
 export default (app: App): void => {
-  const { io, prisma, config, emitter, users } = app
+  const { io, emitter, users } = app
 
   const changeLevel = async (
     moderator: User,
