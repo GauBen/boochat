@@ -1,4 +1,4 @@
-import { client } from '$lib/prisma'
+import { prisma } from '$lib/prisma'
 import { Type } from '$messenger/types'
 
 export type GetResponse = {
@@ -22,7 +22,7 @@ export type GetResponse = {
 export const getMessages = async (): Promise<GetResponse> => ({
   type: Type.Detailed,
   messages: (
-    await client.message.findMany({
+    await prisma.message.findMany({
       take: -1000,
       include: { author: { select: { id: true, name: true, teamId: true } } },
     })

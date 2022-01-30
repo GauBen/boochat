@@ -1,7 +1,7 @@
 import { App } from '$/app'
 import type { ClientToServerEvents, ServerToClientEvents } from '$/socket-api'
 import { config } from '$lib/config'
-import { client as prisma } from '$lib/prisma'
+import { prisma } from '$lib/prisma'
 import createMessenger from '$messenger'
 import chalk from 'chalk'
 import debug from 'debug'

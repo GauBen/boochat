@@ -1,4 +1,4 @@
-import { client as prisma } from '$lib/prisma'
+import { prisma } from '$lib/prisma'
 import type { User } from '@prisma/client'
 import { nanoid } from 'nanoid'
 import { getTeams } from './teams'

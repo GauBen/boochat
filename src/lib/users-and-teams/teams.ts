@@ -1,3 +1,3 @@
-import { client } from '$lib/prisma'
+import { prisma } from '$lib/prisma'
 
-export const getTeams = async () => client.team.findMany()
+export const getTeams = async () => prisma.team.findMany()

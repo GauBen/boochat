@@ -5,5 +5,5 @@ declare global {
   var prismaClient: Prisma.PrismaClient
 }
 
-export const client = globalThis.prismaClient ?? new Prisma.PrismaClient()
-globalThis.prismaClient ??= client
+export const prisma = globalThis.prismaClient ?? new Prisma.PrismaClient()
+globalThis.prismaClient ??= prisma
