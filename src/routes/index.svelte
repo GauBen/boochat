@@ -7,14 +7,14 @@
   import { io } from 'socket.io-client'
   import { onMount } from 'svelte'
   import { writable } from 'svelte/store'
-  import { Level, Me, PostRequest } from '../api'
+  import { Level, Me } from '../api'
   import Admin from '../components/Admin.svelte'
   import GameController from '../components/GameController.svelte'
-  import { post } from '../fetch'
   import Messenger from '../messenger/Messenger.svelte'
   import type { Socket } from '../socket-api'
   import { ServerEvent } from '../socket-api'
   import type { Team } from '../types'
+  import type { GetMe } from './api/me.json'
 
   export const load: Load = async ({ fetch }) => {
     const [teams, thread] = await Promise.all([
@@ -49,8 +49,8 @@
   onMount(async () => {
     const token = localStorage.getItem('token')
     if (token !== null) {
-      void post(PostRequest.Me, { token }).then(({ body }) => {
-        me = body
+      void get<GetMe>('/api/me.json', { params: { token } }).then((user) => {
+        me = user
       })
     }
 

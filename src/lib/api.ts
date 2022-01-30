@@ -1,15 +1,28 @@
 /** Sends a typed GET request. */
-export const get = async <T extends () => unknown>(
+// @ts-expect-error The signatures can't match
+export async function get<T extends (searchParams: never) => unknown>(
+  uri: string,
+  options: {
+    fetch?: typeof globalThis.fetch
+    params: T extends (searchParams: infer U) => unknown ? U : never
+  }
+): Promise<Awaited<ReturnType<T>>>
+export async function get<T extends () => unknown>(
+  uri: string,
+  options?: { fetch?: typeof globalThis.fetch }
+): Promise<Awaited<ReturnType<T>>>
+export async function get(
   uri: string,
   {
-    fetch,
-  }: {
-    fetch: typeof globalThis.fetch
-  } = globalThis
-): Promise<Awaited<ReturnType<T>>> => {
-  const response = await fetch(uri)
+    fetch = globalThis.fetch,
+    params,
+  }: { fetch?: typeof globalThis.fetch; params?: Record<string, string> } = {}
+): Promise<unknown> {
+  const search = params ? new URLSearchParams(params).toString() : ''
+  const response = await fetch(uri + (search ? '?' + search : ''))
   if (response.status >= 400) throw new Error(response.statusText)
-  return (await response.json()) as Awaited<ReturnType<T>>
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return response.json()
 }
 
 /** Sends a typed POST request. */

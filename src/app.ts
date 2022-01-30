@@ -87,12 +87,6 @@ export class App implements AppAttributes {
     // Get requests
     this.get(GetRequest.UsersOnline, () => this.computeStats())
 
-    // Post requests
-    this.post(
-      PostRequest.Me,
-      async ({ token }) => (await this.getUserFromToken(token)) ?? false
-    )
-
     // Socket events
     this.io.on('connect', (socket) => {
       if (socket.user) this.emitter.emit(AppEvent.UserUpdated, socket.user)
@@ -152,6 +146,7 @@ export class App implements AppAttributes {
       } else {
         try {
           res.json(
+            // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
             (await handler(
               req.body as JTDDataType<typeof schemas[T]>,
               req.user

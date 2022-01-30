@@ -1,4 +1,4 @@
-import { GetRequest, Level } from '$/api'
+import { Level } from '$/api'
 import type { App } from '$/app'
 import { AppEvent } from '$/app'
 import { check } from 'p4ssw0rd'
@@ -236,7 +236,4 @@ export default (app: App): void => {
 
     next()
   })
-
-  // Get settings
-  app.get(GetRequest.ChatSettings, () => config.get('chat'))
 }

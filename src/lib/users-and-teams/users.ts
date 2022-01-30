@@ -28,3 +28,12 @@ export const register = async ({
 
   return { token }
 }
+
+export const fromToken = async ({ token }: { token: User['token'] }) => {
+  const user = await prisma.user.findUnique({
+    where: { token },
+    include: { team: true },
+  })
+  if (!user) throw new Error('Not found')
+  return user
+}

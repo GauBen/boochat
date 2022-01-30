@@ -1,9 +1,10 @@
 <script lang="ts">
   import type { Me } from '$/api'
-  import { GetRequest, Level } from '$/api'
-  import { get } from '$/fetch'
+  import { Level } from '$/api'
   import { ClientEvent, ServerEvent, Socket } from '$/socket-api'
   import type { DetailedMessage, MessageUser, RichMessage, Team } from '$/types'
+  import { get } from '$lib/api'
+  import type { GetChatConfig } from '$routes/api/chat-config.json'
   import { createEventDispatcher, onMount, tick } from 'svelte'
   import type { Gif } from 'svelte-tenor/api'
   import MessageInput from './MessageInput.svelte'
@@ -60,10 +61,7 @@
   const dispatch = createEventDispatcher<{ logout: void; send: string }>()
 
   onMount(async () => {
-    void get(GetRequest.ChatSettings).then(({ body }) => {
-      // Load messages above notices
-      settings = body
-    })
+    settings = await get<GetChatConfig>('/api/chat-config.json.ts')
   })
 
   const setDeleted = (id: number, deleted: boolean) => {

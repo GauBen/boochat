@@ -10,7 +10,6 @@ export enum Level {
 }
 
 export enum GetRequest {
-  ChatSettings = '/chat-settings',
   GameSettings = '/game-settings',
   GameState = '/game-results',
   Connect3State = '/connect3',
@@ -18,18 +17,12 @@ export enum GetRequest {
 }
 
 export enum PostRequest {
-  Me = '/me',
   SetupGame = '/setup-game',
   QuizzAnswer = '/quizz-answer',
   Connect3Play = '/connect3-play',
 }
 
 export const schemas = {
-  [PostRequest.Me]: {
-    properties: {
-      token: { type: 'string' },
-    },
-  },
   [PostRequest.SetupGame]: {
     properties: {
       value: { type: 'string' },
@@ -50,7 +43,6 @@ export const schemas = {
 export type Me = (User & { team: Team }) | false
 
 export interface Response {
-  [GetRequest.ChatSettings]: { slowdown: number; moderationDelay: number }
   [GetRequest.GameSettings]: { value: string }
   [GetRequest.GameState]: CurrentState
   [GetRequest.Connect3State]: Connect3State
@@ -62,7 +54,6 @@ export interface Response {
       online: number
     }>
   }
-  [PostRequest.Me]: (User & { team: Team }) | false
   [PostRequest.SetupGame]: void
   [PostRequest.QuizzAnswer]: void
   [PostRequest.Connect3Play]: void

@@ -1,11 +1,9 @@
 <script lang="ts">
-  import { GetRequest, Response } from '$/api'
-  import { get } from '$/fetch'
+  import type { GetRequest, Response } from '$/api'
   import type { ClientToServerEvents, ServerToClientEvents } from '$/socket-api'
   import { ServerEvent } from '$/socket-api'
   import GameAdmin from '$games/connect3/Admin.svelte'
   import type { Socket } from 'socket.io-client'
-  import { onMount } from 'svelte'
 
   export let socket:
     | Socket<ClientToServerEvents, ServerToClientEvents>
@@ -13,18 +11,12 @@
 
   let stats: Response[GetRequest.UsersOnline] | undefined
 
-  onMount(() => {
-    void get(GetRequest.UsersOnline).then(({ body: json }) => {
-      stats = json
-    })
-  })
-
   const listen = (
     socket: Socket<ServerToClientEvents, ClientToServerEvents> | undefined
   ) => {
     if (!socket) return
 
-    socket.on(ServerEvent.Stats, async (x) => {
+    socket.on(ServerEvent.Stats, (x) => {
       stats = x
     })
   }

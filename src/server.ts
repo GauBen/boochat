@@ -2,21 +2,19 @@ import { schemas } from '$/api'
 import { App } from '$/app'
 import type { ClientToServerEvents, ServerToClientEvents } from '$/socket-api'
 import createGame from '$games/connect3'
+import { config } from '$lib/config'
 import { client as prisma } from '$lib/prisma'
 import createMessenger from '$messenger'
 import type { JTDDataType } from 'ajv/dist/jtd'
 import Ajv from 'ajv/dist/jtd'
 import type { ValidateFunction } from 'ajv/dist/types'
 import chalk from 'chalk'
-import Conf from 'conf'
 import debug from 'debug'
 import express, { RequestHandler } from 'express'
 import { statSync } from 'fs'
 import { createServer } from 'http'
 import fetch from 'node-fetch'
-import path from 'path'
 import { Server } from 'socket.io'
-import { fileURLToPath } from 'url'
 
 const log = debug('boochat')
 
@@ -54,24 +52,6 @@ console.log(
 
 log('Logs enabled!')
 
-const config = new Conf<{
-  chat: { slowdown: number; moderationDelay: number }
-  quizz: { question: number; answer: number; leaderboard: number }
-}>({
-  cwd: path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'storage'),
-  configName: 'app-config',
-  defaults: {
-    chat: {
-      moderationDelay: 2000,
-      slowdown: 5000,
-    },
-    quizz: {
-      question: 15_000,
-      answer: 15_000,
-      leaderboard: 15_000,
-    },
-  },
-})
 const ajv = new Ajv()
 const validate = Object.fromEntries(
   Object.entries(schemas).map(([key, schema]) => [key, ajv.compile(schema)])
