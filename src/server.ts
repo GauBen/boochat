@@ -1,12 +1,8 @@
-import { schemas } from '$/api'
 import { App } from '$/app'
 import type { ClientToServerEvents, ServerToClientEvents } from '$/socket-api'
 import { config } from '$lib/config'
 import { client as prisma } from '$lib/prisma'
 import createMessenger from '$messenger'
-import type { JTDDataType } from 'ajv/dist/jtd'
-import Ajv from 'ajv/dist/jtd'
-import type { ValidateFunction } from 'ajv/dist/types'
 import chalk from 'chalk'
 import debug from 'debug'
 import express, { RequestHandler } from 'express'
@@ -51,12 +47,6 @@ console.log(
 
 log('Logs enabled!')
 
-const ajv = new Ajv()
-const validate = Object.fromEntries(
-  Object.entries(schemas).map(([key, schema]) => [key, ajv.compile(schema)])
-) as {
-  [k in keyof typeof schemas]: ValidateFunction<JTDDataType<typeof schemas[k]>>
-}
 const app = express()
 const server = createServer(app)
 const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
@@ -64,7 +54,7 @@ const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
   serveClient: false,
 })
 
-const app2 = new App({ io, prisma, validate, config })
+const app2 = new App({ io, prisma, config })
 
 app2.use(createMessenger)
 app.use('/api', app2.api)

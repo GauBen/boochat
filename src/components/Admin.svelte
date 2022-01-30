@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { GetRequest, Response } from '$/api'
   import type { ClientToServerEvents, ServerToClientEvents } from '$/socket-api'
   import { ServerEvent } from '$/socket-api'
+  import type { Team, User } from '@prisma/client'
 
   import type { Socket } from 'socket.io-client'
 
@@ -9,7 +9,18 @@
     | Socket<ClientToServerEvents, ServerToClientEvents>
     | undefined
 
-  let stats: Response[GetRequest.UsersOnline] | undefined
+  let stats:
+    | {
+        online: number
+        connected: number
+        users: Array<{
+          user: User & {
+            team: Team
+          }
+          online: number
+        }>
+      }
+    | undefined
 
   const listen = (
     socket: Socket<ServerToClientEvents, ClientToServerEvents> | undefined

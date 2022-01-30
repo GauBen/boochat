@@ -1,7 +1,5 @@
-import { Level, schemas } from '$/api'
+import { Level } from '$/api'
 import type { PrismaClient, Team, User } from '@prisma/client'
-import type { ValidateFunction } from 'ajv'
-import type { JTDDataType } from 'ajv/dist/core'
 import type Conf from 'conf'
 import cors from 'cors'
 import EventEmitter from 'events'
@@ -18,11 +16,6 @@ import {
 export interface AppAttributes {
   readonly io: Server<ClientToServerEvents, ServerToClientEvents>
   readonly prisma: PrismaClient
-  readonly validate: {
-    [k in keyof typeof schemas]: ValidateFunction<
-      JTDDataType<typeof schemas[k]>
-    >
-  }
   readonly config: Conf<{
     chat: { slowdown: number; moderationDelay: number }
     quizz: { question: number; answer: number; leaderboard: number }
@@ -35,7 +28,6 @@ export enum AppEvent {
 
 export class App implements AppAttributes {
   readonly io
-  readonly validate
   readonly prisma
   readonly config
   readonly loaded
@@ -49,9 +41,8 @@ export class App implements AppAttributes {
   readonly users: Map<number, User & { team: Team }> = new Map()
   readonly tokens: Map<string, number> = new Map()
 
-  constructor({ io, validate, prisma, config }: AppAttributes) {
+  constructor({ io, prisma, config }: AppAttributes) {
     this.io = io
-    this.validate = validate
     this.prisma = prisma
     this.config = config
 
