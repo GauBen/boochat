@@ -37,8 +37,8 @@ export default (app: App): void => {
       where: { id: userFound.id },
       include: { team: true },
     })
-    users.set(updatedUser.id, updatedUser)
-    return updatedUser
+
+    return Object.assign(users.get(updatedUser.id), updatedUser)
   }
 
   // eslint-disable-next-line complexity
@@ -88,7 +88,7 @@ export default (app: App): void => {
           where: { id: user.id },
           include: { team: true },
         })
-        users.set(updatedUser.id, updatedUser)
+        Object.assign(users.get(updatedUser.id), updatedUser)
         emitter.emit(AppEvent.UserUpdated, updatedUser)
         socket.emit(ServerEvent.Notice, `Connecté en tant qu'administrateur`)
       }
