@@ -19,6 +19,9 @@ const config = {
             target: 'ws://localhost:3001',
             ws: true,
           },
+          '/api': {
+            target: 'http://localhost:3001',
+          },
         },
       },
       resolve: {
