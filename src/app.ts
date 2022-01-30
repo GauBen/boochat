@@ -1,4 +1,4 @@
-import { GetRequest, Level, PostRequest, Response, schemas } from '$/api'
+import { Level, schemas } from '$/api'
 import type { PrismaClient, Team, User } from '@prisma/client'
 import type { ValidateFunction } from 'ajv'
 import type { JTDDataType } from 'ajv/dist/core'
@@ -14,7 +14,6 @@ import {
   ServerEvent,
   ServerToClientEvents,
 } from './socket-api'
-import type { DetailedUser } from './types'
 
 export interface AppAttributes {
   readonly io: Server<ClientToServerEvents, ServerToClientEvents>
@@ -84,9 +83,6 @@ export class App implements AppAttributes {
       next()
     })
 
-    // Get requests
-    this.get(GetRequest.UsersOnline, () => this.computeStats())
-
     // Socket events
     this.io.on('connect', (socket) => {
       if (socket.user) this.emitter.emit(AppEvent.UserUpdated, socket.user)
@@ -114,51 +110,6 @@ export class App implements AppAttributes {
       }
 
       io.to(Room.Moderator).emit(ServerEvent.Stats, this.computeStats())
-    })
-  }
-
-  get<T extends GetRequest>(
-    path: T,
-    handler: () => Response[T] | Promise<Response[T]>
-  ): void {
-    this.api.get(path, async (_req, res) => {
-      try {
-        res.json(await handler())
-      } catch (error: unknown) {
-        console.error(error)
-        res.status(400).json({
-          error: error instanceof Error ? error.message : 'Bad Request',
-        })
-      }
-    })
-  }
-
-  post<T extends PostRequest>(
-    path: T,
-    handler: (
-      body: JTDDataType<typeof schemas[T]>,
-      user: DetailedUser | undefined
-    ) => Response[T] | Promise<Response[T]>
-  ): void {
-    this.api.post(path, async (req, res) => {
-      if (!('body' in req) || !this.validate[path](req.body)) {
-        res.status(400).json({ error: 'Invalid data' })
-      } else {
-        try {
-          res.json(
-            // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
-            (await handler(
-              req.body as JTDDataType<typeof schemas[T]>,
-              req.user
-            )) ?? {}
-          )
-        } catch (error: unknown) {
-          console.error(error)
-          res.status(400).json({
-            error: error instanceof Error ? error.message : 'Bad Request',
-          })
-        }
-      }
     })
   }
 

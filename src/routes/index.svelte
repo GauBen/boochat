@@ -117,7 +117,7 @@
       <Messenger {thread} {teams} {socket} {me} on:logout={logout} />
     </section>
     <section>
-      <GameController {socket} {me} />
+      <GameController />
     </section>
     {#if me && me.level >= Level.Moderator}
       <section>

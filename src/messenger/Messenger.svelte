@@ -61,7 +61,7 @@
   const dispatch = createEventDispatcher<{ logout: void; send: string }>()
 
   onMount(async () => {
-    settings = await get<GetChatConfig>('/api/chat-config.json.ts')
+    settings = await get<GetChatConfig>('/api/chat-config.json')
   })
 
   const setDeleted = (id: number, deleted: boolean) => {

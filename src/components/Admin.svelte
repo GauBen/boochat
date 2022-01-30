@@ -2,7 +2,7 @@
   import type { GetRequest, Response } from '$/api'
   import type { ClientToServerEvents, ServerToClientEvents } from '$/socket-api'
   import { ServerEvent } from '$/socket-api'
-  import GameAdmin from '$games/connect3/Admin.svelte'
+
   import type { Socket } from 'socket.io-client'
 
   export let socket:
@@ -39,8 +39,6 @@
   {:else}
     Chargement des stats...
   {/if}
-
-  <svelte:component this={GameAdmin} />
 </div>
 
 <style lang="scss">

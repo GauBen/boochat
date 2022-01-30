@@ -1,6 +1,4 @@
 import type { Team, User } from '$/types'
-import type { CurrentState as Connect3State } from '$games/connect3/types'
-import type { CurrentState } from '$games/quizz/types'
 
 export enum Level {
   Banned = 0,
@@ -44,8 +42,6 @@ export type Me = (User & { team: Team }) | false
 
 export interface Response {
   [GetRequest.GameSettings]: { value: string }
-  [GetRequest.GameState]: CurrentState
-  [GetRequest.Connect3State]: Connect3State
   [GetRequest.UsersOnline]: {
     online: number
     connected: number

@@ -1,5 +1,4 @@
 import type { DetailedMessage, RichMessage, Team, User } from '$/types'
-import type { CurrentState } from '$games/connect3/types'
 import type { Socket as ClientSocket } from 'socket.io-client'
 
 export type Socket = ClientSocket<ServerToClientEvents, ClientToServerEvents>
@@ -71,7 +70,6 @@ export interface ServerToClientEvents {
     ratios: Array<[Team['id'], number]>
   }) => void
   [ServerEvent.QuizzLeaderboard]: (points: Array<[Team['id'], number]>) => void
-  [ServerEvent.Connect3NextTurn]: (state: CurrentState) => void
 }
 
 export enum Room {

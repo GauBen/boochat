@@ -1,7 +1,6 @@
 import { schemas } from '$/api'
 import { App } from '$/app'
 import type { ClientToServerEvents, ServerToClientEvents } from '$/socket-api'
-import createGame from '$games/connect3'
 import { config } from '$lib/config'
 import { client as prisma } from '$lib/prisma'
 import createMessenger from '$messenger'
@@ -67,7 +66,7 @@ const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
 
 const app2 = new App({ io, prisma, validate, config })
 
-app2.use(createMessenger, createGame)
+app2.use(createMessenger)
 app.use('/api', app2.api)
 
 if (isProduction) {
