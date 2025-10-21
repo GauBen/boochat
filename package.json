@@ -5,8 +5,6 @@
     "@prisma/client": "^3.8.1",
     "@sveltejs/adapter-node": "^1.0.0-next.67",
     "@sveltejs/kit": "^1.0.0-next.251",
-    "@swc/core": "^1.2.135",
-    "@swc/helpers": "^0.3.2",
     "ajv": "^8.9.0",
     "array-shuffle": "^3.0.0",
     "chalk": "^5.0.0",
@@ -15,8 +13,6 @@
     "debug": "^4.3.3",
     "express": "^4.17.2",
     "nanoid": "^3.2.0",
-    "node-fetch": "^3.2.0",
-    "nodemon": "^2.0.15",
     "p4ssw0rd": "^1.0.7",
     "prisma": "^3.8.1",
     "sanitize.css": "~12.0.1",
@@ -26,7 +22,6 @@
     "svelte": "^3.46.3",
     "svelte-preprocess": "^4.10.2",
     "svelte-tenor": "^0.0.15",
-    "ts-node": "^10.4.0",
     "tsconfig-paths": "^3.12.0",
     "tslib": "^2.3.1",
     "twemoji": "^13.1.0",
@@ -62,31 +57,31 @@
     "stylelint": "^14.3.0",
     "stylelint-config-idiomatic-order": "^8.1.0",
     "stylelint-config-standard-scss": "^3.0.0",
-    "svelte-check": "^2.4.0"
+    "svelte-check": "^2.4.0",
+    "tsx": "^4.20.6"
   },
   "lint-staged": {
     "*.{js,ts,svelte}": "eslint --fix",
     "*.{css,scss,svelte}": "stylelint --fix",
     "*.{js,cjs,ts,css,scss,html,svelte,json,md,yml}": "prettier --write"
   },
-  "packageManager": "yarn@3.1.1",
+  "packageManager": "yarn@4.10.3",
   "prisma": {
-    "seed": "yarn ts-node prisma/seed.ts"
+    "seed": "yarn node prisma/seed.ts"
   },
   "scripts": {
     "build": "svelte-kit build",
     "check": "tsc --noEmit & eslint --fix 'src/**/*.{ts,js,svelte}' & stylelint --fix 'src/**/*.{css,scss,svelte}' & svelte-check --tsconfig ./tsconfig.json &",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
     "clean": "rm -rf .svelte-kit/ build/",
-    "dev": "nodemon -e ts & svelte-kit dev --host &",
+    "dev": "tsx --watch src/server.ts & svelte-kit dev --host &",
     "format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. src",
     "postinstall": "husky install",
-    "start": "yarn ts-node src/server.ts",
-    "ts-node": "node --experimental-specifier-resolution=node --loader ./loader.js"
+    "start": "tsx src/server.ts"
   },
   "type": "module",
   "volta": {
-    "node": "17.4.0",
-    "yarn": "1.22.17"
+    "node": "24.6.0",
+    "yarn": "1.22.22"
   }
 }

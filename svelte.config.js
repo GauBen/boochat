@@ -19,9 +19,10 @@ const config = {
             target: 'ws://localhost:3001',
             ws: true,
           },
-          '/api': {
-            target: 'http://localhost:3001',
-          },
+          // Disable proxying for now, as the refactor was never completed
+          // '/api': {
+          //   target: 'http://localhost:3001',
+          // },
         },
       },
       resolve: {

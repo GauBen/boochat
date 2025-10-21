@@ -6,13 +6,9 @@ import debug from 'debug'
 import express, { RequestHandler } from 'express'
 import { statSync } from 'fs'
 import { createServer } from 'http'
-import fetch from 'node-fetch'
 import { Server } from 'socket.io'
 
 const log = debug('boochat')
-
-// @ts-expect-error Monkey patch to add fetch to Node.js
-globalThis.fetch = fetch
 
 // Server settings
 const port = Number(process.env.VITE_API_PORT ?? 3001)
